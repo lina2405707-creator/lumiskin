@@ -10,6 +10,7 @@ if (process.env.NODE_ENV !== 'production') {
 const MongoStore = require('connect-mongo')(session);
 
 const app = express();
+app.set('trust proxy', 1);
 
 // ── Database ──────────────────────────────────────────────────────────────────
 mongoose.connect(process.env.MONGO_URI)
