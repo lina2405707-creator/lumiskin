@@ -19,7 +19,6 @@ async function addToCart(productName, price) {
         }
 
         // ── Translated toast ──
-        // Use LumiI18n.t() to get the right language string
         const toastSuffix = (window.LumiI18n && window.LumiI18n.t('product.toast'))
             || 'added to cart!';
         showToast(productName + ' ' + toastSuffix);
@@ -60,3 +59,44 @@ function showToast(message) {
         toast.style.transform = 'translateX(-50%) translateY(20px)';
     }, 2500);
 }
+
+/* ── Tag translation ── */
+var TAG_MAP = {
+    en: {
+        'HYDRATE'      : 'HYDRATE',
+        'CLEANSE'      : 'CLEANSE',
+        'REPAIR'       : 'REPAIR',
+        'PROTECT'      : 'PROTECT',
+        'SOOTHE'       : 'SOOTHE',
+        'DERM APPROVED': 'DERM APPROVED',
+        'MOISTURIZE'   : 'MOISTURIZE',
+        'SPF'          : 'SPF',
+        'TREAT'        : 'TREAT',
+        'BRIGHTEN'     : 'BRIGHTEN'
+    },
+    ar: {
+        'HYDRATE'      : 'ترطيب',
+        'CLEANSE'      : 'تنظيف',
+        'REPAIR'       : 'إصلاح',
+        'PROTECT'      : 'حماية',
+        'SOOTHE'       : 'تهدئة',
+        'DERM APPROVED': 'موصى طبياً',
+        'MOISTURIZE'   : 'ترطيب عميق',
+        'SPF'          : 'حماية شمس',
+        'TREAT'        : 'علاج',
+        'BRIGHTEN'     : 'إشراق'
+    }
+};
+
+function translateTags() {
+    var lang = window.LumiI18n ? window.LumiI18n.lang() : 'en';
+    var map  = TAG_MAP[lang] || TAG_MAP.en;
+    document.querySelectorAll('[data-product-tag]').forEach(function (el) {
+        var original = el.getAttribute('data-product-tag');
+        el.textContent = map[original] || original;
+    });
+}
+
+/* Run on load and on every language switch */
+document.addEventListener('DOMContentLoaded', translateTags);
+document.addEventListener('langchange', translateTags);

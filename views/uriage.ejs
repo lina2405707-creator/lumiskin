@@ -28,7 +28,7 @@
         <% products.forEach(product => { %>
         <div class="product-item">
             <div class="image-wrap">
-                <span class="tag-promo"><%= product.tag %></span>
+                <span class="tag-promo" data-product-tag="<%= product.tag %>"><%= product.tag %></span>
                 <img src="<%= product.image && product.image.startsWith('/') ? product.image : '/images/' + product.image %>"
                      alt="<%= product.name %>" class="img-primary">
                 <img src="<%= product.image2 && product.image2.startsWith('/') ? product.image2 : '/images/' + product.image2 %>"
@@ -70,6 +70,7 @@
     </div>
 </section>
 
+<script src="/js/i18n.js"></script>
 <script src="/js/product.js"></script>
 </body>
 </html>
