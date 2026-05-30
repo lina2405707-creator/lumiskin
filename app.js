@@ -8,7 +8,7 @@ const app = express();
 
 // ── Database ──────────────────────────────────────────────────────────────────
 mongoose.connect(process.env.MONGO_URI, {
-  family: 4
+  family: 4,
   serverSelectionTimeoutMS: 30000,
   socketTimeoutMS: 45000,
 })
