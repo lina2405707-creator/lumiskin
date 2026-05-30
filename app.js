@@ -9,6 +9,8 @@ const app = express();
 // ── Database ──────────────────────────────────────────────────────────────────
 mongoose.connect(process.env.MONGO_URI, {
   family: 4
+  serverSelectionTimeoutMS: 30000,
+  socketTimeoutMS: 45000,
 })
   .then(() => console.log('Database connected'))
   .catch((err) => console.log('Database connection failed', err.message));
