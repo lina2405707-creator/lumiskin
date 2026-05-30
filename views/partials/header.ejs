@@ -1,0 +1,44 @@
+<!-- Unified Header CSS — loaded on every page -->
+<link rel="stylesheet" href="/css/header.css">
+<link rel="stylesheet" href="/css/darkmode.css">
+<link rel="stylesheet" href="/css/rtl.css">
+
+<header>
+    <div class="container">
+        <nav>
+            <ul class="navbuttons">
+                <li><a href="/" data-i18n="nav.home"><b>Home</b></a></li>
+                <li><a href="/#brand-section" data-i18n="nav.products"><b>Products</b></a></li>
+                <li><a href="/about" data-i18n="nav.about"><b>About</b></a></li>
+                <li><a href="/skin-advisor" data-i18n="nav.advisor"><b>Skin Advisor</b></a></li>
+            </ul>
+        </nav>
+
+        <a href="/" class="logo">
+            <div class="logotext"><i>Lumiskin</i></div>
+        </a>
+
+        <div class="nav-buttons">
+            <% if (user !== '') { %>
+                <% if (role === 'admin') { %>
+                    <a href="/admin" class="btn-secondary" data-i18n="nav.admin"><b>⚙ Admin</b></a>
+                <% } %>
+                <a href="/user/profile" class="btn-secondary"><b><%= user %></b></a>
+                <a href="/user/logout" class="btn-secondary" data-i18n="nav.logout"><b>Logout</b></a>
+            <% } else { %>
+                <a href="/user/login" class="btn-secondary" data-i18n="nav.account"><b>Account</b></a>
+            <% } %>
+            <a href="/user/cart" class="btn-primary" data-i18n="nav.cart"><b>Cart</b></a>
+
+            <!-- Language toggle -->
+            <button id="lang-switcher" title="Toggle language" onclick="if(window.LumiI18n) LumiI18n.toggle()">ع</button>
+
+            <!-- Dark mode toggle -->
+            <button id="theme-switcher-control" title="Toggle dark mode">🌙</button>
+        </div>
+    </div>
+</header>
+
+<script src="/js/js.js"></script>
+<script src="/js/i18n.js"></script>
+<script src="/js/script.js"></script>

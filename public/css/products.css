@@ -1,0 +1,236 @@
+*{
+    margin: 0;
+    padding: 0;
+        box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+
+.brand-showcase {
+    padding: 80px 5%;
+    text-align: left;
+  
+    background-color: rgb(233, 221, 206); 
+}
+
+.brand-title {
+    font-size: 42px;
+    color: rgb(147, 97, 62); 
+    margin-bottom: 50px;
+    font-weight: 800;
+}
+
+.brand-container {
+    display: flex;
+    justify-content: flex-start; 
+    gap: 40px; 
+    padding-top: 20px;
+}
+
+.brand-card {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.brand-circle {
+    width: 220px;
+    height: 220px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden; /* This is vital for the zoom effect */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border: 2px solid transparent;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.brand-circle img {
+    width: 75%;
+    height: auto;
+    transition: transform 0.5s ease; /* Controls the zoom speed */
+}
+
+.brand-name {
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: 700;
+    color: rgb(147, 97, 62);
+}
+
+/* --- THE HOVER ANIMATIONS --- */
+
+.brand-card:hover .brand-circle img {
+    transform: scale(1.3); 
+}
+
+.brand-card:hover .brand-circle {
+    box-shadow: 0 15px 40px rgba(163, 108, 69, 0.2);
+    border-color: rgb(233, 221, 206); /* Matches your website background exactly */
+    transform: translateY(-5px); /* Gentle lift */
+}
+
+.brand-card:hover .brand-name {
+    color: rgb(147, 97, 62) !important ; /* Matches your logo exactly when hovered */
+}
+
+.product-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    justify-content: center;
+}
+
+.product-item {
+    width: 320px;
+    background-color: #ffffff;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    border: 1px solid #f0f0f0;
+    transition: box-shadow 0.3s ease;
+}
+
+.product-item:hover {
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+/* --- THE IMAGE AREA (Hover Logic) --- */
+.image-wrap {
+    position: relative; 
+    height: 380px;
+    overflow: hidden;  
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-wrap img {
+    position: absolute;
+    max-width: 85%;
+    max-height: 85%;
+    object-fit: contain;
+    transition: opacity 0.4s ease-in-out;
+}
+
+.img-secondary {
+    opacity: 0; 
+}
+
+.product-item:hover .img-primary {
+    opacity: 0;
+}
+
+.product-item:hover .img-secondary {
+    opacity: 1;
+}
+.add-to-cart-btn {
+    position: absolute;
+    bottom: 15px;      /* Added a little gap from the bottom edge */
+    left: 5%;          /* This centers the 90% width button */
+    width: 90%;        /* Now slightly smaller than the whole card */
+    height: 50px;      /* Slightly slimmer height for a cleaner look */
+    border: none;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    z-index: 5;
+    
+    background: linear-gradient(to right, white 50%, black 50%);
+    background-size: 200% 100%;
+    background-position: right bottom;
+    
+    color: #ffffff;
+    
+    transform: translateY(150%); /* Move further down so it stays hidden */
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother slide */
+}
+
+.product-item:hover .add-to-cart-btn {
+    transform: translateY(0);
+}
+
+.add-to-cart-btn:hover {
+    background-position: left bottom;
+    color: #000000;
+    outline: 1px solid #000000; 
+}
+
+
+.product-details {
+    padding: 20px;
+    background-color: #fcfcfc;
+}
+
+.brand-label {
+    font-size: 12px;
+    color: #888;
+    letter-spacing: 1.5px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.product-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a1a1a;
+    line-height: 1.4;
+    margin: 0 0 12px 0;
+    height: 45px; /* Keeps titles aligned if one is longer */
+}
+
+.current-price {
+    font-size: 18px;
+    font-weight: 700;
+    color: #ce6e1a; /* Magenta color for price */
+}
+
+/* --- MAGENTA PROMO TAGS --- */
+.tag-promo {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background-color: #ce681abf;
+    color: #ffffff;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 3px;
+    z-index: 10;
+}
+/* ── Person 5: Luxury Card Motion Adjustments ── */
+.brand-card, .product-item {
+    background: var(--surface-white);
+    border-radius: var(--radius-premium) !important;
+    box-shadow: var(--shadow-soft) !important;
+    transition: var(--transition-smooth) !important;
+}
+
+/* Smooth float movement when hovering over any card component */
+.brand-card:hover, .product-item:hover {
+    transform: translateY(-6px) !important;
+    box-shadow: var(--shadow-hover) !important;
+}
+
+/* Your custom brand circle interactions */
+.brand-card:hover .brand-circle img {
+    transform: scale(1.3); 
+}
+
+.brand-card:hover .brand-circle {
+    box-shadow: 0 15px 40px rgba(163, 108, 69, 0.2);
+    border-color: rgb(233, 221, 206); 
+    transform: translateY(-5px); 
+}
+
+.brand-card:hover .brand-name {
+    color: rgb(147, 97, 62) !important; 
+}

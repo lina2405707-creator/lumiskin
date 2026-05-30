@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Product | Lumiskin Admin</title>
+    <link rel="stylesheet" href="/css/admin.css">
+    <style>
+        .upload-label {
+            display: block;
+            font-size: 11px; font-weight: 700;
+            letter-spacing: 0.08em; color: #999;
+            text-transform: uppercase; margin-bottom: 4px;
+        }
+        .upload-input {
+            width: 100%; padding: 8px 10px;
+            border: 1px dashed #444; border-radius: 6px;
+            background: #1e1e1e; color: #ccc;
+            font-size: 13px; cursor: pointer;
+        }
+        .upload-input:hover { border-color: #a36c45; }
+        .current-image {
+            width: 80px; height: 80px;
+            object-fit: cover; border-radius: 8px;
+            border: 1px solid #333; margin-bottom: 8px;
+            display: block;
+        }
+        .img-note {
+            font-size: 11px; color: #777; margin-top: 4px;
+        }
+        .upload-preview {
+            width: 60px; height: 60px;
+            object-fit: cover; border-radius: 6px;
+            margin-top: 6px; border: 1px solid #333;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="sidebar">
+    <h2>LUMISKIN</h2>
+    <p style="color:#ccc; font-size:13px; padding: 0 16px;">Welcome, <%= user %></p>
+    <ul>
+        <li onclick="window.location.href='/admin'">Overview</li>
+        <li onclick="window.location.href='/admin'">Manage Products</li>
+        <li onclick="window.location.href='/admin'">Manage Users</li>
+    </ul>
+    <a href="/user/logout" style="color:#ccc; padding:16px; display:block; margin-top:20px;">Logout</a>
+</nav>
+
+<main class="main-content">
+    <div class="management-section">
+        <h1>Edit Product</h1>
+        <p style="color:#888; margin-bottom:20px;">
+            Update the product details below. Upload a new image to replace the current one.
+        </p>
+
+        <!-- enctype="multipart/form-data" is REQUIRED for file uploads -->
+        <form action="/admin/edit-product/<%= product._id %>" method="POST"
+              enctype="multipart/form-data"
+              style="display:flex; flex-direction:column; gap:18px; max-width:520px;">
+
+            <div>
+                <label>Product Name</label><br>
+                <input type="text" name="name" value="<%= product.name %>" required
+                       style="width:100%; padding:8px; margin-top:5px;">
+            </div>
+
+            <div>
+                <label>Brand</label><br>
+                <input type="text" name="brand" value="<%= product.brand %>" required
+                       style="width:100%; padding:8px; margin-top:5px;">
+            </div>
+
+            <div>
+                <label>Price (EGP)</label><br>
+                <input type="number" name="price" value="<%= product.price %>" required
+                       style="width:100%; padding:8px; margin-top:5px;">
+            </div>
+
+            <div>
+                <label>Category</label><br>
+                <input type="text" name="category" value="<%= product.category %>"
+                       style="width:100%; padding:8px; margin-top:5px;">
+            </div>
+
+            <div>
+                <label>Tag</label><br>
+                <input type="text" name="tag" value="<%= product.tag %>"
+                       style="width:100%; padding:8px; margin-top:5px;">
+            </div>
+
+            <!-- ── Primary image upload ─────────────────────────────────────── -->
+            <div>
+                <span class="upload-label">Product Image (Primary)</span>
+
+                <% if (product.image) { %>
+                    <img src="/images/<%= product.image %>" alt="current" class="current-image">
+                    <p class="img-note">⬆ Current image. Upload a new one below to replace it.</p>
+                <% } else { %>
+                    <p class="img-note" style="color:#e67e22;">⚠ No image uploaded yet.</p>
+                <% } %>
+
+                <input type="file" name="image" accept="image/*" class="upload-input"
+                       id="imgInput" onchange="previewImage(this,'imgPreview')">
+                <img id="imgPreview" class="upload-preview" alt="new preview">
+            </div>
+
+            <!-- ── Secondary (hover) image upload ──────────────────────────── -->
+            <div>
+                <span class="upload-label">Hover Image (optional)</span>
+
+                <% if (product.image2) { %>
+                    <img src="/images/<%= product.image2 %>" alt="current hover" class="current-image">
+                    <p class="img-note">⬆ Current hover image. Upload a new one to replace.</p>
+                <% } %>
+
+                <input type="file" name="image2" accept="image/*" class="upload-input"
+                       id="img2Input" onchange="previewImage(this,'img2Preview')">
+                <img id="img2Preview" class="upload-preview" alt="new hover preview">
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button type="submit" class="btn-add">Save Changes</button>
+                <a href="/admin"
+                   style="padding:8px 16px; background:#888; color:white;
+                          text-decoration:none; border-radius:4px;">
+                   Cancel
+                </a>
+            </div>
+
+        </form>
+    </div>
+</main>
+
+<script>
+// Preview a selected image before uploading
+function previewImage(input, previewId) {
+    const preview = document.getElementById(previewId);
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            preview.src = e.target.result;
+            preview.style.display = 'block';
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
+
+</body>
+</html>

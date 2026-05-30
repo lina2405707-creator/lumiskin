@@ -1,0 +1,53 @@
+{
+  "nav.home":        "Home",
+  "nav.products":    "Products",
+  "nav.about":       "About",
+  "nav.advisor":     "Skin Advisor",
+  "nav.admin":       "⚙ Admin",
+  "nav.logout":      "Logout",
+  "nav.account":     "Account",
+  "nav.cart":        "Cart",
+
+  "hero.title":      "Discover the Secret to",
+  "hero.title.span": "Radiant Skin",
+  "hero.cta":        "Regain your formula",
+
+  "myth.badge":      "myth vs fact?",
+  "myth.heading":    "Think you know your skin?",
+  "myth.spf":        "SPF in winter?",
+  "myth.water":      "8 glasses of water?",
+  "myth.natural":    "Natural = Safe?",
+  "myth.cta":        "Test Your Skincare IQ →",
+
+  "reviews.label":   "What our customers say",
+  "reviews.heading": "Real Results",
+  "review.form.title": "Share your glow ✨",
+  "review.form.sub":   "Your experience might inspire someone else's skincare journey.",
+  "review.form.name":  "Your name",
+  "review.form.name.placeholder": "e.g. Sara",
+  "review.form.rating": "Your rating",
+  "review.form.text":  "Your review",
+  "review.form.text.placeholder": "Tell us about your Lumiskin experience...",
+  "review.form.submit": "Post My Review",
+  "review.toast":    "🌟 Thank you! Your review has been added.",
+
+  "brands.heading":  "Shop by Brand",
+
+  "footer.tagline":  "Your Best Skin Starts Here",
+  "footer.sub":      "Join our community and receive expert insights.",
+  "footer.email.placeholder": "Enter an email address",
+  "footer.discover": "Discover",
+  "footer.home":     "Home",
+  "footer.about":    "About",
+  "footer.product":  "Product",
+  "footer.reviews":  "Reviews",
+  "footer.contact":  "Contact",
+  "footer.branch.cairo": "cairo, Egypt",
+  "footer.branch.alex":  "alexandria, Egypt",
+  "footer.social":   "Social Media",
+  "footer.help":     "Help & Support",
+  "footer.faq":      "FAQ",
+  "footer.privacy":  "Privacy Policy"
+
+
+} 

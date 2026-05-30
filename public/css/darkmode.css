@@ -1,0 +1,465 @@
+/* ═══════════════════════════════════════════════════════════
+   LUMISKIN — darkmode.css
+   Loaded on EVERY page via partials/header.ejs
+   Toggles class  `dark-mode`  on  <html>  (set by script.js)
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Toggle button (always visible in header) ── */
+#theme-switcher-control {
+    background: transparent;
+    border: 1px solid rgba(147, 97, 62, 0.32);
+    border-radius: 50px;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 6px 10px;
+    margin-left: 6px;
+    line-height: 1;
+    transition: background 0.2s, border-color 0.2s;
+    outline: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+#theme-switcher-control:hover {
+    background: rgba(147, 97, 62, 0.12);
+}
+
+/* ══════════════════════════════════════════════════════════
+   DARK MODE TOKENS
+   ══════════════════════════════════════════════════════════ */
+html.dark-mode {
+    --dm-bg-page:        #18120e;
+    --dm-bg-surface:     #221a14;
+    --dm-bg-card:        #2a1f16;
+    --dm-bg-header:      rgba(24, 18, 14, 0.97);
+    --dm-brown-dark:     rgb(214, 185, 155);
+    --dm-brown-mid:      rgb(220, 178, 130);
+    --dm-brown-light:    rgb(210, 165, 118);
+    --dm-accent:         rgb(230, 145, 60);
+    --dm-text-primary:   rgb(235, 220, 200);
+    --dm-text-muted:     #b0a090;
+    --dm-text-subtle:    #806050;
+    --dm-border:         rgba(180, 140, 100, 0.25);
+    --dm-border-strong:  rgba(180, 140, 100, 0.45);
+    --dm-input-bg:       #2a1f16;
+    --dm-input-text:     rgb(235, 220, 200);
+    --dm-input-border:   rgba(180, 140, 100, 0.3);
+}
+
+/* ══════════════════════════════════════════════════════════
+   GLOBAL
+   ══════════════════════════════════════════════════════════ */
+html.dark-mode body {
+    background-color: var(--dm-bg-page) !important;
+    color: var(--dm-text-primary) !important;
+}
+/* Never invert product/skin images */
+html.dark-mode img,
+html.dark-mode video {
+    filter: brightness(0.88) !important;
+}
+/* Inline hardcoded colors on product pages (back-to-brands link etc.) */
+html.dark-mode a[style*="color:#1a1a1a"] {
+    color: var(--dm-text-primary) !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   HEADER
+   ══════════════════════════════════════════════════════════ */
+html.dark-mode header {
+    background: var(--dm-bg-header) !important;
+    border-bottom-color: rgba(180, 140, 100, 0.2) !important;
+}
+html.dark-mode header .logotext,
+html.dark-mode header nav a,
+html.dark-mode header .btn-secondary,
+html.dark-mode header .btn-primary {
+    color: var(--dm-brown-dark) !important;
+}
+html.dark-mode header nav a::after { background: var(--dm-brown-dark) !important; }
+html.dark-mode header .btn-secondary,
+html.dark-mode header .btn-primary  { border-color: var(--dm-border-strong) !important; }
+html.dark-mode header .btn-secondary:hover,
+html.dark-mode header .btn-primary:hover {
+    background: var(--dm-brown-light) !important;
+    color: #fff !important;
+}
+html.dark-mode #theme-switcher-control {
+    border-color: var(--dm-border-strong) !important;
+    color: var(--dm-brown-dark) !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   FOOTER  (shared across all pages)
+   ══════════════════════════════════════════════════════════ */
+html.dark-mode footer {
+    background-color: var(--dm-bg-page) !important;
+}
+html.dark-mode .footer-newsletter h2,
+html.dark-mode .footer-brand h1      { color: var(--dm-brown-light) !important; }
+html.dark-mode .footer-newsletter p  { color: var(--dm-text-muted)  !important; }
+html.dark-mode .nav-col h4           { color: var(--dm-brown-light) !important; }
+html.dark-mode .nav-col a            { color: var(--dm-text-muted)  !important; }
+html.dark-mode .input-group          { border-bottom-color: var(--dm-border) !important; }
+html.dark-mode .input-group input    { color: var(--dm-text-primary) !important; }
+html.dark-mode .input-group button   { background: var(--dm-bg-surface) !important; }
+
+/* ══════════════════════════════════════════════════════════
+   INDEX PAGE  (style.css + reviews.css)
+   ══════════════════════════════════════════════════════════ */
+html.dark-mode .myth-teaser {
+    background: linear-gradient(135deg, #1a1410 0%, #18120e 100%) !important;
+    border-top-color: rgba(180,140,100,0.15) !important;
+}
+html.dark-mode .myth-teaser h2  { color: var(--dm-brown-dark) !important; }
+html.dark-mode .myth-teaser p   { color: var(--dm-text-muted) !important; }
+html.dark-mode .mini-card {
+    background: var(--dm-bg-card) !important;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4) !important;
+}
+html.dark-mode .mini-card p     { color: var(--dm-brown-dark)  !important; }
+
+html.dark-mode .reviews         { background-color: var(--dm-bg-page) !important; }
+html.dark-mode .reviews .heading{ color: var(--dm-brown-mid) !important; }
+html.dark-mode .reviews .section-label { color: var(--dm-accent) !important; }
+html.dark-mode .reviews .heading span  { color: var(--dm-accent) !important; }
+html.dark-mode .reviews .divider       { background: var(--dm-accent) !important; }
+
+html.dark-mode .box {
+    background: var(--dm-bg-card) !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.35) !important;
+}
+html.dark-mode .box h3    { color: var(--dm-brown-mid)  !important; }
+html.dark-mode .box p     { color: var(--dm-text-muted) !important; }
+html.dark-mode .box .stars{ color: var(--dm-accent)     !important; }
+
+html.dark-mode .add-review-wrapper {
+    background: var(--dm-bg-card) !important;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.35) !important;
+}
+html.dark-mode .add-review-wrapper .form-title { color: var(--dm-brown-mid)  !important; }
+html.dark-mode .add-review-wrapper .form-sub   { color: var(--dm-text-muted) !important; }
+html.dark-mode .form-row label    { color: var(--dm-brown-mid)    !important; }
+html.dark-mode .form-row input,
+html.dark-mode .form-row textarea {
+    background:   var(--dm-input-bg)     !important;
+    border-color: var(--dm-input-border) !important;
+    color:        var(--dm-input-text)   !important;
+}
+html.dark-mode .review-toast {
+    background: var(--dm-bg-surface) !important;
+    color: var(--dm-brown-mid)       !important;
+}
+
+html.dark-mode .brand-showcase  { background-color: var(--dm-bg-page) !important; }
+html.dark-mode .brand-title     { color: var(--dm-brown-mid)          !important; }
+html.dark-mode .brand-circle    {
+    background-color: var(--dm-bg-card)            !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4)        !important;
+}
+html.dark-mode .brand-name      { color: var(--dm-brown-mid) !important; }
+
+html.dark-mode .myths-banner,
+html.dark-mode .myths-cta       { background: var(--dm-bg-surface) !important; }
+html.dark-mode .myths-banner-text h2,
+html.dark-mode .myths-cta h2    { color: var(--dm-brown-dark)  !important; }
+html.dark-mode .myths-banner-text p,
+html.dark-mode .myths-cta p     { color: var(--dm-text-muted)  !important; }
+
+html.dark-mode .review-peek {
+    background: var(--dm-bg-card)  !important;
+    border-color: var(--dm-border) !important;
+}
+html.dark-mode .peek-name  { color: var(--dm-brown-mid)   !important; }
+html.dark-mode .peek-text  { color: var(--dm-text-muted)  !important; }
+html.dark-mode .peek-stars { color: var(--dm-accent)      !important; }
+html.dark-mode .peek-cta   { color: var(--dm-brown-light) !important; }
+
+/* ══════════════════════════════════════════════════════════
+   PRODUCT PAGES  (laroche.ejs / cerave.ejs / uriage.ejs)
+   products.css + inline styles
+   ══════════════════════════════════════════════════════════ */
+html.dark-mode .brand-products-section { background-color: var(--dm-bg-page) !important; }
+
+html.dark-mode .product-grid     { background-color: var(--dm-bg-page) !important; }
+
+html.dark-mode .product-item {
+    background-color: var(--dm-bg-card) !important;
+    border-color: var(--dm-border)      !important;
+}
+html.dark-mode .product-details  { background-color: var(--dm-bg-surface) !important; }
+html.dark-mode .product-title    { color: var(--dm-text-primary) !important; }
+html.dark-mode .brand-label      { color: var(--dm-text-subtle)  !important; }
+html.dark-mode .current-price    { color: var(--dm-accent)       !important; }
+html.dark-mode .image-wrap       { background-color: var(--dm-bg-card) !important; }
+
+html.dark-mode .brand-card:hover .brand-circle {
+    border-color: var(--dm-bg-page) !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   MYTH VS FACT PAGE  (mythvsfact.css)
+   ══════════════════════════════════════════════════════════ */
+html.dark-mode .myths-hero         { background-color: var(--dm-bg-page)    !important; }
+html.dark-mode .myths-hero-title   { color: var(--dm-brown-dark)  !important; }
+html.dark-mode .myths-hero-sub     { color: var(--dm-text-muted)  !important; }
+html.dark-mode .myths-ticker       { background: #0e0a07          !important; }
+html.dark-mode .myth-front {
+    background: var(--dm-bg-card) !important;
+    border-color: var(--dm-border) !important;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.3) !important;
+}
+html.dark-mode .myth-back {
+    background: linear-gradient(135deg, #3a2a1e 0%, #2a1f16 100%) !important;
+    border-color: var(--dm-border-strong) !important;
+}
+html.dark-mode .myth-text     { color: var(--dm-brown-dark) !important; }
+html.dark-mode .myth-tap-hint { color: var(--dm-text-subtle) !important; }
+html.dark-mode .truth-heading { color: var(--dm-brown-dark) !important; }
+html.dark-mode .truth-body    { color: var(--dm-text-muted)  !important; }
+html.dark-mode .truth-label   { color: var(--dm-brown-light) !important; }
+html.dark-mode .myths-progress{ color: var(--dm-brown-light) !important; }
+html.dark-mode .myths-cta::before { color: rgba(163,108,69,0.04) !important; }
+
+/* ══════════════════════════════════════════════════════════
+   QUIZ PAGE  (quiz.css)
+   ══════════════════════════════════════════════════════════ */
+html.dark-mode .quiz-body,
+html.dark-mode .top-bar       { background: var(--dm-bg-page) !important; }
+html.dark-mode body.quiz-page { background: var(--dm-bg-page) !important; }
+html.dark-mode .q-title       { color: #d0c8f0 !important; }
+html.dark-mode .q-sub,
+html.dark-mode .q-hint        { color: var(--dm-text-muted) !important; }
+html.dark-mode .q-note        {
+    background: var(--dm-bg-surface) !important;
+    color: var(--dm-text-primary)    !important;
+}
+html.dark-mode .opt-card {
+    background: var(--dm-bg-card) !important;
+    color: #d0c8f0                !important;
+    border-color: var(--dm-border) !important;
+}
+html.dark-mode .opt-card:hover  { border-color: #8878d8 !important; }
+html.dark-mode .img-card,
+html.dark-mode .goal-card       { background: var(--dm-bg-card) !important; border-color: var(--dm-border) !important; }
+html.dark-mode .img-card-body strong,
+html.dark-mode .goal-label      { color: #d0c8f0 !important; }
+html.dark-mode .img-card-body span { color: var(--dm-text-muted) !important; }
+html.dark-mode .intro-card      { background: var(--dm-bg-card) !important; }
+html.dark-mode .q-textarea {
+    background: var(--dm-input-bg)    !important;
+    color: var(--dm-text-primary)     !important;
+    border-color: var(--dm-border-strong) !important;
+}
+html.dark-mode .seg             { background: #444 !important; }
+html.dark-mode .brand-label.quiz { color: #d0c8f0 !important; }
+html.dark-mode .result-item     { background: var(--dm-bg-card) !important; }
+html.dark-mode .result-title    { color: #d0c8f0 !important; }
+html.dark-mode .result-desc     { color: var(--dm-text-muted) !important; }
+html.dark-mode .result-item-text strong { color: #d0c8f0 !important; }
+html.dark-mode .result-item-text span   { color: var(--dm-text-subtle) !important; }
+
+/* ══════════════════════════════════════════════════════════
+   CART PAGE  (cart.css)
+   ══════════════════════════════════════════════════════════ */
+html.dark-mode .cart-heading  { color: var(--dm-brown-mid)  !important; }
+html.dark-mode .cart-item {
+    background: var(--dm-bg-card) !important;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3) !important;
+}
+html.dark-mode .cart-item-name  { color: var(--dm-text-primary) !important; }
+html.dark-mode .cart-item-price { color: var(--dm-text-muted)   !important; }
+html.dark-mode .qty-count       { color: var(--dm-text-primary) !important; }
+html.dark-mode .qty-btn {
+    border-color: var(--dm-brown-mid) !important;
+    color: var(--dm-brown-mid)        !important;
+}
+html.dark-mode .qty-btn:hover {
+    background: var(--dm-brown-mid) !important;
+    color: #fff !important;
+}
+html.dark-mode .cart-item-total { color: var(--dm-accent) !important; }
+html.dark-mode .cart-summary {
+    background: var(--dm-bg-card) !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.35) !important;
+}
+html.dark-mode .cart-summary h2 { color: var(--dm-brown-mid)   !important; }
+html.dark-mode .summary-row     { color: var(--dm-text-muted)  !important; }
+html.dark-mode .total-row       {
+    color: var(--dm-text-primary)  !important;
+    border-top-color: var(--dm-border) !important;
+}
+html.dark-mode .btn-continue-shop { color: var(--dm-brown-mid) !important; }
+html.dark-mode .empty-msg p       { color: var(--dm-text-muted) !important; }
+
+/* ══════════════════════════════════════════════════════════
+   LOGIN / SIGNUP PAGE  (login.css)
+   ══════════════════════════════════════════════════════════ */
+html.dark-mode .auth-form-panel   { background: #221a14 !important; }
+html.dark-mode .auth-title        { color: var(--dm-text-primary)  !important; }
+html.dark-mode .auth-subtitle     { color: var(--dm-text-muted)    !important; }
+html.dark-mode .auth-eyebrow      { color: var(--dm-brown-light)   !important; }
+html.dark-mode .field label       { color: var(--dm-brown-mid)     !important; }
+html.dark-mode .field input {
+    background:   var(--dm-input-bg)     !important;
+    border-color: var(--dm-input-border) !important;
+    color:        var(--dm-input-text)   !important;
+}
+html.dark-mode .field input:focus {
+    border-color: var(--dm-brown-light) !important;
+    box-shadow: 0 0 0 3px rgba(163,108,69,0.18) !important;
+    background: var(--dm-bg-surface) !important;
+}
+html.dark-mode .auth-divider::before,
+html.dark-mode .auth-divider::after { background: var(--dm-border) !important; }
+html.dark-mode .auth-link           { color: var(--dm-text-muted)  !important; }
+html.dark-mode .auth-link a         { color: var(--dm-brown-mid)   !important; }
+html.dark-mode .error-msg {
+    background: rgba(192,57,43,0.15) !important;
+    color: #f5a0a0 !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   ABOUT PAGE  (newstyle.css)
+   ══════════════════════════════════════════════════════════ */
+html.dark-mode .about-section { background: var(--dm-bg-page) !important; }
+html.dark-mode .main-title    { color: var(--dm-brown-mid)    !important; }
+html.dark-mode .sub-title     { color: var(--dm-brown-dark)   !important; }
+html.dark-mode .body-text     { color: var(--dm-text-muted)   !important; }
+html.dark-mode .image-frame   {
+    background: var(--dm-bg-surface) !important;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.4) !important;
+}
+html.dark-mode .curated-section,
+html.dark-mode .matching-section,
+html.dark-mode .reviews-section { background: var(--dm-bg-page) !important; }
+
+/* ══════════════════════════════════════════════════════════
+   SKIN ADVISOR PAGE  (inline styles in skinAdvisor.ejs)
+   ══════════════════════════════════════════════════════════ */
+html.dark-mode .advisor-hero {
+    background: linear-gradient(160deg, #1a1410 0%, #18120e 100%) !important;
+}
+html.dark-mode .advisor-hero h1   { color: var(--dm-text-primary) !important; }
+html.dark-mode .advisor-hero p    { color: var(--dm-text-muted)   !important; }
+html.dark-mode .advisor-hero .eyebrow { color: var(--dm-brown-light) !important; }
+html.dark-mode .city-form {
+    background: var(--dm-bg-card)   !important;
+    border-color: var(--dm-border)  !important;
+    box-shadow: 0 2px 18px rgba(0,0,0,0.3) !important;
+}
+html.dark-mode #cityInput {
+    color: var(--dm-text-primary) !important;
+    background: transparent       !important;
+}
+html.dark-mode .weather-banner {
+    background: var(--dm-bg-card)  !important;
+    border-color: var(--dm-border) !important;
+}
+html.dark-mode .city-name    { color: var(--dm-text-primary) !important; }
+html.dark-mode .stat .val    { color: var(--dm-brown-light)  !important; }
+html.dark-mode .stat .lbl    { color: var(--dm-text-subtle)  !important; }
+html.dark-mode .advice-card  {
+    background: var(--dm-bg-card)  !important;
+    border-color: var(--dm-border) !important;
+}
+html.dark-mode .advice-card h3 { color: var(--dm-brown-light) !important; }
+html.dark-mode .tip-list li    {
+    background: var(--dm-bg-surface) !important;
+    border-left-color: var(--dm-brown-light) !important;
+    color: var(--dm-text-primary) !important;
+}
+html.dark-mode .tag-chip {
+    background: var(--dm-bg-surface) !important;
+    border-color: var(--dm-border)   !important;
+    color: var(--dm-brown-light)     !important;
+}
+html.dark-mode .tag-chip:hover {
+    background: var(--dm-brown-light) !important;
+    color: #fff !important;
+}
+html.dark-mode .fact-card {
+    background: var(--dm-bg-card)  !important;
+    border-color: var(--dm-border) !important;
+}
+html.dark-mode .fact-label { color: var(--dm-brown-light)  !important; }
+html.dark-mode .fact-card p { color: var(--dm-text-muted) !important; }
+html.dark-mode .urgency-strip.urg-low {
+    background: #0e2018 !important; border-color: #1a5030 !important; color: #6adba0 !important;
+}
+html.dark-mode .urgency-strip.urg-medium {
+    background: #1e1800 !important; border-color: #5a4000 !important; color: #f0c040 !important;
+}
+html.dark-mode .urgency-strip.urg-high {
+    background: #200808 !important; border-color: #601010 !important; color: #f08080 !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   PROFILE PAGE  (inline styles in profile.ejs)
+   ══════════════════════════════════════════════════════════ */
+html.dark-mode .profile-sidebar {
+    background: var(--dm-bg-surface) !important;
+    border-right-color: var(--dm-border) !important;
+}
+html.dark-mode .profile-form-panel { background: var(--dm-bg-page) !important; }
+html.dark-mode .profile-title      { color: var(--dm-brown-mid)   !important; }
+
+/* ══════════════════════════════════════════════════════════
+   ADMIN PAGE  (admin.css)
+   ══════════════════════════════════════════════════════════ */
+html.dark-mode .main-content  { background: var(--dm-bg-page) !important; color: var(--dm-text-primary) !important; }
+html.dark-mode h1             { color: var(--dm-brown-mid)    !important; }
+html.dark-mode .card {
+    background: var(--dm-bg-surface) !important;
+    border-color: var(--dm-border)   !important;
+}
+html.dark-mode table          { background: var(--dm-bg-card)    !important; }
+html.dark-mode th {
+    background: var(--dm-bg-surface) !important;
+    color: var(--dm-brown-mid)       !important;
+}
+html.dark-mode td {
+    border-bottom-color: var(--dm-border)  !important;
+    color: var(--dm-text-primary)          !important;
+}
+html.dark-mode .input-group.admin-input { background: var(--dm-bg-card) !important; }
+html.dark-mode input {
+    background: var(--dm-input-bg)    !important;
+    border-color: var(--dm-border)    !important;
+    color: var(--dm-input-text)       !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   404 / 500 ERROR PAGES
+   ══════════════════════════════════════════════════════════ */
+html.dark-mode .error-page,
+html.dark-mode .error-container { background: var(--dm-bg-page) !important; }
+html.dark-mode .error-page h1,
+html.dark-mode .error-page h2   { color: var(--dm-brown-mid)   !important; }
+html.dark-mode .error-page p    { color: var(--dm-text-muted)  !important; }
+
+/* ── Footer bottom strip & full page background ── */
+html.dark-mode html,
+html.dark-mode body,
+html.dark-mode .footer,
+html.dark-mode .footer-brand,
+html.dark-mode footer .footer-brand {
+    background-color: var(--dm-bg-page) !important;
+}
+
+/* Catch any leftover beige/cream backgrounds site-wide */
+html.dark-mode [style*="background-color: rgb(233"],
+html.dark-mode [style*="background-color:rgb(233"] {
+    background-color: var(--dm-bg-page) !important;
+}
+
+/* ── Hero title readable in dark mode ── */
+html.dark-mode .hero-title,
+html.dark-mode .hero-title b,
+html.dark-mode .hero-title span,
+html.dark-mode .hero-content h1,
+html.dark-mode .hero-content h1 b,
+html.dark-mode .hero-content h1 span {
+    color: #ffffff !important;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8) !important;
+}

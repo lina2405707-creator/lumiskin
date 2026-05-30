@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uriage | LumiSkin</title>
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/products.css">
+    <link rel="stylesheet" href="/css/darkmode.css">
+    <link rel="stylesheet" href="/css/rtl.css">
+</head>
+<body>
+<%- include('partials/header') %>
+
+<section class="brand-products-section" style="padding-top: 100px;">
+    <div style="padding: 20px 5% 0 5%;">
+        <a href="/#brand-section"
+           data-i18n="product.back"
+           style="text-decoration:none; color:#1a1a1a; font-weight:600; font-size:13px; letter-spacing:0.1em; text-transform:uppercase;">← Back to Brands</a>
+    </div>
+
+    <div class="product-grid" style="padding: 40px 5%;">
+        <% if (products.length === 0) { %>
+            <p data-i18n="product.none"
+               style="text-align:center; color:#888; padding:60px;">No products found.</p>
+        <% } %>
+
+        <% products.forEach(product => { %>
+        <div class="product-item">
+            <div class="image-wrap">
+                <span class="tag-promo"><%= product.tag %></span>
+                <img src="<%= product.image && product.image.startsWith('/') ? product.image : '/images/' + product.image %>"
+                     alt="<%= product.name %>" class="img-primary">
+                <img src="<%= product.image2 && product.image2.startsWith('/') ? product.image2 : '/images/' + product.image2 %>"
+                     alt="<%= product.name %>" class="img-secondary">
+                <button class="add-to-cart-btn"
+                        data-i18n="product.addToCart"
+                        onclick="addToCart('<%= product.name %>', <%= product.price %>)">
+                    Add To Cart
+                </button>
+                <% if (role === 'admin') { %>
+                <a href="/admin/delete-product/<%= product._id %>"
+                   data-i18n="product.remove"
+                   onclick="return confirm('Delete this product?')"
+                   style="position:absolute; top:10px; right:10px; background:rgba(192,57,43,0.9);
+                          color:white; padding:6px 12px; border-radius:6px;
+                          text-decoration:none; font-size:11px; font-weight:700;
+                          letter-spacing:0.05em; z-index:10;">
+                   ✕ Remove
+                </a>
+                <% } %>
+            </div>
+            <div class="product-details">
+                <span class="brand-label">URIAGE</span>
+                <h3 class="product-title"><%= product.name %></h3>
+                <div class="price-row">
+                    <span class="current-price"><%= product.price %> <span data-i18n="product.currency">EGP</span></span>
+                    <% if (role === 'admin') { %>
+                    <a href="/admin/edit-product/<%= product._id %>"
+                       data-i18n="product.edit"
+                       style="font-size:11px; color:rgb(147,97,62); font-weight:700;
+                              text-decoration:underline; margin-left:12px;">
+                       Edit
+                    </a>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        <% }) %>
+    </div>
+</section>
+
+<script src="/js/product.js"></script>
+</body>
+</html>

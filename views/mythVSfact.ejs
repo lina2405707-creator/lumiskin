@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumiskin — Skin Myths Busted</title>
+  <link rel="stylesheet" href="/css/mythvsfact.css">
+  <link rel="stylesheet" href="/css/darkmode.css">
+  <link rel="stylesheet" href="/css/rtl.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+  <%- include('partials/header') %>
+
+  <!-- Hero -->
+  <div class="myths-hero">
+    <p class="myths-eyebrow" data-i18n="myth.page.eyebrow">Skincare Decoded</p>
+    <h1 class="myths-hero-title" data-i18n="myth.page.title">Myth or <em>Truth?</em><br>Let's Fact Check.</h1>
+    <p class="myths-hero-sub" data-i18n="myth.page.sub">Your skin has been lied to. Tap each card to reveal the real science behind the myth.</p>
+    <div class="myths-score-pill">
+      <i class="fas fa-star"></i>
+      <span id="scoreCount">0</span>
+      <span data-i18n="myth.page.score">myths busted so far</span>
+    </div>
+  </div>
+
+  <!-- Ticker -->
+  <div class="myths-ticker">
+    <div class="myths-ticker-inner" id="mythsTicker">
+      <span data-i18n="myth.ticker.1">SPF is only for summer</span>
+      <span data-i18n="myth.ticker.2">You need to feel the burn to know it's working</span>
+      <span data-i18n="myth.ticker.3">Drinking water gives you clear skin</span>
+      <span data-i18n="myth.ticker.4">Natural always means safe</span>
+      <span data-i18n="myth.ticker.5">Pores can open and close</span>
+      <span data-i18n="myth.ticker.6">You should exfoliate every day</span>
+      <span data-i18n="myth.ticker.7">Oily skin doesn't need moisturizer</span>
+      <span data-i18n="myth.ticker.8">Expensive skincare is always better</span>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <p class="myths-progress" id="progressText" data-i18n="myth.page.flip">Flip the cards to reveal the truth ↓</p>
+
+  <!-- Cards grid -->
+  <div class="myths-grid" id="mythsGrid"></div>
+
+  <!-- CTA -->
+  <div class="myths-cta">
+    <h2 data-i18n="myth.cta.heading">Ready for a routine <em>built for you?</em></h2>
+    <p data-i18n="myth.cta.sub">Skip the guesswork. Take our skin quiz and get a personalized routine in minutes.</p>
+    <a href="/quiz" class="btn-formula"
+       data-i18n="myth.cta.btn"
+       style="margin:0 auto;display:inline-block;">Find my formula →</a>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-top">
+      <div class="footer-newsletter">
+        <h2 data-i18n="footer.tagline">Your Best Skin<br>Starts Here</h2>
+        <p data-i18n="footer.sub">Join our community and receive expert insights.</p>
+        <div class="input-group">
+          <input type="email"
+                 data-i18n-ph="footer.email.ph"
+                 placeholder="Enter an email address">
+          <button type="button">↗</button>
+        </div>
+      </div>
+      <div class="footer-nav">
+        <div class="nav-col">
+          <h4 data-i18n="footer.discover">Discover</h4>
+          <ul>
+            <li><a href="/"               data-i18n="footer.home">Home</a></li>
+            <li><a href="/about"          data-i18n="footer.about">About</a></li>
+            <li><a href="/#brand-section" data-i18n="footer.product">Product</a></li>
+            <li><a href="/mythvsfact"     data-i18n="myth.page.link">Skin Myths</a></li>
+          </ul>
+        </div>
+        <div class="nav-col">
+          <h4 data-i18n="footer.contact">Contact</h4>
+          <p><strong>LumiSkin Cairo</strong> <span data-i18n="footer.cairo">Cairo, Egypt</span></p>
+          <p><strong>LumiSkin Alexandria</strong> <span data-i18n="footer.alex">Alexandria, Egypt</span></p>
+        </div>
+        <div class="nav-col">
+          <h4 data-i18n="footer.social">Social Media</h4>
+          <ul>
+            <li><a href="#">Instagram</a></li>
+            <li><a href="#">Facebook</a></li>
+          </ul>
+        </div>
+        <div class="nav-col">
+          <h4 data-i18n="footer.help">Help & Support</h4>
+          <ul>
+            <li><a href="#" data-i18n="footer.faq">FAQ</a></li>
+            <li><a href="#" data-i18n="footer.privacy">Privacy Policy</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-brand">
+      <h1>LumiSkin</h1>
+    </div>
+  </footer>
+
+  <script src="/js/i18n.js"></script>
+  <script src="/js/mythvsfact.js"></script>
+
+</body>
+</html>

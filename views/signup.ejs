@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account — Lumiskin</title>
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="/css/darkmode.css">
+    <link rel="stylesheet" href="/css/rtl.css">
+</head>
+
+<body>
+
+<%- include('partials/header') %>
+
+<div class="auth-layout">
+    <!-- Left: Image -->
+    <div class="auth-image">
+        <img src="/images/skin2.jpg" alt="Skincare">
+        <div class="auth-image-overlay"></div>
+        <div class="auth-image-quote">
+            <p data-i18n="signup.quote">"Invest in your skin. It's going to represent you for a very long time."</p>
+            <span data-i18n="signup.philosophy">Lumiskin Philosophy</span>
+        </div>
+    </div>
+
+    <!-- Right: Form -->
+    <div class="auth-form-panel">
+        <div class="auth-form-box">
+            <p class="auth-eyebrow" data-i18n="signup.eyebrow">Join Lumiskin</p>
+            <h1 class="auth-title"  data-i18n="signup.title">Create Account</h1>
+            <p class="auth-subtitle" data-i18n="signup.subtitle">Start your personalized skincare journey today.</p>
+
+            <% if (error !== '') { %>
+                <div class="error-msg"><%= error %></div>
+            <% } %>
+
+            <form action="/user/signup" method="POST" onsubmit="return validateLogin()">
+                <div class="field-row">
+                    <div class="field">
+                        <label data-i18n="signup.fname">First Name</label>
+                        <input type="text" name="fname"
+                               data-i18n-ph="signup.fname.ph"
+                               placeholder="Nour" required>
+                    </div>
+                    <div class="field">
+                        <label data-i18n="signup.lname">Last Name</label>
+                        <input type="text" name="lname"
+                               data-i18n-ph="signup.lname.ph"
+                               placeholder="Ahmed" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label data-i18n="login.email">Email Address</label>
+                    <input type="email" name="email"
+                           data-i18n-ph="login.email.ph"
+                           placeholder="you@example.com" required>
+                </div>
+
+                <div class="field">
+                    <label data-i18n="login.password">Password</label>
+                    <input type="password" name="password"
+                           data-i18n-ph="signup.password.ph"
+                           placeholder="Min 8 characters" required>
+                </div>
+
+                <div class="field">
+                    <label data-i18n="signup.confirm">Confirm Password</label>
+                    <input type="password" name="confirmPassword"
+                           data-i18n-ph="signup.confirm.ph"
+                           placeholder="Repeat your password" required>
+                </div>
+
+                <button type="submit" class="auth-btn" data-i18n="signup.btn">Create Account</button>
+            </form>
+
+            <div class="auth-divider"><span data-i18n="login.or">or</span></div>
+
+            <p class="auth-link">
+                <span data-i18n="signup.hasAccount">Already have an account?</span>
+                <a href="/user/login" data-i18n="signup.signin">Sign in</a>
+            </p>
+
+            <p class="terms-note" data-i18n="signup.terms">
+                By creating an account, you agree to our privacy policy and terms of service.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script src="/js/auth.js"></script>
+</body>
+</html>

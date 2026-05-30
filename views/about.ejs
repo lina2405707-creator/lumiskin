@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Lumiskin - Personalized Skincare</title>
+    <link rel="stylesheet" href="/css/newstyle.css">
+    <link rel="stylesheet" href="/css/darkmode.css">
+    <link rel="stylesheet" href="/css/rtl.css">
+</head>
+<body>
+
+    <%- include('partials/header') %>
+
+    <section class="about-section">
+        <div class="header-container">
+            <h1 class="main-title" data-i18n="about.title">Why Lumiskin</h1>
+        </div>
+        <div class="content-grid">
+            <div class="image-col visible">
+                <div class="image-frame">
+                    <img src="/images/dr.png.jfif" alt="Lumiskin Dermatology professional">
+                </div>
+            </div>
+            <div class="text-col visible">
+                <h2 class="sub-title" data-i18n="about.s1.heading">Expert-informed skincare guide</h2>
+                <p class="body-text" data-i18n="about.s1.p1">
+                    At Lumiskin, we provide a dedicated platform for individuals navigating the
+                    complexities of skin health. By combining professional dermatology research
+                    with an interactive assessment quiz, we accurately identify your unique
+                    skin type and specific concerns.
+                </p>
+                <p class="body-text" data-i18n="about.s1.p2">
+                    Our mission is to move beyond generic advice, providing you with a personalized 
+                    skincare routine and carefully curated product recommendations.
+                    At Lumiskin, we guide you confidently through your skincare journey,
+                    making expert knowledge accessible and reliable for everyone.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="curated-section">
+        <div class="content-grid">
+            <div class="text-col visible">
+                <h2 class="sub-title" data-i18n="about.s2.heading">Meet your personalized routine</h2>
+                <p class="body-text" data-i18n="about.s2.p1">
+                    Based on your unique skin assessment, we've curated a personalized kit featuring high-quality,
+                    clinical-grade products that work synergistically for you. From international standards like 
+                    La Roche-Posay, every item is hand-selected to meet your specific skin barrier needs.
+                </p>
+            </div>
+            <div class="image-col visible">
+                <div class="image-frame">
+                    <img src="/images/kit.png.png" alt="Lumiskin Curated routine">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="matching-section">
+        <div class="content-grid">
+            <div class="image-col visible">
+                <div class="image-frame special-shadow">
+                    <img src="/images/Model.jpg.jfif" alt="Clinical results on skin">
+                </div>
+            </div>
+            <div class="text-col visible">
+                <h2 class="sub-title" data-i18n="about.s3.heading">The power of Clinical Matching</h2>
+                <p class="body-text" data-i18n="about.s3.p1">
+                    Real results come from dermatology-informed logic. 
+                    Lumiskin uses research to filter through the noise 
+                    of the skincare industry, identifying the formulations 
+                    that actually work for your skin profile.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="reviews-section">
+        <div class="reviews-header">
+            <h1 class="main-title" data-i18n="about.reviews.heading">Real Transformations</h1>
+            <p class="reviews-subtitle" data-i18n="about.reviews.sub">Real skin. Real people. Real transformations.</p>
+        </div>
+        <div class="content-grid">
+            <div class="text-col visible">
+                <p class="review-duration" data-i18n="about.review.duration">After 4 Months</p>
+                <h2 class="sub-title" data-i18n="about.review.title">I finally enjoy my skincare routine</h2>
+                <p class="body-text" data-i18n="about.review.quote">
+                    "I realized I was using the wrong active ingredients for my specific barrier type. 
+                    After 4 months of my Clinical Matching protocol, the inflammation has subsided 
+                    and my skin texture is finally smooth."
+                </p>
+                <p class="review-author" data-i18n="about.review.author">— Sara, Cairo</p>
+            </div>
+            <div class="image-col visible">
+                <div class="image-frame">
+                    <img src="/images/before&after-2.jpg.jfif" alt="before and after">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="footer-newsletter">
+                <h2 data-i18n="footer.tagline">Your Best Skin<br>Starts Here</h2>
+                <p data-i18n="footer.sub">Join our community and receive expert insights.</p>
+                <div class="input-group">
+                    <input type="email"
+                           data-i18n-ph="footer.email.ph"
+                           placeholder="Enter an email address">
+                    <button type="submit">↗️</button>
+                </div>
+            </div>
+            <div class="footer-nav">
+                <div class="nav-col">
+                    <h4 data-i18n="footer.discover">Discover</h4>
+                    <ul>
+                        <li><a href="/"               data-i18n="footer.home">Home</a></li>
+                        <li><a href="/about"           data-i18n="footer.about">About</a></li>
+                        <li><a href="/#brand-section" data-i18n="footer.product">Product</a></li>
+                        <li><a href="/#reviews-section" data-i18n="footer.reviews">Reviews</a></li>
+                    </ul>
+                </div>
+                <div class="nav-col">
+                    <h4 data-i18n="footer.contact">Contact</h4>
+                    <p><strong>LumiSkin Branches</strong><br>
+                       <span data-i18n="footer.cairo">Cairo, Egypt</span></p>
+                    <p><strong>LumiSkin Branches</strong><br>
+                       <span data-i18n="footer.alex">Alexandria, Egypt</span></p>
+                </div>
+                <div class="nav-col">
+                    <h4 data-i18n="footer.social">Social Media</h4>
+                    <ul>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">Facebook</a></li>
+                    </ul>
+                </div>
+                <div class="nav-col">
+                    <h4 data-i18n="footer.help">Help & Support</h4>
+                    <ul>
+                        <li><a href="#" data-i18n="footer.faq">FAQ</a></li>
+                        <li><a href="#" data-i18n="footer.privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-brand">
+            <h1>LumiSkin</h1>
+        </div>
+    </footer>
+
+</body>
+</html>

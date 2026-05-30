@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit User | Lumiskin Admin</title>
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+
+<nav class="sidebar">
+    <h2>LUMISKIN</h2>
+    <p style="color:#ccc; font-size:13px; padding: 0 16px;">Welcome, <%= user %></p>
+    <ul>
+        <li onclick="window.location.href='/admin'">Overview</li>
+        <li onclick="window.location.href='/admin'">Manage Products</li>
+        <li onclick="window.location.href='/admin'">Manage Users</li>
+    </ul>
+    <a href="/user/logout" style="color:#ccc; padding:16px; display:block;">Logout</a>
+</nav>
+
+<main class="main-content">
+    <div class="management-section">
+        <h1>Edit User</h1>
+        <form action="/admin/edit-user/<%= editUser._id %>" method="POST"
+              style="display:flex; flex-direction:column; gap:15px; max-width:500px;">
+
+            <div>
+                <label>Full Name</label><br>
+                <input type="text" name="name" 
+                       value="<%= editUser.name %>" required
+                       style="width:100%; padding:8px; margin-top:5px;">
+            </div>
+
+            <div>
+                <label>Email</label><br>
+                <input type="text" name="email" 
+                       value="<%= editUser.email %>" required
+                       style="width:100%; padding:8px; margin-top:5px;">
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button type="submit" class="btn-add">Save Changes</button>
+                <a href="/admin" 
+                   style="padding:8px 16px; background:#888; color:white; 
+                          text-decoration:none; border-radius:4px;">
+                   Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</main>
+
+</body>
+</html>

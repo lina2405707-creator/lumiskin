@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LumiSkin – Cart</title>
+    <link rel="stylesheet" href="/css/cart.css">
+    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="/css/darkmode.css">
+    <link rel="stylesheet" href="/css/rtl.css">
+</head>
+<body>
+
+<%- include('partials/header') %>
+
+<main class="cart-main">
+    <h1 class="cart-heading" data-i18n="cart.heading">Your Cart</h1>
+
+    <div class="cart-layout">
+        <div class="cart-items-panel">
+            <div id="emptyMsg" class="empty-msg" style="display:none;">
+                <p data-i18n="cart.empty">Your cart is empty.</p>
+                <a href="/#brand-section" class="btn-shop" data-i18n="cart.continue">Continue Shopping</a>
+            </div>
+            <ul id="cartItems" class="cart-list"></ul>
+        </div>
+
+        <div class="cart-summary" id="cartSummary" style="display:none;">
+            <h2 data-i18n="cart.summary">Order Summary</h2>
+            <div class="summary-row">
+                <span data-i18n="cart.subtotal">Subtotal</span>
+                <span id="subtotal">0 EGP</span>
+            </div>
+            <div class="summary-row">
+                <span data-i18n="cart.shipping">Shipping</span>
+                <span data-i18n="cart.free">Free</span>
+            </div>
+            <div class="summary-row total-row">
+                <span data-i18n="cart.total">Total</span>
+                <span id="totalAmount">0 EGP</span>
+            </div>
+            <button class="btn-checkout" data-i18n="cart.checkout" onclick="checkout()">Proceed to Checkout</button>
+            <a href="/#brand-section" class="btn-continue-shop" data-i18n="cart.back">← Continue Shopping</a>
+        </div>
+    </div>
+</main>
+
+<script src="/js/cart.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,308 @@
+/* ════════════════════════════════════════════
+   LUMISKIN — Unified Header
+   Load this in partials/header.ejs only.
+   Remove ALL header CSS from other files.
+════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+    --font-heading: 'Playfair Display', serif;
+    --font-body:    'DM Sans', sans-serif;
+    --brown:        rgb(147, 97, 62);
+    --brown-dark:   rgb(83, 54, 30);
+    --beige:        rgba(233, 221, 206, 0.97);
+    --header-h:     76px;
+    --surface-white: #ffffff;
+    --text-dark:     #2b2520;
+    --text-muted:    #766e65;
+    --shadow-soft: 0 4px 20px rgba(83, 54, 30, 0.05);
+    --shadow-hover: 0 12px 32px rgba(83, 54, 30, 0.12);
+    --radius-premium: 16px;
+    --radius-interactive: 8px;
+    --transition-smooth: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* ── Global font ── */
+body, p, a, span, li, label, input,
+textarea, button, td, th, select {
+    font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, h5,
+.logotext, .auth-title, .profile-title,
+.cart-heading, .brand-title, .main-title,
+.sub-title, .myths-hero-title, .myths-cta h2,
+.login-title, .signup-title {
+    font-family: var(--font-heading);
+}
+
+/* ── Body offset ── */
+body            { padding-top: var(--header-h); }
+body.home-page  { padding-top: 0; }
+
+/* ── Header shell ── */
+header {
+    width: 100%;
+    height: var(--header-h);
+    position: fixed;
+    top: 0; left: 0;
+    z-index: 1000;
+    background: var(--beige);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(147, 97, 62, 0.13);
+    transition: transform 0.38s cubic-bezier(.4,0,.2,1),
+                background 0.38s ease,
+                border-color 0.38s ease,
+                box-shadow 0.38s ease;
+}
+
+/* ── Three-column grid → nav | logo | buttons ── */
+header .container {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    height: 100%;
+    padding: 0 48px;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ── Logo — always centred ── */
+header .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+header .logotext {
+    font-family: var(--font-heading);
+    font-size: 40px;
+    font-weight: 500;
+    font-style: italic;
+    color: var(--brown);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    transition: color 0.35s;
+}
+
+/* ── Left nav ── */
+header nav ul,
+header nav ul.navbuttons {
+    list-style: none;
+    display: flex;
+    gap: 32px;
+    margin: 0; padding: 0;
+}
+
+header nav a {
+    font-family: var(--font-body);
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--brown);
+    text-decoration: none;
+    position: relative;
+    padding-bottom: 3px;
+    transition: opacity 0.25s;
+}
+
+header nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 1px;
+    background: var(--brown);
+    transition: width 0.3s ease;
+}
+
+header nav a:hover { opacity: 0.7; }
+header nav a:hover::after { width: 100%; }
+
+/* ── Right buttons ── */
+header .nav-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+header .btn-secondary,
+header .btn-primary {
+    font-family: var(--font-body);
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--brown);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 18px;
+    border-radius: 50px;
+    border: 1px solid rgba(147, 97, 62, 0.32);
+    background: transparent;
+    white-space: nowrap;
+    transition: background 0.25s, color 0.25s, border-color 0.25s, transform 0.2s;
+    cursor: pointer;
+}
+
+header .btn-secondary:hover,
+header .btn-primary:hover {
+    background: var(--brown);
+    color: #fff;
+    border-color: var(--brown);
+    transform: translateY(-1px);
+}
+
+/* ── Scroll states ── */
+header.hidden   { transform: translateY(-100%); }
+header.scrolled { box-shadow: 0 4px 20px rgba(83,54,30,0.1); }
+
+/* ── Transparent (home page at top) ── */
+header.transparent {
+    background: transparent;
+    border-bottom-color: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}
+
+header.transparent .logotext,
+header.transparent nav a,
+header.transparent .btn-secondary,
+header.transparent .btn-primary {
+    color: #fff;
+}
+
+header.transparent nav a::after      { background: #fff; }
+header.transparent .btn-secondary,
+header.transparent .btn-primary      { border-color: rgba(255,255,255,0.4); }
+
+header.transparent .btn-secondary:hover,
+header.transparent .btn-primary:hover {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+} 
+html {
+    scroll-behavior: smooth;
+    background-color: var(--beige);
+}
+
+body {
+    color: var(--text-dark);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Premium Text Highlighting */
+::selection {
+    background-color: var(--brown);
+    color: var(--surface-white);
+} 
+/* ════════════════════════════════════════════
+   ADD TO BOTTOM OF header.css
+   Language switcher button styles
+════════════════════════════════════════════ */
+
+/* ── Language toggle button ── */
+#lang-switcher {
+    font-family: var(--font-heading);
+    font-size: 17px;
+    font-weight: 600;
+    font-style: normal;
+    letter-spacing: 0.05em;
+    min-width: 44px;
+    padding: 8px 14px;
+    /* inherits .btn-secondary styles from header.css */
+}
+
+/* Arabic label uses Cairo font when shown */
+[dir="rtl"] #lang-switcher {
+    font-family: 'Cairo', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0;
+}
+
+/* Subtle highlight to distinguish from nav buttons */
+#lang-switcher {
+    border-style: dashed;
+}
+
+#lang-switcher:hover {
+    border-style: solid;
+}
+
+/* Transparent header state */
+header.transparent #lang-switcher {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+header.transparent #lang-switcher:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+/* ═══════════════════════════════════════════
+   ADD TO BOTTOM OF header.css
+   Fixes nav overflow + lang button sizing
+   ═══════════════════════════════════════════ */
+
+/* Prevent nav links from wrapping */
+header nav a {
+    white-space: nowrap;
+}
+
+/* Shrink font slightly so 4 items + logo + buttons all fit */
+header nav a,
+header .btn-secondary,
+header .btn-primary {
+    font-size: 15px;
+}
+
+/* Tighter gap between nav items */
+header nav ul,
+header nav ul.navbuttons {
+    gap: 20px;
+}
+
+/* Tighter gap between right buttons */
+header .nav-buttons {
+    gap: 6px;
+}
+
+/* Lang button — compact */
+#lang-switcher {
+    padding: 8px 12px;
+    min-width: 40px;
+    font-size: 15px;
+    border-style: dashed;
+}
+
+#lang-switcher:hover {
+    border-style: solid;
+}
+
+/* Transparent state */
+header.transparent #lang-switcher {
+    color: #fff;
+    border-color: rgba(255,255,255,0.45);
+}
+header.transparent #lang-switcher:hover {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+}
+
+/* RTL: no letter-spacing on Arabic nav text */
+[dir="rtl"] header nav a,
+[dir="rtl"] header .btn-secondary,
+[dir="rtl"] header .btn-primary,
+[dir="rtl"] #lang-switcher {
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 15px;
+}

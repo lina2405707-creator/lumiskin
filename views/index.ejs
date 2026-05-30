@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<!--
+    data-i18n attributes are read by /js/i18n.js on every page load.
+    The script replaces textContent with the correct language string.
+    Fallback text (English) is always present for non-JS environments.
+-->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumiskin</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/reviews.css">
+    <link rel="stylesheet" href="/css/darkmode.css">
+    <script src="/js/reviews.js"></script>
+</head>
+
+<body class="home-page">
+    <%- include('partials/header') %>
+
+    <!-- ── Hero ── -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <b>
+                        <span data-i18n="hero.title">Discover the Secret to</span>
+                        <span data-i18n="hero.title.span" style="color:inherit"> Radiant Skin</span>
+                    </b>
+                </h1>
+                <a href="/quiz" class="btn-formula">
+                    <b data-i18n="hero.cta">Regain your formula</b>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Myth Teaser ── -->
+    <section class="myth-teaser">
+        <div class="teaser-content">
+            <div class="teaser-badge" data-i18n="myth.badge">myth vs fact?</div>
+            <h2>Think you know your <em data-i18n="myth.heading">skin?</em></h2>
+
+            <div class="teaser-cards">
+                <div class="mini-card">
+                    <span class="icon">☀️</span>
+                    <p data-i18n="myth.spf">SPF in winter?</p>
+                </div>
+                <div class="mini-card">
+                    <span class="icon">💧</span>
+                    <p data-i18n="myth.water">8 glasses of water?</p>
+                </div>
+                <div class="mini-card">
+                    <span class="icon">🌿</span>
+                    <p data-i18n="myth.natural">Natural = Safe?</p>
+                </div>
+            </div>
+
+            <a href="/myth-vs-fact" class="btn-myths-link" data-i18n="myth.cta">Test Your Skincare IQ →</a>
+        </div>
+    </section>
+
+    <!-- ── Reviews ── -->
+    <a id="reviews-section"></a>
+    <section class="reviews">
+        <p class="section-label" data-i18n="reviews.label">What our customers say</p>
+        <h1 class="heading"><span data-i18n="reviews.heading">Real <span>Results</span></span></h1>
+        <div class="divider"></div>
+
+        <div class="box-container" id="reviewsGrid">
+            <div class="box">
+                <img src="/images/img 1 girl.jpg" alt="Nour">
+                <h3>Nour</h3>
+                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <p>"Lumiskin completely cleared my redness. I've never felt more confident!"</p>
+            </div>
+            <div class="box">
+                <img src="/images/img 2 girl.jpg" alt="Jana">
+                <h3>Jana</h3>
+                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <p>"The glow is real! My dark circles have faded so much since I started."</p>
+            </div>
+            <div class="box">
+                <img src="/images/img 3 girl.jpg" alt="Lina">
+                <h3>Lina</h3>
+                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <p>"Targeting my hyperpigmentation was a struggle until I found Lumiskin."</p>
+            </div>
+            <div class="box">
+                <img src="/images/img 4 girl.jpg" alt="Hadeel">
+                <h3>Hadeel</h3>
+                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <p>"Acne-free for the first time in 5 years. This feels like a dream."</p>
+            </div>
+            <div class="box">
+                <img src="/images/img 5 girl.jpg" alt="Nouran">
+                <h3>Nouran</h3>
+                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <p>"The best skincare investment. The results speak for themselves."</p>
+            </div>
+            <div class="box">
+                <img src="/images/img 6 girl.jpg" alt="Dina">
+                <h3>Dina</h3>
+                <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                <p>"Lumiskin is now a permanent part of my life. My skin texture is 100% better."</p>
+            </div>
+        </div>
+
+        <!-- Add Review Form -->
+        <div class="add-review-wrapper">
+            <p class="form-title"   data-i18n="review.form.title">Share your glow ✨</p>
+            <p class="form-sub"     data-i18n="review.form.sub">Your experience might inspire someone else's skincare journey.</p>
+
+            <div class="form-row">
+                <label for="reviewName" data-i18n="review.form.name">Your name</label>
+                <input type="text" id="reviewName"
+                       data-i18n-placeholder="review.form.name.placeholder"
+                       placeholder="e.g. Sara" maxlength="30" />
+            </div>
+
+            <div class="form-row">
+                <label data-i18n="review.form.rating">Your rating</label>
+                <div class="star-picker" id="starPicker">
+                    <span data-v="1">★</span>
+                    <span data-v="2">★</span>
+                    <span data-v="3">★</span>
+                    <span data-v="4">★</span>
+                    <span data-v="5">★</span>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <label for="reviewText" data-i18n="review.form.text">Your review</label>
+                <textarea id="reviewText"
+                          data-i18n-placeholder="review.form.text.placeholder"
+                          placeholder="Tell us about your Lumiskin experience..."></textarea>
+            </div>
+
+            <button class="submit-btn" onclick="submitReview()" data-i18n="review.form.submit">Post My Review</button>
+            <div class="review-toast" id="reviewToast" data-i18n="review.toast">🌟 Thank you! Your review has been added.</div>
+        </div>
+    </section>
+
+    <!-- ── Brands ── -->
+    <section id="brand-section" class="brand-showcase">
+        <h2 class="brand-title" data-i18n="brands.heading">Shop by Brand</h2>
+        <div class="brand-container">
+            <a href="/laroche" class="brand-card">
+                <div class="brand-circle">
+                    <img src="/images/La-Roche-Posay-logo-brand-page.jpg" alt="La Roche-Posay Logo">
+                </div>
+                <p class="brand-name">La Roche-Posay</p>
+            </a>
+            <a href="/cerave" class="brand-card">
+                <div class="brand-circle">
+                    <img src="/images/CeraVe-Logo.jpg" alt="CeraVe">
+                </div>
+                <p class="brand-name">CeraVe</p>
+            </a>
+            <a href="/uriage" class="brand-card">
+                <div class="brand-circle">
+                    <img src="/images/uriage logo.png" alt="Uriage">
+                </div>
+                <p class="brand-name">Uriage</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- ── Footer ── -->
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="footer-newsletter">
+                <h2 data-i18n="footer.tagline">Your Best Skin<br>Starts Here</h2>
+                <p data-i18n="footer.sub">Join our community and receive expert insights.</p>
+                <div class="input-group">
+                    <input type="email"
+                           data-i18n-placeholder="footer.email.placeholder"
+                           placeholder="Enter an email address">
+                    <button type="submit">↗️</button>
+                </div>
+            </div>
+
+            <div class="footer-nav">
+                <div class="nav-col">
+                    <h4 data-i18n="footer.discover">Discover</h4>
+                    <ul>
+                        <li><a href="/"               data-i18n="footer.home">Home</a></li>
+                        <li><a href="/about"           data-i18n="footer.about">About</a></li>
+                        <li><a href="#brand-section"   data-i18n="footer.product">Product</a></li>
+                        <li><a href="#reviews-section" data-i18n="footer.reviews">Reviews</a></li>
+                    </ul>
+                </div>
+                <div class="nav-col">
+                    <h4 data-i18n="footer.contact">Contact</h4>
+                    <p><strong>LumiSkin Branches</strong><br>
+                       <span data-i18n="footer.branch.cairo">cairo, Egypt</span></p>
+                    <p><strong>LumiSkin Branches</strong><br>
+                       <span data-i18n="footer.branch.alex">alexandria, Egypt</span></p>
+                </div>
+                <div class="nav-col">
+                    <h4 data-i18n="footer.social">Social Media</h4>
+                    <ul>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">Facebook</a></li>
+                    </ul>
+                </div>
+                <div class="nav-col">
+                    <h4 data-i18n="footer.help">Help & Support</h4>
+                    <ul>
+                        <li><a href="#" data-i18n="footer.faq">FAQ</a></li>
+                        <li><a href="#" data-i18n="footer.privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-brand">
+            <h1>LumiSkin</h1>
+        </div>
+    </footer>
+
+</body>
+</html>

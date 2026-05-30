@@ -1,0 +1,303 @@
+/* ═══════════════════════════════════════════════════════════
+   LUMISKIN — rtl.css
+   Arabic RTL layout overrides
+   Loaded on every page via header.ejs
+   ═══════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap');
+
+/* ── Arabic font on the whole page ── */
+.lang-ar,
+.lang-ar p,
+.lang-ar a,
+.lang-ar span,
+.lang-ar li,
+.lang-ar label,
+.lang-ar input,
+.lang-ar textarea,
+.lang-ar button,
+.lang-ar td,
+.lang-ar th {
+    font-family: 'Cairo', sans-serif !important;
+}
+
+/* Keep Playfair for the logo only */
+.lang-ar .logotext {
+    font-family: 'Playfair Display', serif !important;
+}
+
+/* ── Header RTL ── */
+.lang-ar header .container {
+    grid-template-columns: 1fr auto 1fr;
+    direction: rtl;
+}
+
+.lang-ar header nav ul {
+    flex-direction: row-reverse;
+}
+
+.lang-ar header .nav-buttons {
+    justify-content: flex-start;
+    flex-direction: row-reverse;
+}
+
+.lang-ar header nav a::after {
+    left: auto;
+    right: 0;
+}
+
+/* ── Hero ── */
+.lang-ar .hero-content {
+    text-align: right;
+    align-items: flex-end;
+}
+
+/* ── Sections general ── */
+.lang-ar .footer-top {
+    flex-direction: row-reverse;
+}
+
+.lang-ar .footer-nav {
+    direction: rtl;
+}
+
+.lang-ar .nav-col {
+    text-align: right;
+}
+
+.lang-ar .nav-col ul {
+    padding-right: 0;
+}
+
+/* ── Footer newsletter ── */
+.lang-ar .footer-newsletter {
+    text-align: right;
+}
+
+.lang-ar .input-group {
+    flex-direction: row-reverse;
+}
+
+/* ── Reviews ── */
+.lang-ar .box p,
+.lang-ar .box h3 {
+    text-align: right;
+}
+
+.lang-ar .add-review-wrapper {
+    text-align: right;
+    direction: rtl;
+}
+
+.lang-ar .form-row label {
+    text-align: right;
+}
+
+/* ── Cart ── */
+.lang-ar .cart-layout {
+    flex-direction: row-reverse;
+}
+
+.lang-ar .cart-item {
+    flex-direction: row-reverse;
+}
+
+.lang-ar .cart-item-info {
+    text-align: right;
+}
+
+.lang-ar .cart-item-total {
+    text-align: left;
+}
+
+.lang-ar .summary-row {
+    flex-direction: row-reverse;
+}
+
+/* ── Login / Signup ── */
+.lang-ar .auth-layout {
+    flex-direction: row-reverse;
+}
+
+.lang-ar .auth-form-box {
+    text-align: right;
+    direction: rtl;
+}
+
+.lang-ar .field label {
+    text-align: right;
+}
+
+.lang-ar .auth-divider {
+    direction: rtl;
+}
+
+/* ── About ── */
+.lang-ar .content-grid {
+    direction: rtl;
+}
+
+.lang-ar .about-section {
+    text-align: right;
+}
+
+/* ── Myth vs Fact ── */
+.lang-ar .myths-hero {
+    direction: rtl;
+}
+
+.lang-ar .myth-text,
+.lang-ar .truth-body,
+.lang-ar .truth-heading {
+    text-align: right;
+    direction: rtl;
+}
+
+.lang-ar .myth-tap-hint {
+    justify-content: flex-start;
+    flex-direction: row-reverse;
+}
+
+/* ── Products ── */
+.lang-ar .brand-showcase {
+    text-align: right;
+    direction: rtl;
+}
+
+.lang-ar .brand-container {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+
+.lang-ar .product-details {
+    text-align: right;
+}
+
+/* ── Skin Advisor ── */
+.lang-ar .advisor-hero {
+    direction: rtl;
+}
+
+.lang-ar .city-form {
+    flex-direction: row-reverse;
+}
+
+.lang-ar #searchBtn {
+    border-radius: 40px 0 0 40px !important;
+}
+
+.lang-ar #cityInput {
+    border-radius: 0 40px 40px 0 !important;
+}
+
+.lang-ar .advice-card,
+.lang-ar .fact-card {
+    text-align: right;
+    direction: rtl;
+}
+
+.lang-ar .tip-list li {
+    border-left: none !important;
+    border-right: 3px solid #b5814a;
+    text-align: right;
+}
+
+.lang-ar .weather-banner {
+    direction: rtl;
+}
+
+/* ── Language toggle button ── */
+#lang-switcher-control {
+    background: transparent;
+    border: 1px solid rgba(147, 97, 62, 0.32);
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 6px 12px;
+    margin-left: 6px;
+    line-height: 1;
+    transition: background 0.2s, border-color 0.2s;
+    outline: none;
+    font-family: 'Cairo', 'DM Sans', sans-serif;
+    color: rgb(147, 97, 62);
+    min-width: 38px;
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#lang-switcher-control:hover {
+    background: rgba(147, 97, 62, 0.12);
+}
+
+/* Dark mode compat */
+html.dark-mode #lang-switcher-control {
+    color: rgb(220, 178, 130) !important;
+    border-color: rgba(180, 140, 100, 0.45) !important;
+}
+
+html.dark-mode header.transparent #lang-switcher-control {
+    color: #ffffff !important;
+    border-color: rgba(255,255,255,0.4) !important;
+}
+
+/* ── Quiz RTL ── */
+.lang-ar .q-title,
+.lang-ar .q-sub,
+.lang-ar .q-note,
+.lang-ar .q-hint      { text-align: right; direction: rtl; }
+
+.lang-ar .opt-card    { flex-direction: row-reverse; text-align: right; }
+.lang-ar .check-icon  { margin-left: 0; margin-right: auto; }
+.lang-ar .img-card-body { text-align: right; }
+.lang-ar .goal-label  { text-align: right; }
+.lang-ar .q-textarea  { text-align: right; direction: rtl; }
+.lang-ar .warning-box { text-align: right; direction: rtl; }
+.lang-ar .result-title,
+.lang-ar .result-desc,
+.lang-ar .result-section-label { text-align: right; direction: rtl; }
+.lang-ar .result-item { flex-direction: row-reverse; }
+.lang-ar .result-item-text { text-align: right; }
+.lang-ar .result-tags { justify-content: flex-end; }
+.lang-ar .top-bar     { direction: rtl; }
+
+/* ── Language switcher button ── */
+#lang-switcher {
+    background: transparent;
+    border: 1px solid rgba(147, 97, 62, 0.32);
+    border-radius: 50px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 6px 12px;
+    margin-left: 4px;
+    line-height: 1;
+    transition: background 0.2s, border-color 0.2s;
+    outline: none;
+    font-family: 'Cairo', 'DM Sans', sans-serif;
+    color: rgb(147, 97, 62);
+    min-width: 38px;
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+#lang-switcher:hover {
+    background: rgba(147, 97, 62, 0.12);
+}
+/* Transparent header state */
+header.transparent #lang-switcher {
+    color: #fff;
+    border-color: rgba(255,255,255,0.4);
+}
+/* Dark mode */
+html.dark-mode #lang-switcher {
+    color: rgb(220, 178, 130) !important;
+    border-color: rgba(180, 140, 100, 0.45) !important;
+}
+html.dark-mode header.transparent #lang-switcher {
+    color: #ffffff !important;
+    border-color: rgba(255,255,255,0.4) !important;
+}
