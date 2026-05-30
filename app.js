@@ -1,4 +1,3 @@
-require('dotenv').config();
 const express = require('express');
 const fileUpload = require('express-fileupload');
 const session = require('express-session');
@@ -7,10 +6,7 @@ const mongoose = require('mongoose');
 const app = express();
 
 // ── Database ──────────────────────────────────────────────────────────────────
-mongoose.connect(process.env.MONGO_URI, {
-  family: 4,
-  
-})
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('Database connected'))
   .catch((err) => console.log('Database connection failed', err.message));
 
@@ -21,12 +17,12 @@ app.use(fileUpload());
 app.use(express.static(require('path').join(__dirname, 'public')));
 
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  secret: process.env.SESSION_SECRET || 'fallback-secret',
   resave: false,
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production', // only true in production
+    secure: process.env.NODE_ENV === 'production',
     maxAge: 1000 * 60 * 60 * 24
   }
 }));
@@ -61,19 +57,10 @@ app.use((err, req, res, next) => {
   res.status(500).render('500', {});
 });
 
-// ── Local dev server (not used by Vercel) ─────────────────────────────────────
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
-
-  try {
-    const PORT = process.env.PORT || 3000;
+// ── Start server ──────────────────────────────────────────────────────────────
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-  } catch (e) {
-    app.listen(3000, () => console.log('HTTP running at http://localhost:3000'));
-  }
-}
 
-// ── Export for Vercel ─────────────────────────────────────────────────────────
 module.exports = app;
