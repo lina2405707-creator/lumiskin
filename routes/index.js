@@ -1,6 +1,6 @@
 const express  = require('express');
 const router   = express.Router();
-const controller   = require('../controllers/indexcontroller');
+const controller = require('../controllers/indexController');
 const skinCtrl = require('../controllers/skinAdvisorController');
 
 router.get('/',             controller.getHome);
