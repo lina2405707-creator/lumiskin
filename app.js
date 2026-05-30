@@ -50,7 +50,7 @@ app.set('views', require('path').join(__dirname, 'views'));
 
 // ── Routes ────────────────────────────────────────────────────────────────────
 const indexRoutes = require('./routes/index');
-const userRoutes  = require('./routes/user');
+const userRoutes = require('./routes/user');
 const adminRoutes = require('./routes/admin');
 
 app.use('/', indexRoutes);
@@ -75,3 +75,4 @@ app.listen(PORT, () => {
 });
 
 module.exports = app;
+// test push
