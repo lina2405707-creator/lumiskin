@@ -84,10 +84,11 @@ exports.postSignup = async (req, res) => {
     await User.create({ name, email: email.toLowerCase().trim(), password });
     res.redirect('/user/login');
  
-  } catch (err) {
-    console.error('Signup error:', err.message);
-    res.render('signup', { user: '', error: 'Something went wrong. Please try again.' });
-  }
+  // AFTER:
+} catch (err) {
+  console.error('Signup error FULL:', err);
+  res.render('signup', { user: '', error: 'Something went wrong. Please try again.' });
+}
 };
  
 // ── GET /user/logout ──────────────────────────────────────────────────────────

@@ -29,9 +29,6 @@ exports.validateSignup = (req, res, next) => {
   if (!/\d/.test(password)) {
     return res.render('signup', { user: '', error: 'Password must contain at least 1 number.' });
   }
-  if (!/[!@#$%^&*]/.test(password)) {
-    return res.render('signup', { user: '', error: 'Password must contain at least one special character (!@#$%^&*).' });
-  }
   if (password !== confirmPassword) {
     return res.render('signup', { user: '', error: 'Passwords do not match.' });
   }

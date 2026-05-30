@@ -9,8 +9,7 @@ const app = express();
 // ── Database ──────────────────────────────────────────────────────────────────
 mongoose.connect(process.env.MONGO_URI, {
   family: 4,
-  serverSelectionTimeoutMS: 30000,
-  socketTimeoutMS: 45000,
+  
 })
   .then(() => console.log('Database connected'))
   .catch((err) => console.log('Database connection failed', err.message));
@@ -64,16 +63,13 @@ app.use((err, req, res, next) => {
 
 // ── Local dev server (not used by Vercel) ─────────────────────────────────────
 if (process.env.NODE_ENV !== 'production') {
-  const https = require('https');
-  const fs    = require('fs');
+  require('dotenv').config();
+
   try {
-    const sslOptions = {
-      key:  fs.readFileSync('cert.key'),
-      cert: fs.readFileSync('cert.crt')
-    };
-    https.createServer(sslOptions, app).listen(8443, () => {
-      console.log('HTTPS running at https://localhost:8443');
-    });
+    const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
   } catch (e) {
     app.listen(3000, () => console.log('HTTP running at http://localhost:3000'));
   }
