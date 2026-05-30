@@ -1,15 +1,15 @@
 const express  = require('express');
 const router   = express.Router();
-const ctrl     = require('../controllers/indexcontroller');
+const controller   = require('../controllers/indexcontroller');
 const skinCtrl = require('../controllers/skinAdvisorController');
 
-router.get('/',             ctrl.getHome);
-router.get('/about',        ctrl.getAbout);
-router.get('/quiz',         ctrl.getQuiz);
-router.get('/myth-vs-fact', ctrl.getMythVsFact);
-router.get('/cerave',       ctrl.getCerave);
-router.get('/laroche',      ctrl.getLaroche);
-router.get('/uriage',       ctrl.getUriage);
+router.get('/',             controller.getHome);
+router.get('/about',        controller.getAbout);
+router.get('/quiz',         controller.getQuiz);
+router.get('/myth-vs-fact', controller.getMythVsFact);
+router.get('/cerave',       controller.getCerave);
+router.get('/laroche',      controller.getLaroche);
+router.get('/uriage',       controller.getUriage);
 
 // Skin Advisor page
 router.get('/skin-advisor', skinCtrl.getSkinAdvisor);

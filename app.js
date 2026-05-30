@@ -1,7 +1,5 @@
 require('dotenv').config();
 const express = require('express');
-const https = require('https');
-const fs = require('fs');
 const fileUpload = require('express-fileupload');
 const session = require('express-session');
 const mongoose = require('mongoose');
@@ -12,9 +10,8 @@ const app = express();
 mongoose.connect(process.env.MONGO_URI, {
   family: 4
 })
-
-  .then(() => console.log(' Database connected'))
-  .catch((err) => console.log(' Database connection failed', err.message));
+  .then(() => console.log('Database connected'))
+  .catch((err) => console.log('Database connection failed', err.message));
 
 // ── Middleware ────────────────────────────────────────────────────────────────
 app.use(express.urlencoded({ extended: true }));
@@ -22,17 +19,17 @@ app.use(express.json());
 app.use(fileUpload());
 app.use(express.static('public'));
 
-
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    secure: true,
+    secure: process.env.NODE_ENV === 'production', // only true in production
     maxAge: 1000 * 60 * 60 * 24
   }
 }));
+
 app.use((req, res, next) => {
   res.locals.user = req.session.user || '';
   res.locals.role = req.session.role || '';
@@ -44,7 +41,7 @@ app.set('view engine', 'ejs');
 
 // ── Routes ────────────────────────────────────────────────────────────────────
 const indexRoutes = require('./routes/index');
-const userRoutes = require('./routes/user');
+const userRoutes  = require('./routes/user');
 const adminRoutes = require('./routes/admin');
 
 app.use('/', indexRoutes);
@@ -62,12 +59,22 @@ app.use((err, req, res, next) => {
   res.status(500).render('500', {});
 });
 
-// ── HTTPS Server ──────────────────────────────────────────────────────────────
-const sslOptions = {
-  key: fs.readFileSync('cert.key'),
-  cert: fs.readFileSync('cert.crt')
-};
+// ── Local dev server (not used by Vercel) ─────────────────────────────────────
+if (process.env.NODE_ENV !== 'production') {
+  const https = require('https');
+  const fs    = require('fs');
+  try {
+    const sslOptions = {
+      key:  fs.readFileSync('cert.key'),
+      cert: fs.readFileSync('cert.crt')
+    };
+    https.createServer(sslOptions, app).listen(8443, () => {
+      console.log('HTTPS running at https://localhost:8443');
+    });
+  } catch (e) {
+    app.listen(3000, () => console.log('HTTP running at http://localhost:3000'));
+  }
+}
 
-https.createServer(sslOptions, app).listen(8443, () => {
-  console.log(' HTTPS running at https://localhost:8443');
-});
+// ── Export for Vercel ─────────────────────────────────────────────────────────
+module.exports = app;
