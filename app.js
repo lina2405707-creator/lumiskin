@@ -17,7 +17,7 @@ mongoose.connect(process.env.MONGO_URI, {
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(fileUpload());
-app.use(express.static('public'));
+app.use(express.static(require('path').join(__dirname, 'public')));
 
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -38,6 +38,7 @@ app.use((req, res, next) => {
 
 // ── View Engine ───────────────────────────────────────────────────────────────
 app.set('view engine', 'ejs');
+app.set('views', require('path').join(__dirname, 'views'));
 
 // ── Routes ────────────────────────────────────────────────────────────────────
 const indexRoutes = require('./routes/index');
