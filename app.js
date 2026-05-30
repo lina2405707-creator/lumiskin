@@ -2,13 +2,14 @@ const express = require('express');
 const fileUpload = require('express-fileupload');
 const session = require('express-session');
 const mongoose = require('mongoose');
-const MongoStore = require('connect-mongo');
-
-const app = express();
 
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
+
+const MongoStore = require('connect-mongo')(session);
+
+const app = express();
 
 // ── Database ──────────────────────────────────────────────────────────────────
 mongoose.connect(process.env.MONGO_URI)
@@ -25,8 +26,8 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'fallback-secret',
   resave: false,
   saveUninitialized: false,
-  store: MongoStore.create({
-    mongoUrl: process.env.MONGO_URI
+  store: new MongoStore({
+    mongooseConnection: mongoose.connection
   }),
   cookie: {
     httpOnly: true,
