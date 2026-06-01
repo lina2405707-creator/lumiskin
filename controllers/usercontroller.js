@@ -182,3 +182,38 @@ exports.updateProfile = async (req, res) => {
     res.redirect('/');
   }
 };
+
+// Save quiz result to database
+exports.saveQuizResult = async (req, res) => {
+  try {
+    const { result } = req.body;
+    if (!req.session.userId) return res.json({ success: false, message: 'Not logged in' });
+    await User.findByIdAndUpdate(req.session.userId, { quizResult: result });
+    res.json({ success: true });
+  } catch (err) {
+    res.json({ success: false, message: err.message });
+  }
+};
+
+// Save purchases to database (called when checkout happens)
+exports.savePurchase = async (req, res) => {
+  try {
+    const { items } = req.body;
+    if (!req.session.userId) return res.json({ success: false, message: 'Not logged in' });
+    if (!items || items.length === 0) return res.json({ success: false, message: 'No items' });
+
+    const purchaseItems = items.map(item => ({
+      name:  item.name,
+      price: item.price,
+      date:  new Date()
+    }));
+
+    await User.findByIdAndUpdate(req.session.userId, {
+      $push: { purchases: { $each: purchaseItems } }
+    });
+
+    res.json({ success: true });
+  } catch (err) {
+    res.json({ success: false, message: err.message });
+  }
+};

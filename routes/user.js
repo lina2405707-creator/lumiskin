@@ -18,4 +18,6 @@ router.get('/cart/data', requireLogin, userController.getCartData);
 router.post('/cart/save', requireLogin, userController.saveCart);
 router.get('/profile', userController.getProfile);
 router.post('/profile', userController.updateProfile);
+router.post('/save-quiz',     userController.saveQuizResult);
+router.post('/save-purchase', userController.savePurchase);
 module.exports = router;

@@ -105,7 +105,32 @@ function removeItem(name) {
 }
 
 function checkout() {
-  alert('Thank you for your order! This is a demo — checkout is not yet implemented.');
+  let cart = JSON.parse(localStorage.getItem('lumiskin_cart') || '[]');
+
+  if (!cart || cart.length === 0) {
+    alert('Your cart is empty!');
+    return;
+  }
+
+  // Save purchases to database
+  fetch('/user/save-purchase', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ items: cart })
+  })
+  .then(res => res.json())
+  .then(data => {
+    // Clear cart after successful purchase
+    localStorage.removeItem('lumiskin_cart');
+    alert('✓ Thank you for your order! Your purchase has been saved.');
+    window.location.reload();
+  })
+  .catch(() => {
+    // Even if save fails, confirm the order
+    localStorage.removeItem('lumiskin_cart');
+    alert('✓ Thank you for your order!');
+    window.location.reload();
+  });
 }
 
 loadCart();

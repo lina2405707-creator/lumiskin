@@ -6,171 +6,93 @@
     <title>Lumiskin Admin</title>
     <link rel="stylesheet" href="/css/admin.css">
     <style>
-        /* ── File Upload Styling ─────────────────────────────────── */
-        .upload-label {
-            display: block;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            color: #999;
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-        .upload-input {
-            width: 100%;
-            padding: 8px 10px;
-            border: 1px dashed #444;
-            border-radius: 6px;
-            background: #1e1e1e;
-            color: #ccc;
-            font-size: 13px;
-            cursor: pointer;
-        }
-        .upload-input:hover { border-color: #a36c45; }
-        .upload-preview {
-            width: 60px; height: 60px;
-            object-fit: cover;
-            border-radius: 6px;
-            margin-top: 6px;
-            border: 1px solid #333;
-            display: none;
-        }
-        /* ── Toast notification ──────────────────────────────────── */
-        #admin-toast {
-            position: fixed; bottom: 28px; left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            background: #2e7d32; color: #fff;
-            padding: 12px 28px; border-radius: 50px;
-            font-size: 14px; font-weight: 700;
-            z-index: 9999; opacity: 0;
-            transition: all 0.3s ease; pointer-events: none;
-        }
-        #admin-toast.error { background: #c62828; }
-        #admin-toast.show  { opacity: 1; transform: translateX(-50%) translateY(0); }
-        /* ── Product thumbnail in table ──────────────────────────── */
-        .prod-thumb {
-            width: 44px; height: 44px;
-            object-fit: cover; border-radius: 4px;
-            border: 1px solid #333; vertical-align: middle;
-        }
-        /* ── Loading spinner on submit ───────────────────────────── */
-        .btn-add:disabled { opacity: 0.6; cursor: not-allowed; }
+        .badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; letter-spacing:0.05em; }
+        .badge-quiz  { background:rgba(163,108,69,0.12); color:rgb(147,97,62); }
+        .badge-none  { background:#f0f0f0; color:#aaa; }
+        .badge-admin { background:rgb(83,54,30); color:#fff; }
+        .purchases-list { list-style:none; padding:0; margin:0; font-size:12px; }
+        .purchases-list li { padding:3px 0; color:#555; border-bottom:1px solid #f5f5f5; }
+        .purchases-list li:last-child { border-bottom:none; }
+        .no-data { color:#ccc; font-size:12px; font-style:italic; }
+        .action-links a { margin-right:8px; font-size:12px; font-weight:700; text-decoration:none; padding:4px 10px; border-radius:4px; }
+        .link-edit   { color:rgb(147,97,62); border:1px solid rgba(147,97,62,0.3); }
+        .link-edit:hover { background:rgba(147,97,62,0.1); }
+        .link-delete { color:#c0392b; border:1px solid rgba(192,57,43,0.3); }
+        .link-delete:hover { background:rgba(192,57,43,0.1); }
+        table { table-layout:auto; }
+        td { vertical-align:top; padding:14px 16px; }
+        .sidebar-bottom { margin-top:auto; border-top:1px solid rgba(255,255,255,0.1); padding-top:16px; display:flex; flex-direction:column; gap:4px; }
+        .sidebar-bottom a { color:rgba(255,255,255,0.6); text-decoration:none; padding:10px 16px; border-radius:8px; font-size:13px; font-weight:500; letter-spacing:0.05em; text-transform:uppercase; transition:all 0.2s; }
+        .sidebar-bottom a:hover { background:rgba(255,255,255,0.1); color:#fff; }
     </style>
 </head>
 <body>
 
 <nav class="sidebar">
     <h2>LUMISKIN</h2>
-    <p style="color:#ccc; font-size:13px; padding: 0 16px;">Welcome, <%= user %></p>
+    <p style="color:#ccc; font-size:13px; padding:0 16px 16px;">Welcome, <%= user %></p>
     <ul>
         <li onclick="showSection('dashboard')">Overview</li>
         <li onclick="showSection('products')">Manage Products</li>
-        <li onclick="showSection('users')">Manage Users</li>
+        <li onclick="showSection('user')">Manage Users</li>
     </ul>
-    <a href="/" class="return-home-card">
-        <div class="return-home-content">
-            <span class="home-icon">⌂</span>
-            <div><h3>Return To Home</h3></div>
-        </div>
-    </a>
-    <a href="/user/logout" style="color:#ccc; padding:16px; display:block; margin-top:20px;">Logout</a>
+    <div class="sidebar-bottom">
+        <a href="/">Return Home</a>
+        <a href="/user/logout">Sign Out</a>
+    </div>
 </nav>
 
 <main class="main-content">
 
-    <!-- DASHBOARD OVERVIEW -->
     <div id="dashboardSection" class="management-section">
         <h1>Dashboard Overview</h1>
         <div class="card-row">
-            <div class="card">
-                <small>TOTAL PRODUCTS</small>
-                <h2 class="stat-value" id="productCount"><%= products.length %></h2>
-            </div>
-            <div class="card">
-                <small>TOTAL REGISTERED USERS</small>
-                <h2 class="stat-value"><%= users.length %></h2>
-            </div>
+            <div class="card"><small>TOTAL PRODUCTS</small><h2 class="stat-value"><%= products.length %></h2></div>
+            <div class="card"><small>TOTAL REGISTERED USERS</small><h2 class="stat-value"><%= users.length %></h2></div>
+            <div class="card"><small>USERS WITH QUIZ RESULT</small><h2 class="stat-value"><%= users.filter(u => u.quizResult && u.quizResult !== '').length %></h2></div>
         </div>
     </div>
 
-    <!-- MANAGE PRODUCTS -->
     <div id="productsSection" class="management-section" style="display:none;">
         <h1>Manage Products</h1>
-
-        <!-- ── Add Product Form (multipart for file upload) ──────────────── -->
-        <form id="addProductForm" enctype="multipart/form-data"
-              style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:30px; align-items:flex-end;">
-
-            <input type="text"   name="name"     placeholder="Product Name" required>
-            <input type="text"   name="brand"    placeholder="Brand" required>
-            <input type="number" name="price"    placeholder="Price (EGP)" required>
-            <input type="text"   name="category" placeholder="Category (e.g. Cleanser)">
-            <input type="text"   name="tag"      placeholder="Tag (e.g. CLEANSE)">
-
-            <!-- ── Primary image upload ──────────────────────────────────── -->
-            <div style="display:flex; flex-direction:column;">
-                <span class="upload-label">Product Image</span>
-                <input type="file" name="image" accept="image/*"
-                       class="upload-input" id="imgInput"
-                       onchange="previewImage(this,'imgPreview')">
-                <img id="imgPreview" class="upload-preview" alt="preview">
+        <form action="/admin/add-product" method="POST" enctype="multipart/form-data"
+              style="background:#fff; padding:24px; border-radius:12px; margin-bottom:30px; box-shadow:0 2px 12px rgba(0,0,0,0.05);">
+            <h3 style="margin-bottom:16px; color:rgb(147,97,62); font-size:16px;">Add New Product</h3>
+            <div style="display:flex; flex-wrap:wrap; gap:12px;">
+                <input type="text"   name="name"     placeholder="Product Name"  required style="flex:2; min-width:200px;">
+                <input type="text"   name="brand"    placeholder="Brand"         required style="flex:2; min-width:180px;">
+                <input type="number" name="price"    placeholder="Price (EGP)"   required style="flex:1; min-width:100px;">
+                <input type="text"   name="category" placeholder="Category"               style="flex:1; min-width:120px;">
+                <input type="text"   name="tag"      placeholder="Tag (e.g. CLEANSE)"      style="flex:1; min-width:100px;">
             </div>
-
-            <!-- ── Hover / secondary image upload ────────────────────────── -->
-            <div style="display:flex; flex-direction:column;">
-                <span class="upload-label">Hover Image (optional)</span>
-                <input type="file" name="image2" accept="image/*"
-                       class="upload-input" id="img2Input"
-                       onchange="previewImage(this,'img2Preview')">
-                <img id="img2Preview" class="upload-preview" alt="preview">
+            <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:12px; align-items:flex-end;">
+                <div style="flex:1; min-width:200px;">
+                    <label style="font-size:11px; color:#888; display:block; margin-bottom:4px;">Primary Image</label>
+                    <input type="file" name="image" accept="image/*" style="flex:unset;">
+                </div>
+                <div style="flex:1; min-width:200px;">
+                    <label style="font-size:11px; color:#888; display:block; margin-bottom:4px;">Hover Image</label>
+                    <input type="file" name="image2" accept="image/*" style="flex:unset;">
+                </div>
+                <button type="submit" class="btn-add">+ Add Product</button>
             </div>
-
-            <button type="submit" class="btn-add" id="addBtn">+ Add Product</button>
         </form>
-
-        <!-- Products Table -->
         <table>
-            <thead>
-                <tr>
-                    <th>IMG</th>
-                    <th>NAME</th>
-                    <th>BRAND</th>
-                    <th>PRICE</th>
-                    <th>CATEGORY</th>
-                    <th>TAG</th>
-                    <th>ACTIONS</th>
-                </tr>
-            </thead>
-            <tbody id="productsTableBody">
+            <thead><tr><th>NAME</th><th>BRAND</th><th>PRICE</th><th>CATEGORY</th><th>TAG</th><th>ACTIONS</th></tr></thead>
+            <tbody>
                 <% if (products.length === 0) { %>
-                    <tr id="emptyProductsRow">
-                        <td colspan="7" style="text-align:center;">
-                            No products yet. Add one above!
-                        </td>
-                    </tr>
+                <tr><td colspan="6" style="text-align:center; color:#aaa; padding:40px;">No products yet. Add one above!</td></tr>
                 <% } %>
                 <% products.forEach(product => { %>
-                <tr id="product-row-<%= product._id %>">
-                    <td>
-                        <% if (product.image) { %>
-                            <img src="/images/<%= product.image %>" alt="<%= product.name %>" class="prod-thumb">
-                        <% } else { %>
-                            <span style="color:#666; font-size:11px;">No img</span>
-                        <% } %>
-                    </td>
-                    <td><%= product.name %></td>
+                <tr>
+                    <td><strong><%= product.name %></strong></td>
                     <td><%= product.brand %></td>
-                    <td><%= product.price %> EGP</td>
-                    <td><%= product.category %></td>
-                    <td><%= product.tag %></td>
-                    <td>
-                        <a href="/admin/edit-product/<%= product._id %>"
-                           style="color:#a36c45; margin-right:10px;">Edit</a>
-                        <button onclick="ajaxDeleteProduct('<%= product._id %>', '<%= product.name %>')"
-                                style="background:none; border:none; color:red; cursor:pointer;
-                                       font-size:14px; padding:0;">
-                            Delete
-                        </button>
+                    <td style="color:rgb(206,110,26); font-weight:700; white-space:nowrap;"><%= product.price %> EGP</td>
+                    <td><%= product.category || '—' %></td>
+                    <td><% if (product.tag) { %><span class="badge badge-quiz"><%= product.tag %></span><% } else { %>—<% } %></td>
+                    <td class="action-links">
+                        <a href="/admin/edit-product/<%= product._id %>" class="link-edit">Edit</a>
+                        <a href="/admin/delete-product/<%= product._id %>" onclick="return confirm('Delete this product?')" class="link-delete">Delete</a>
                     </td>
                 </tr>
                 <% }) %>
@@ -178,35 +100,42 @@
         </table>
     </div>
 
-    <!-- MANAGE USERS -->
     <div id="userSection" class="management-section" style="display:none;">
         <h1>Manage Users</h1>
+        <p style="color:#888; font-size:14px; margin-bottom:20px;">Total: <strong style="color:rgb(147,97,62);"><%= users.length %></strong> registered users</p>
         <table>
-            <thead>
-                <tr>
-                    <th>NAME</th>
-                    <th>EMAIL</th>
-                    <th>ACTIONS</th>
-                </tr>
-            </thead>
-            <tbody id="usersTableBody">
+            <thead><tr><th>NAME</th><th>EMAIL</th><th>ROLE</th><th>SKIN PROFILE</th><th>LAST PURCHASES</th><th>ACTIONS</th></tr></thead>
+            <tbody>
                 <% if (users.length === 0) { %>
-                    <tr id="emptyUsersRow">
-                        <td colspan="3" style="text-align:center;">No users registered yet.</td>
-                    </tr>
+                <tr><td colspan="6" style="text-align:center; color:#aaa; padding:40px;">No users registered yet.</td></tr>
                 <% } %>
                 <% users.forEach(u => { %>
-                <tr id="user-row-<%= u._id %>">
-                    <td><%= u.name %></td>
-                    <td><%= u.email %></td>
+                <tr>
+                    <td><strong><%= u.name %></strong></td>
+                    <td style="color:#777; font-size:13px;"><%= u.email %></td>
+                    <td><span class="badge <%= u.role === 'admin' ? 'badge-admin' : 'badge-none' %>"><%= u.role %></span></td>
                     <td>
-                        <a href="/admin/edit-user/<%= u._id %>"
-                           style="color:#a36c45; margin-right:10px;">Edit</a>
-                        <button onclick="ajaxDeleteUser('<%= u._id %>', '<%= u.name %>')"
-                                style="background:none; border:none; color:red; cursor:pointer;
-                                       font-size:14px; padding:0;">
-                            Delete
-                        </button>
+                        <% if (u.quizResult && u.quizResult !== '') { %>
+                            <span class="badge badge-quiz">🧴 <%= u.quizResult %></span>
+                        <% } else { %>
+                            <span class="no-data">No quiz taken</span>
+                        <% } %>
+                    </td>
+                    <td>
+                        <% if (u.purchases && u.purchases.length > 0) { %>
+                            <ul class="purchases-list">
+                                <% u.purchases.slice(-3).reverse().forEach(p => { %>
+                                <li><%= p.name.length > 28 ? p.name.substring(0,28) + '…' : p.name %> — <strong style="color:rgb(206,110,26);"><%= p.price %> EGP</strong></li>
+                                <% }) %>
+                            </ul>
+                            <% if (u.purchases.length > 3) { %><small style="color:#bbb;">+<%= u.purchases.length - 3 %> more</small><% } %>
+                        <% } else { %>
+                            <span class="no-data">No purchases yet</span>
+                        <% } %>
+                    </td>
+                    <td class="action-links">
+                        <a href="/admin/edit-user/<%= u._id %>" class="link-edit">Edit</a>
+                        <a href="/admin/delete-user/<%= u._id %>" onclick="return confirm('Delete this user?')" class="link-delete">Delete</a>
                     </td>
                 </tr>
                 <% }) %>
@@ -215,10 +144,6 @@
     </div>
 
 </main>
-
-<!-- Toast -->
-<div id="admin-toast"></div>
-
 <script src="/js/admin.js"></script>
 </body>
 </html>

@@ -303,6 +303,8 @@
         <a href="/user/profile" class="sidebar-nav-item active">Edit Profile</a>
         <a href="/" class="sidebar-nav-item">Home</a>
         <a href="/user/cart" class="sidebar-nav-item">My Cart</a>
+    <a href="#purchases" class="sidebar-nav-item" onclick="showProfileSection('purchases')">Last Purchases</a>
+    <a href="#quiz" class="sidebar-nav-item" onclick="showProfileSection('quiz')">My Skin Profile</a>
 
         <a href="/user/logout" class="sidebar-logout">Sign Out</a>
     </div>
@@ -368,6 +370,102 @@
         </form>
     </div>
 </div>
+
+<div id="purchasesSection" style="display:none;">
+    <div class="profile-header">
+        <p class="profile-eyebrow">Purchase History</p>
+        <h1 class="profile-title">Last Purchases</h1>
+        <p class="profile-subtitle">Your recent orders from Lumiskin.</p>
+    </div>
+
+    <% if (userData.purchases && userData.purchases.length > 0) { %>
+        <div style="max-width:600px;">
+            <% userData.purchases.slice().reverse().forEach((p, i) => { %>
+            <div style="background:#fff; border-radius:12px; padding:18px 24px;
+                        margin-bottom:12px; display:flex; justify-content:space-between;
+                        align-items:center; box-shadow:0 2px 8px rgba(0,0,0,0.05);
+                        border-left:3px solid rgb(206,110,26);">
+                <div>
+                    <p style="font-weight:600; color:rgb(83,54,30); font-size:15px; margin-bottom:4px;">
+                        <%= p.name %>
+                    </p>
+                    <p style="font-size:12px; color:#aaa;">
+                        <%= new Date(p.date).toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' }) %>
+                    </p>
+                </div>
+                <p style="font-weight:700; color:rgb(206,110,26); font-size:16px; white-space:nowrap;">
+                    <%= p.price %> EGP
+                </p>
+            </div>
+            <% }) %>
+        </div>
+    <% } else { %>
+        <div style="text-align:center; padding:60px 20px;">
+            <p style="font-size:40px; margin-bottom:16px;">🛒</p>
+            <p style="font-size:18px; color:#aaa; margin-bottom:24px;">No purchases yet.</p>
+            <a href="/#brand-section" style="background:rgb(83,54,30); color:#fff;
+                padding:12px 28px; border-radius:8px; text-decoration:none;
+                font-weight:600; font-size:13px; letter-spacing:0.08em; text-transform:uppercase;">
+                Shop Now
+            </a>
+        </div>
+    <% } %>
+</div>
+
+<div id="quizSection" style="display:none;">
+    <div class="profile-header">
+        <p class="profile-eyebrow">Quiz Result</p>
+        <h1 class="profile-title">My Skin Profile</h1>
+        <p class="profile-subtitle">Based on your last skin quiz result.</p>
+    </div>
+
+    <% if (userData.quizResult && userData.quizResult !== '') { %>
+        <div style="max-width:500px; background:#fff; border-radius:16px; padding:32px;
+                    box-shadow:0 4px 20px rgba(0,0,0,0.06);">
+            <p style="font-size:11px; font-weight:700; letter-spacing:0.15em;
+                      text-transform:uppercase; color:rgb(163,108,69); margin-bottom:12px;">
+                Your Skin Profile
+            </p>
+            <h2 style="font-family:'Cormorant Garamond', serif; font-size:32px;
+                       color:rgb(83,54,30); font-weight:400; margin-bottom:20px;">
+                <%= userData.quizResult %>
+            </h2>
+            <a href="/quiz" style="background:rgb(83,54,30); color:#fff; padding:12px 24px;
+                border-radius:8px; text-decoration:none; font-weight:600;
+                font-size:12px; letter-spacing:0.1em; text-transform:uppercase; display:inline-block;">
+                Retake Quiz
+            </a>
+        </div>
+    <% } else { %>
+        <div style="text-align:center; padding:60px 20px;">
+            <p style="font-size:40px; margin-bottom:16px;">🧴</p>
+            <p style="font-size:18px; color:#aaa; margin-bottom:24px;">You haven't taken the quiz yet.</p>
+            <a href="/quiz" style="background:rgb(83,54,30); color:#fff;
+                padding:12px 28px; border-radius:8px; text-decoration:none;
+                font-weight:600; font-size:13px; letter-spacing:0.08em; text-transform:uppercase;">
+                Take the Skin Quiz
+            </a>
+        </div>
+    <% } %>
+</div>
+
+<script>
+function showProfileSection(name) {
+    // Hide all sections
+    const sections = ['editSection', 'purchasesSection', 'quizSection'];
+    sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+    // Show selected
+    const target = document.getElementById(name + 'Section');
+    if (target) target.style.display = 'block';
+
+    // Update active sidebar link
+    document.querySelectorAll('.sidebar-nav-item').forEach(a => a.classList.remove('active'));
+    event.target.classList.add('active');
+}
+</script>
 
 </body>
 </html>

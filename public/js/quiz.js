@@ -1,16 +1,49 @@
-// ── State ──────────────────────────────────────────────────────────────────
+// ── State ─────────────────────────────────────────────────────────────────
 const answers = {};
-const flags = {};
-
+const flags   = {};
 const TOTAL_STEPS = 15;
+
+// ── Skin profile labels (hardcoded — no translation dependency) ───────────
+const SKIN_LABELS = {
+  very_dry:    'Very Dry Skin',
+  often_dry:   'Dry Skin',
+  combination: 'Combination Skin',
+  often_oily:  'Oily Skin',
+  very_oily:   'Very Oily Skin'
+};
+const ACNE_LABELS = {
+  mild:     'Mild Acne',
+  moderate: 'Moderate Acne',
+  severe:   'Severe Acne',
+  none:     'Acne-Free'
+};
+const SENS_LABELS = {
+  sensitive: 'Sensitive',
+  normal:    'Normal',
+  avoids:    'Avoids New Products'
+};
+
+// ── Product data (matches real DB products) ───────────────────────────────
+const PRODUCTS = {
+  'cerave-foam':    { name: 'CeraVe Foaming Facial Cleanser 236ml',           price: 550  },
+  'cerave-hydrate': { name: 'CeraVe Hydrating Facial Cleanser 236ml',         price: 580  },
+  'cerave-lotion':  { name: 'CeraVe Daily Moisturizing Lotion 473ml',         price: 650  },
+  'cerave-spf':     { name: 'CeraVe AM Facial Moisturising Lotion SPF50 52ml',price: 1150 },
+  'uriage-gel':     { name: 'Uriage Hyséac Cleansing Gel 200ml',              price: 799  },
+  'uriage-cica':    { name: 'Uriage Bariéderm-Cica Daily Serum 30ml',         price: 1559 },
+  'uriage-water':   { name: 'Uriage Eau Thermale Water Cream 40ml',           price: 814  },
+  'lrp-effaclar':   { name: 'La Roche-Posay Effaclar Duo(+) 40ml',           price: 850  },
+  'lrp-cicaplast':  { name: 'La Roche-Posay Cicaplast Baume B5+ 40ml',       price: 900  },
+  'lrp-spf':        { name: 'La Roche-Posay Anthelios Invisible Fluid SPF50+',price: 1150 }
+};
 
 function getNextStep(current) {
   switch (current) {
-    case 1: return answers.s1 === 'none' ? 3 : 2;
-    case 8: return answers.s8 === 'male' ? 10 : 9;
-    case 11: return flags.hasAllergy ? 12 : 13;
+    case 1:  return answers.s1 === 'none' ? 3 : 2;
+    case 8:  return answers.s8 === 'male' ? 10 : 9;
+    case 11: return flags.hasAllergy   ? 12 : 13;
     case 13: return flags.hasCondition ? 14 : 15;
-    case 15: return flags.hasExtra ? 16 : 'result';
+    case 15: return flags.hasExtra     ? 16 : 'result';
     case 16: return 'result';
     default: return current + 1;
   }
@@ -18,13 +51,13 @@ function getNextStep(current) {
 
 function getPrevStep(current) {
   switch (current) {
-    case 3: return answers.s1 === 'none' ? 1 : 2;
-    case 10: return answers.s8 === 'male' ? 8 : 9;
-    case 13: return flags.hasAllergy ? 12 : 11;
-    case 15: return flags.hasCondition ? 14 : 13;
-    case 16: return 15;
+    case 3:        return answers.s1 === 'none' ? 1 : 2;
+    case 10:       return answers.s8 === 'male' ? 8 : 9;
+    case 13:       return flags.hasAllergy   ? 12 : 11;
+    case 15:       return flags.hasCondition ? 14 : 13;
+    case 16:       return 15;
     case 'result': return flags.hasExtra ? 16 : 15;
-    default: return current - 1;
+    default:       return current - 1;
   }
 }
 
@@ -58,10 +91,7 @@ function goNext() {
   showStep(next);
   if (next === 'result') showResult();
 }
-
-function goBack() {
-  showStep(getPrevStep(currentStep));
-}
+function goBack() { showStep(getPrevStep(currentStep)); }
 
 function selectImg(card, stepKey) {
   card.closest('.img-grid').querySelectorAll('.img-card').forEach(c => c.classList.remove('selected'));
@@ -92,14 +122,6 @@ function selectMulti(card, stepNum) {
   if (btn) btn.disabled = selected.length === 0;
 }
 
-function selectMultiNone(card, stepNum) {
-  card.closest('.options-list').querySelectorAll('.opt-card').forEach(c => c.classList.remove('selected'));
-  card.classList.add('selected');
-  answers['s' + stepNum] = ['none'];
-  const btn = document.getElementById('next' + stepNum);
-  if (btn) btn.disabled = false;
-}
-
 function selectGoal(card) {
   card.classList.toggle('selected');
   answers.goals = [...document.querySelectorAll('.goal-card.selected')].map(c => c.dataset.value);
@@ -109,56 +131,111 @@ function selectGoal(card) {
 
 function setFlag(key, val) { flags[key] = val; }
 
-// Dynamic textarea button validation rule matching localized inputs safely
 function checkTextarea(id, btnId) {
   const btn = document.getElementById(btnId);
   if (btn) btn.disabled = document.getElementById(id).value.trim().length === 0;
 }
 
-function showResult() {
-  var t = window.LumiI18n ? window.LumiI18n.t.bind(window.LumiI18n) : function(k){ return k; };
+// ── Add to cart — uses same addToCart from product.js ─────────────────────
+function addToCartFromQuiz(productKey, btn) {
+  const product = PRODUCTS[productKey];
+  if (!product) return;
 
+  // Call the addToCart function from product.js (handles login/localStorage)
+  if (typeof addToCart === 'function') {
+    addToCart(product.name, product.price);
+  }
+
+  // Button feedback
+  const original = btn.textContent;
+  btn.textContent = '✓ Added!';
+  btn.style.background = 'rgb(39,174,96)';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = original;
+    btn.style.background = 'rgb(83,54,30)';
+    btn.disabled = false;
+  }, 2000);
+}
+
+// ── Save quiz result to database ──────────────────────────────────────────
+function saveQuizResultToDB(resultText) {
+  fetch('/user/save-quiz', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ result: resultText })
+  }).catch(() => {});
+}
+
+// ── Build routine ─────────────────────────────────────────────────────────
+function buildRoutine(skinType, acne, sensitivity, goals, pregnancy) {
+  const isDry       = ['very_dry','often_dry'].includes(skinType);
+  const isOily      = ['often_oily','very_oily'].includes(skinType);
+  const isSensitive = sensitivity === 'sensitive';
+  const isPregnant  = ['pregnant','breastfeeding','trying'].includes(pregnancy);
+  const routine     = [];
+
+  // Cleanser
+  if (isOily || acne === 'moderate' || acne === 'severe')
+    routine.push({ key: 'cerave-foam',    step: 'Cleanser',    desc: 'Removes excess oil and unclogs pores without stripping.' });
+  else if (isDry || isSensitive)
+    routine.push({ key: 'cerave-hydrate', step: 'Cleanser',    desc: 'Gently cleanses while maintaining the skin moisture barrier.' });
+  else
+    routine.push({ key: 'uriage-gel',     step: 'Cleanser',    desc: 'Purifying gel for balanced combination skin types.' });
+
+  // Treatment
+  if ((acne === 'severe' || acne === 'moderate' || acne === 'mild') && !isPregnant)
+    routine.push({ key: 'lrp-effaclar',   step: 'Treatment',   desc: 'Targets blemishes and unclogs pores. Dermatologist tested.' });
+  else if (goals.includes('dark_spots') || goals.includes('texture'))
+    routine.push({ key: 'uriage-cica',    step: 'Serum',       desc: 'Repairs damaged skin and fades post-acne marks over time.' });
+
+  // Soothing/repair
+  if (isSensitive || goals.includes('rosacea') || isPregnant)
+    routine.push({ key: 'lrp-cicaplast',  step: 'Repair Balm', desc: 'Soothes irritated skin and strengthens the skin barrier.' });
+
+  // Moisturizer
+  if (isDry || goals.includes('firmness'))
+    routine.push({ key: 'cerave-lotion',  step: 'Moisturizer', desc: 'Deep hydration with ceramides for dry and normal skin.' });
+  else if (!isOily)
+    routine.push({ key: 'uriage-water',   step: 'Moisturizer', desc: '24H hydration boost for combination and normal skin.' });
+
+  // SPF
+  if (isOily || acne !== 'none')
+    routine.push({ key: 'lrp-spf',        step: 'Sunscreen',   desc: 'Invisible fluid SPF50+ — ideal for oily and acne-prone skin.' });
+  else
+    routine.push({ key: 'cerave-spf',     step: 'Sunscreen',   desc: 'Moisturising SPF50+ lotion with ceramides for daily use.' });
+
+  return routine;
+}
+
+function showResult() {
   showStep('result');
-  const acne        = answers.s1 || 'none';
+
   const skinType    = answers.s3 || 'combination';
+  const acne        = answers.s1 || 'none';
   const sensitivity = answers.s4 || 'normal';
   const goals       = answers.goals || [];
   const pregnancy   = answers.s9;
 
-  const acneLabels = {
-    mild    : t('quiz.acne.mild'),
-    moderate: t('quiz.acne.moderate'),
-    severe  : t('quiz.acne.severe'),
-    none    : t('quiz.acne.none')
-  };
-  const skinLabels = {
-    very_dry   : t('quiz.skin.very_dry'),
-    often_dry  : t('quiz.skin.often_dry'),
-    combination: t('quiz.skin.combo'),
-    often_oily : t('quiz.skin.often_oily'),
-    very_oily  : t('quiz.skin.very_oily')
-  };
+  // ── Profile label ─────────────────────────────────────────────────────────
+  const skinLabel = SKIN_LABELS[skinType] || 'Combination Skin';
+  const acneLabel = ACNE_LABELS[acne]     || 'Acne-Free';
+  const sensLabel = SENS_LABELS[sensitivity] || 'Normal';
 
-  document.getElementById('resultTitle').textContent =
-    t('quiz.result.profile') + ' ' + (skinLabels[skinType] || t('quiz.skin.combo')) + ' ' + t('quiz.result.and') + ' ' + (acneLabels[acne] || t('quiz.acne.none'));
+  const resultTitle = skinLabel;
+  const resultSummary = `${skinLabel} · ${acneLabel} · ${sensLabel} Sensitivity`;
 
-  let desc = t('quiz.result.based') + ' ' + (skinLabels[skinType] || t('quiz.skin.combo')).toLowerCase() + ' ' + t('quiz.result.skin');
-  if (acne !== 'none') desc += ' ' + t('quiz.result.with') + ' ' + (acneLabels[acne] || '').toLowerCase();
-  if (sensitivity === 'sensitive') desc += t('quiz.result.sensitive');
-  desc += '. ' + t('quiz.result.routine');
-  document.getElementById('resultDesc').textContent = desc;
+  document.getElementById('resultTitle').textContent = resultTitle;
+  document.getElementById('resultDesc').textContent =
+    `Based on your answers, your skin profile is: ${resultSummary}. ` +
+    `Here is your personalized skincare routine — each product is carefully selected for your skin type.`;
 
+  // ── Tags ──────────────────────────────────────────────────────────────────
   const tagEl = document.getElementById('resultTags');
   tagEl.innerHTML = '';
-  
-  const goalTranslations = {
-    clogged_pores: t('quiz.q5.pores'),
-    dark_spots: t('quiz.q5.spots'),
-    firmness: t('quiz.q5.firm'),
-    texture: t('quiz.q5.texture')
-  };
-
-  [skinLabels[skinType], sensitivity === 'sensitive' ? (document.documentElement.dir === 'rtl' ? 'بشرة حساسة' : 'Sensitive') : null, ...goals.map(g => goalTranslations[g] || g)]
+  const goalLabels = { clogged_pores:'Clogged Pores', dark_spots:'Dark Spots', firmness:'Firmness', texture:'Texture' };
+  [skinLabel, acneLabel, sensLabel === 'Normal' ? null : sensLabel + ' Skin',
+   ...goals.map(g => goalLabels[g]).filter(Boolean)]
     .filter(Boolean).forEach(tag => {
       const span = document.createElement('span');
       span.className = 'result-tag';
@@ -166,51 +243,50 @@ function showResult() {
       tagEl.appendChild(span);
     });
 
-  const isDry      = ['very_dry','often_dry'].includes(skinType);
-  const isOily     = ['often_oily','very_oily'].includes(skinType);
-  const isSensitive = sensitivity === 'sensitive';
-  const isPregnant = ['pregnant','breastfeeding','trying'].includes(pregnancy);
-  const routine    = [];
-
-  if (isOily || acne === 'moderate' || acne === 'severe')
-    routine.push({ name: t('quiz.p.cerave.foam'),    desc: t('quiz.p.cerave.foam.desc') });
-  else if (isDry || isSensitive)
-    routine.push({ name: t('quiz.p.cerave.hydrate'), desc: t('quiz.p.cerave.hydrate.desc') });
-  else
-    routine.push({ name: t('quiz.p.uriage.gel'),     desc: t('quiz.p.uriage.gel.desc') });
-
-  if ((acne === 'severe' || acne === 'moderate' || acne === 'mild') && !isPregnant)
-    routine.push({ name: t('quiz.p.lrp.effaclar'),   desc: t('quiz.p.lrp.effaclar.desc') });
-  else if (goals.includes('dark_spots') || goals.includes('texture'))
-    routine.push({ name: t('quiz.p.uriage.cica'),    desc: t('quiz.p.uriage.cica.desc') });
-
-  if (isSensitive || goals.includes('rosacea') || isPregnant)
-    routine.push({ name: t('quiz.p.lrp.cicaplast'),  desc: t('quiz.p.lrp.cicaplast.desc') });
-
-  if (isDry || goals.includes('firmness') || goals.includes('glow'))
-    routine.push({ name: t('quiz.p.cerave.lotion'),  desc: t('quiz.p.cerave.lotion.desc') });
-  else if (!isOily)
-    routine.push({ name: t('quiz.p.uriage.water'),   desc: t('quiz.p.uriage.water.desc') });
-
-  if (isOily || acne !== 'none')
-    routine.push({ name: t('quiz.p.lrp.spf'),        desc: t('quiz.p.lrp.spf.desc') });
-  else
-    routine.push({ name: t('quiz.p.cerave.spf'),     desc: t('quiz.p.cerave.spf.desc') });
-
+  // ── Render routine ────────────────────────────────────────────────────────
+  const routine   = buildRoutine(skinType, acne, sensitivity, goals, pregnancy);
   const routineEl = document.getElementById('routineList');
   routineEl.innerHTML = '';
+
   routine.forEach((item, i) => {
-    routineEl.innerHTML += `<div class="result-item">
-      <div class="result-num">${i + 1}</div>
-      <div class="result-item-text"><strong>${item.name}</strong><span>${item.desc}</span></div>
-    </div>`;
+    const product = PRODUCTS[item.key];
+    if (!product) return;
+    const safeKey = item.key.replace(/'/g, "\\'");
+
+    routineEl.innerHTML += `
+      <div class="result-item" style="display:flex; align-items:flex-start; justify-content:space-between; gap:14px;">
+        <div style="display:flex; gap:14px; align-items:flex-start; flex:1;">
+          <div class="result-num">${i + 1}</div>
+          <div class="result-item-text">
+            <strong>${product.name}</strong>
+            <span style="font-size:12px; color:#888; display:block; margin-top:2px;">${item.step}</span>
+            <span>${item.desc}</span>
+            <span style="color:rgb(206,110,26); font-weight:700; font-size:13px; display:block; margin-top:4px;">
+              ${product.price} EGP
+            </span>
+          </div>
+        </div>
+        <button
+          onclick="addToCartFromQuiz('${safeKey}', this)"
+          style="padding:8px 16px; background:rgb(83,54,30); color:#fff; border:none;
+                 border-radius:20px; font-size:12px; font-weight:600; letter-spacing:0.06em;
+                 text-transform:uppercase; cursor:pointer; white-space:nowrap;
+                 transition:background 0.2s; flex-shrink:0; margin-top:4px;"
+          onmouseover="if(!this.disabled) this.style.background='rgb(147,97,62)'"
+          onmouseout="if(!this.disabled) this.style.background='rgb(83,54,30)'"
+        >+ Add to Cart</button>
+      </div>`;
   });
+
+  // Save to DB (silent)
+  saveQuizResultToDB(resultSummary);
 }
 
 function restartQuiz() {
   Object.keys(answers).forEach(k => delete answers[k]);
   Object.keys(flags).forEach(k => delete flags[k]);
-  document.querySelectorAll('.opt-card.selected, .img-card.selected, .goal-card.selected').forEach(el => el.classList.remove('selected'));
+  document.querySelectorAll('.opt-card.selected, .img-card.selected, .goal-card.selected')
+    .forEach(el => el.classList.remove('selected'));
   document.querySelectorAll('.btn-continue[id]').forEach(btn => { btn.disabled = true; });
   document.querySelectorAll('textarea').forEach(t => t.value = '');
   document.querySelectorAll('.warning-box').forEach(w => w.classList.remove('visible'));
@@ -218,7 +294,4 @@ function restartQuiz() {
 }
 
 updateProgress();
-
-document.addEventListener('langchange', function () {
-  if (currentStep === 'result') showResult();
-});
+document.addEventListener('langchange', () => { if (currentStep === 'result') showResult(); });
