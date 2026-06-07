@@ -1,6 +1,7 @@
-// ── GET /user/login ───────────────────────────────────────────────────────────
-const User = require('../models/user');
+const User   = require('../models/user');
 const bcrypt = require('bcrypt');
+
+// ── GET /user/login ───────────────────────────────────────────────────────────
 exports.getLogin = (req, res) => {
   res.render('login', { user: req.session.user || '', error: '' });
 };
@@ -9,15 +10,15 @@ exports.getLogin = (req, res) => {
 exports.postLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const found = await User.findOne({ email });
+    const found = await User.findOne({ email: email.toLowerCase().trim() });
 
     if (!found) {
-      return res.render('login', { user: '', error: 'No account found with this email' });
+      return res.render('login', { user: '', error: 'No account found with this email.' });
     }
 
     const match = await found.comparePassword(password);
     if (!match) {
-      return res.render('login', { user: '', error: 'Incorrect password' });
+      return res.render('login', { user: '', error: 'Incorrect password.' });
     }
 
     req.session.user   = found.name;
@@ -32,7 +33,7 @@ exports.postLogin = async (req, res) => {
 
   } catch (err) {
     console.error('Login error:', err.message);
-    res.render('login', { user: '', error: 'Something went wrong, try again' });
+    res.render('login', { user: '', error: 'Something went wrong, try again.' });
   }
 };
 
@@ -43,52 +44,17 @@ exports.getSignup = (req, res) => {
 
 // ── POST /user/signup ─────────────────────────────────────────────────────────
 exports.postSignup = async (req, res) => {
-  const { fname, lname, email, password, confirmPassword } = req.body;
-
-  if (!fname || !lname || !email || !password || !confirmPassword) {
-    return res.render('signup', { user: '', error: 'All fields are required.' });
-  }
-
-  if (fname.trim().length < 2) {
-    return res.render('signup', { user: '', error: 'First name must be at least 2 characters.' });
-  }
-
-  if (lname.trim().length < 2) {
-    return res.render('signup', { user: '', error: 'Last name must be at least 2 characters.' });
-  }
-
-  if (!/^\S+@\S+\.\S+$/.test(email)) {
-    return res.render('signup', { user: '', error: 'Please enter a valid email address.' });
-  }
-
-  if (password.length < 8) {
-    return res.render('signup', { user: '', error: 'Password must be at least 8 characters.' });
-  }
-
-  if (!/[A-Z]/.test(password)) {
-    return res.render('signup', { user: '', error: 'Password must contain at least 1 uppercase letter.' });
-  }
-
-  if (!/\d/.test(password)) {
-    return res.render('signup', { user: '', error: 'Password must contain at least 1 number.' });
-  }
-
-  if (password !== confirmPassword) {
-    return res.render('signup', { user: '', error: 'Passwords do not match.' });
-  }
-
+  const { fname, lname, email, password } = req.body;
   try {
     const existing = await User.findOne({ email: email.toLowerCase().trim() });
     if (existing) {
       return res.render('signup', { user: '', error: 'This email is already registered.' });
     }
-
     const name = `${fname.trim()} ${lname.trim()}`;
     await User.create({ name, email: email.toLowerCase().trim(), password });
     res.redirect('/user/login');
-
   } catch (err) {
-    console.error('Signup error FULL:', err);
+    console.error('Signup error:', err);
     res.render('signup', { user: '', error: 'Something went wrong. Please try again.' });
   }
 };
@@ -138,7 +104,6 @@ exports.saveCart = async (req, res) => {
 
 // ── GET /user/profile ─────────────────────────────────────────────────────────
 exports.getProfile = async (req, res) => {
-  if (!req.session.user) return res.redirect('/user/login');
   try {
     const user = await User.findById(req.session.userId);
     res.render('profile', { user: req.session.user, userData: user, error: '', success: '' });
@@ -149,23 +114,13 @@ exports.getProfile = async (req, res) => {
 
 // ── POST /user/profile ────────────────────────────────────────────────────────
 exports.updateProfile = async (req, res) => {
-  if (!req.session.user) return res.redirect('/user/login');
   try {
-    const { fname, lname, email, password, confirmPassword } = req.body;
-    const name = fname + ' ' + lname;
-    const updateData = { name, email };
+    const { fname, lname, email, password } = req.body;
+    const name = `${fname.trim()} ${lname.trim()}`;
+    const updateData = { name, email: email.toLowerCase().trim() };
 
-    if (password && password !== '') {
-      if (password !== confirmPassword) {
-        const user = await User.findById(req.session.userId);
-        return res.render('profile', {
-          user: req.session.user,
-          userData: user,
-          error: 'Passwords do not match',
-          success: ''
-        });
-      }
-      updateData.password = await bcrypt.hash(password, 10);
+    if (password && password.trim() !== '') {
+      updateData.password = await bcrypt.hash(password, 12); // ✅ 12 rounds
     }
 
     await User.findByIdAndUpdate(req.session.userId, updateData);
@@ -179,15 +134,15 @@ exports.updateProfile = async (req, res) => {
       success: 'Profile updated successfully!'
     });
   } catch (err) {
+    console.error('Profile update error:', err.message);
     res.redirect('/');
   }
 };
 
-// Save quiz result to database
+// ── POST /user/save-quiz ──────────────────────────────────────────────────────
 exports.saveQuizResult = async (req, res) => {
   try {
     const { result } = req.body;
-    if (!req.session.userId) return res.json({ success: false, message: 'Not logged in' });
     await User.findByIdAndUpdate(req.session.userId, { quizResult: result });
     res.json({ success: true });
   } catch (err) {
@@ -195,15 +150,12 @@ exports.saveQuizResult = async (req, res) => {
   }
 };
 
-// Save purchases to database (called when checkout happens)
-// Save purchases to session database (called when checkout happens)
+// ── POST /user/save-purchase ──────────────────────────────────────────────────
 exports.savePurchase = async (req, res) => {
   try {
     const { items } = req.body;
-    if (!req.session.userId) return res.json({ success: false, message: 'Not logged in' });
     if (!items || items.length === 0) return res.json({ success: false, message: 'No items' });
 
-    // 1. Maintain your original logic to push items to user purchase history records
     const purchaseItems = items.map(item => ({
       name:  item.name,
       price: item.price,
@@ -214,7 +166,6 @@ exports.savePurchase = async (req, res) => {
       $push: { purchases: { $each: purchaseItems } }
     });
 
-    // 2. NEW FIX: Safely populate req.session.cart so checkoutController.js can read it!
     req.session.cart = items.map(item => ({
       productId: item.productId || item._id || item.id,
       name:      item.name,
@@ -223,7 +174,6 @@ exports.savePurchase = async (req, res) => {
       quantity:  parseInt(item.quantity) || 1
     }));
 
-    // Save session manually to ensure data is persistent before replying to client
     req.session.save((err) => {
       if (err) {
         console.error('Session save error during checkout sync:', err);
