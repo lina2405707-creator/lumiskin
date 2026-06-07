@@ -196,12 +196,14 @@ exports.saveQuizResult = async (req, res) => {
 };
 
 // Save purchases to database (called when checkout happens)
+// Save purchases to session database (called when checkout happens)
 exports.savePurchase = async (req, res) => {
   try {
     const { items } = req.body;
     if (!req.session.userId) return res.json({ success: false, message: 'Not logged in' });
     if (!items || items.length === 0) return res.json({ success: false, message: 'No items' });
 
+    // 1. Maintain your original logic to push items to user purchase history records
     const purchaseItems = items.map(item => ({
       name:  item.name,
       price: item.price,
@@ -212,7 +214,24 @@ exports.savePurchase = async (req, res) => {
       $push: { purchases: { $each: purchaseItems } }
     });
 
-    res.json({ success: true });
+    // 2. NEW FIX: Safely populate req.session.cart so checkoutController.js can read it!
+    req.session.cart = items.map(item => ({
+      productId: item.productId || item._id || item.id,
+      name:      item.name,
+      image:     item.image || '',
+      price:     parseFloat(item.price),
+      quantity:  parseInt(item.quantity) || 1
+    }));
+
+    // Save session manually to ensure data is persistent before replying to client
+    req.session.save((err) => {
+      if (err) {
+        console.error('Session save error during checkout sync:', err);
+        return res.json({ success: false, message: 'Session save failed' });
+      }
+      res.json({ success: true });
+    });
+
   } catch (err) {
     res.json({ success: false, message: err.message });
   }

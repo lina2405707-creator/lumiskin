@@ -32,7 +32,7 @@ app.use(session({
   }),
   cookie: {
     httpOnly: true,
-    secure: false,
+    secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     maxAge: 1000 * 60 * 60 * 24
   }
@@ -52,10 +52,12 @@ app.set('views', require('path').join(__dirname, 'views'));
 const indexRoutes = require('./routes/index');
 const userRoutes = require('./routes/user');
 const adminRoutes = require('./routes/admin');
+const checkoutRoutes = require('./routes/checkout');
 
 app.use('/', indexRoutes);
 app.use('/user', userRoutes);
 app.use('/admin', adminRoutes);
+app.use('/checkout', checkoutRoutes);
 
 // ── 404 Handler ───────────────────────────────────────────────────────────────
 app.use((req, res) => {

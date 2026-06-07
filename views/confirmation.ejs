@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/checkout.css" />
+</head>
+<body>
+
+  <header class="checkout-header">
+    <a href="/" class="logo">LUMISKIN</a>
+    <nav class="checkout-breadcrumb" aria-label="Checkout progress">
+      <span>Checkout</span>
+      <span class="sep">›</span>
+      <span class="active">Confirmation</span>
+    </nav>
+    <div></div>
+  </header>
+
+  <main>
+    <div class="confirmation-wrapper">
+
+      <!-- Success icon -->
+      <div class="confirmation-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+
+      <h1>Order Confirmed</h1>
+      <p class="subtitle">
+        Thank you, <%= name %>. Your skincare routine is on its way. 🌿<br/>
+        A confirmation has been sent to <strong><%= email %></strong>.
+      </p>
+
+      <!-- Order meta card -->
+      <div class="confirmation-card">
+        <div class="card-item">
+          <span>Order ID</span>
+          <strong><%= orderId %></strong>
+        </div>
+        <div class="card-item">
+          <span>Estimated Delivery</span>
+          <strong><%= estimatedDelivery %></strong>
+        </div>
+        <div class="card-item">
+          <span>Order Total</span>
+          <strong>$<%= total %></strong>
+        </div>
+        <div class="card-item">
+          <span>Status</span>
+          <strong style="color:var(--green);">Processing</strong>
+        </div>
+      </div>
+
+      <a href="/" class="confirmation-cta">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        </svg>
+        Back to Home
+      </a>
+
+    </div>
+  </main>
+
+</body>
+</html>

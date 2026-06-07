@@ -105,32 +105,34 @@ function removeItem(name) {
 }
 
 function checkout() {
-  let cart = JSON.parse(localStorage.getItem('lumiskin_cart') || '[]');
+    // 1. Grab your local array data from cart.js (assuming it's named 'cart' or loaded from DB)
+    // If you are tracking the array items inside a variable called 'cart', use that here:
+    if (!cart || cart.length === 0) {
+        alert("Your cart is empty.");
+        return;
+    }
 
-  if (!cart || cart.length === 0) {
-    alert('Your cart is empty!');
-    return;
-  }
-
-  // Save purchases to database
-  fetch('/user/save-purchase', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ items: cart })
-  })
-  .then(res => res.json())
-  .then(data => {
-    // Clear cart after successful purchase
-    localStorage.removeItem('lumiskin_cart');
-    alert('✓ Thank you for your order! Your purchase has been saved.');
-    window.location.reload();
-  })
-  .catch(() => {
-    // Even if save fails, confirm the order
-    localStorage.removeItem('lumiskin_cart');
-    alert('✓ Thank you for your order!');
-    window.location.reload();
-  });
+    // 2. Send items to user controller session storage
+    fetch('/user/save-purchase', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ items: cart }) // Sends the array to usercontroller
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // 3. Success! The session is filled; redirect to checkout page now
+            window.location.href = '/checkout';
+        } else {
+            alert("Checkout validation error: " + data.message);
+        }
+    })
+    .catch(err => {
+        console.error("Syncing session failed:", err);
+        alert("An error occurred preparing checkout.");
+    });
 }
 
 loadCart();
