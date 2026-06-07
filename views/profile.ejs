@@ -465,6 +465,60 @@ function showProfileSection(name) {
     document.querySelectorAll('.sidebar-nav-item').forEach(a => a.classList.remove('active'));
     event.target.classList.add('active');
 }
+
+
+  document.querySelectorAll('input[name="fname"], input[name="lname"]').forEach(input => {
+
+    // Create a hint element per field
+    const hint = document.createElement('small');
+    hint.textContent = 'Numbers are not allowed in name fields.';
+    hint.style.cssText = `
+      color: #c0392b;
+      font-size: 0.78rem;
+      margin-top: 4px;
+      display: none;
+      transition: opacity 0.3s ease;
+      opacity: 0;
+    `;
+    input.insertAdjacentElement('afterend', hint);
+
+    let hideTimer;
+
+    const showHint = () => {
+      clearTimeout(hideTimer);
+      hint.style.display = 'block';
+      // Small delay so display:block renders before opacity transition kicks in
+      setTimeout(() => hint.style.opacity = '1', 10);
+      hideTimer = setTimeout(() => {
+        hint.style.opacity = '0';
+        setTimeout(() => hint.style.display = 'none', 300);
+      }, 2500); // disappears after 2.5 seconds
+    };
+
+    input.addEventListener('keypress', (e) => {
+      if (/\d/.test(e.key)) {
+        e.preventDefault();
+        showHint();
+      }
+    });
+
+    input.addEventListener('input', () => {
+      if (/\d/.test(input.value)) {
+        input.value = input.value.replace(/\d/g, '');
+        showHint();
+      }
+    });
+
+    input.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const pasted = (e.clipboardData || window.clipboardData).getData('text');
+      const cleaned = pasted.replace(/\d/g, '');
+      input.value = cleaned;
+      if (pasted !== cleaned) showHint();
+    });
+  });
+
+
 </script>
 
 </body>
