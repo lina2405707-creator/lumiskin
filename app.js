@@ -72,8 +72,35 @@ app.use((err, req, res, next) => {
 
 // ── Start server ──────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+
+if (process.env.NODE_ENV !== 'production') {
+  // ── Local HTTPS on port 3000 ──
+  const https = require('https');
+  const fs    = require('fs');
+  const path  = require('path');
+
+  const certPath = path.join(__dirname, 'cert.crt');
+  const keyPath  = path.join(__dirname, 'cert.key');
+
+  if (fs.existsSync(certPath) && fs.existsSync(keyPath)) {
+    const sslOptions = {
+      key:  fs.readFileSync(keyPath),
+      cert: fs.readFileSync(certPath)
+    };
+    https.createServer(sslOptions, app).listen(PORT, () => {
+      console.log(`HTTPS running at https://localhost:${PORT}`);
+    });
+  } else {
+    // No cert files found — fall back to HTTP
+    app.listen(PORT, () => {
+      console.log(`HTTP running at http://localhost:${PORT}`);
+    });
+  }
+} else {
+  // ── Production (Railway) — plain HTTP, Railway handles HTTPS ──
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
 
 module.exports = app;
