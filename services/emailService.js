@@ -4,7 +4,7 @@
  * Sends a post-purchase confirmation email.
  */
 
-const nodemailer = require("nodemailer"); // <-- UNCOMMENTED THIS LINE
+
 
 /**
  * Builds a clean HTML email body for the order confirmation.
