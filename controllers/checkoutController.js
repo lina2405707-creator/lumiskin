@@ -224,20 +224,25 @@ exports.postCheckout = async (req, res) => {
     });
     console.log("[checkoutController] ✅ User cart cleared and purchases updated");
 
-    // 3. Send confirmation email
-    console.log("[checkoutController] 📧 Sending email to:", orderData.email);
-    console.log("[checkoutController] 📧 EMAIL_USER:", process.env.EMAIL_USER);
-    console.log("[checkoutController] 📧 EMAIL_PASS length:", (process.env.EMAIL_PASS || '').replace(/\s/g, '').length);
-
-    await sendConfirmationEmail({
-      email:   orderData.email,
-      name:    orderData.fullName,
-      orderId,
-      items:   orderData.items,
-      totals:  { subtotal, shipping, tax, discount, total },
-      address: orderData.shippingAddress,
-      estimatedDelivery,
-    });
+    // 3. Send confirmation email (non-blocking — don't let email failure crash checkout)
+    try {
+      await sendConfirmationEmail({
+        email:   orderData.email,
+        name:    orderData.fullName,
+        orderId,
+        items:   orderData.items,
+        totals:  { subtotal, shipping, tax, discount, total },
+       address: [
+  orderData.shippingAddress.street,
+  orderData.shippingAddress.apt,
+  `${orderData.shippingAddress.city}, ${orderData.shippingAddress.state} ${orderData.shippingAddress.zip}`,
+  orderData.shippingAddress.country,
+].filter(Boolean).join("\n"),
+        estimatedDelivery,
+      });
+    } catch (emailErr) {
+      console.error("[checkoutController] ⚠️ Email failed (order still saved):", emailErr.message);
+    }
 
     // 4. Store confirmation data in session for the confirmation page
     req.session.orderConfirmation = {

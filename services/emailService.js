@@ -1,159 +1,160 @@
 /**
  * services/emailService.js
- *
- * Sends a post-purchase confirmation email.
  */
 
+const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 
-
-/**
- * Builds a clean HTML email body for the order confirmation.
- */
 function buildEmailHTML({ name, orderId, items, totals, address, estimatedDelivery }) {
-  const itemRows = items
+  const itemsHTML = items
     .map(
       (item) => `
-      <tr>
-        <td style="padding:10px 0;border-bottom:1px solid #f0ece8;">
-          <strong>${item.name}</strong><br/>
-          <span style="color:#9a8f87;font-size:13px;">${item.step || ""}</span>
-        </td>
-        <td style="padding:10px 0;border-bottom:1px solid #f0ece8;text-align:center;color:#6b6460;">
-          ×${item.quantity}
-        </td>
-        <td style="padding:10px 0;border-bottom:1px solid #f0ece8;text-align:right;">
-          $${(item.price * item.quantity).toFixed(2)}
-        </td>
-      </tr>`
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid #2a2a2a;">
+        <div>
+          <div style="font-size:15px;font-weight:500;color:#e0d8c8;line-height:1.4;">${item.name}</div>
+          <div style="font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:#666;margin-top:4px;">
+            DERM APPROVED &nbsp;·&nbsp; ×${item.quantity}
+          </div>
+        </div>
+        <div style="font-family:'Georgia',serif;font-size:17px;color:#c8b89a;white-space:nowrap;">
+          ${(item.price * item.quantity).toLocaleString()} EGP
+        </div>
+      </div>`
     )
     .join("");
 
+  // Safe formatting for address (which can be a string or a structured object from mongoose)
+  let formattedAddress = "";
+  if (address) {
+    if (typeof address === "object") {
+      formattedAddress = `${address.street || ""}${address.apt ? ", " + address.apt : ""}<br/>
+                          ${address.city || ""}, ${address.state || ""} ${address.zip || ""}<br/>
+                          ${address.country || ""}`;
+    } else if (typeof address === "string") {
+      formattedAddress = address.replace(/\n/g, "<br>");
+    }
+  }
+
+  const addressHTML = formattedAddress
+    ? `
+      <div style="padding:20px 32px;border-bottom:1px solid #2a2a2a;">
+        <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#555;margin-bottom:10px;">Shipping To</div>
+        <div style="font-size:13px;font-weight:300;color:#777;line-height:1.8;">
+          ${formattedAddress}
+        </div>
+      </div>`
+    : "";
+
   return `
-<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"/></head>
-<body style="margin:0;padding:0;background:#faf8f6;font-family:'Georgia',serif;color:#2c2420;">
-  <table width="100%" cellpadding="0" cellspacing="0">
-    <tr><td align="center" style="padding:40px 20px;">
-      <table width="560" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:4px;overflow:hidden;">
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Confirmed — ${orderId}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  </head>
+  <body style="margin:0;padding:30px 16px;background:#1a1a1a;font-family:'Jost',sans-serif;">
+    <div style="max-width:520px;margin:0 auto;background:#111;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.6);">
 
-        <tr>
-          <td style="background:#2c2420;padding:32px 40px;text-align:center;">
-            <h1 style="margin:0;color:#f5f0eb;font-size:22px;letter-spacing:4px;font-weight:400;">
-              LUMISKIN
-            </h1>
-          </td>
-        </tr>
+      <!-- Header -->
+      <div style="padding:36px 32px 28px;border-bottom:1px solid #2a2a2a;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;color:#e8e0d0;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:20px;">
+          Lumiskin
+        </div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:#f0ebe0;line-height:1.2;">
+          Thank you, <span style="color:#c8b89a;">${name}</span> 🌿
+        </div>
+        <p style="margin-top:10px;font-size:13px;font-weight:300;color:#777;line-height:1.6;">
+          Your order has been confirmed. We'll send a tracking link once it ships.
+        </p>
+      </div>
 
-        <tr><td style="padding:40px;">
-          <p style="font-size:18px;margin:0 0 8px;">Thank you, ${name}. 🌿</p>
-          <p style="color:#9a8f87;margin:0 0 32px;font-size:14px;line-height:1.6;">
-            Your order has been confirmed. We'll send a tracking link once it ships.
-          </p>
+      <!-- Order ID + Delivery -->
+      <div style="display:flex;gap:16px;padding:20px 32px;border-bottom:1px solid #2a2a2a;">
+        <div style="flex:1;background:#1c1c1c;border-radius:8px;padding:14px 16px;">
+          <div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#555;margin-bottom:6px;">Order ID</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:17px;color:#e0d8c8;font-weight:500;">${orderId}</div>
+        </div>
+        <div style="flex:1;background:#1c1c1c;border-radius:8px;padding:14px 16px;">
+          <div style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:#555;margin-bottom:6px;">Est. Delivery</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:17px;color:#e0d8c8;font-weight:500;line-height:1.3;">${estimatedDelivery}</div>
+        </div>
+      </div>
 
-          <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;background:#faf8f6;border-radius:4px;">
-            <tr>
-              <td style="padding:16px 20px;">
-                <span style="font-size:12px;letter-spacing:2px;color:#9a8f87;text-transform:uppercase;">Order ID</span><br/>
-                <strong style="font-size:15px;">${orderId}</strong>
-              </td>
-              <td style="padding:16px 20px;text-align:right;">
-                <span style="font-size:12px;letter-spacing:2px;color:#9a8f87;text-transform:uppercase;">Est. Delivery</span><br/>
-                <strong style="font-size:15px;">${estimatedDelivery}</strong>
-              </td>
-            </tr>
-          </table>
+      <!-- Items -->
+      <div style="padding:20px 32px;border-bottom:1px solid #2a2a2a;">
+        <div style="font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:#555;margin-bottom:4px;">Your Routine</div>
+        ${itemsHTML}
+      </div>
 
-          <p style="font-size:12px;letter-spacing:2px;color:#9a8f87;text-transform:uppercase;margin:0 0 12px;">
-            Your Routine
-          </p>
-          <table width="100%" cellpadding="0" cellspacing="0">${itemRows}</table>
+      <!-- Totals -->
+      <div style="padding:20px 32px;border-bottom:1px solid #2a2a2a;">
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:#666;font-weight:300;margin-bottom:8px;">
+          <span>Subtotal</span><span>${totals.subtotal.toLocaleString()} EGP</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:#666;font-weight:300;margin-bottom:8px;">
+          <span>Shipping</span><span>${totals.shipping === 0 ? "Free" : `${totals.shipping.toLocaleString()} EGP`}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:#666;font-weight:300;margin-bottom:8px;">
+          <span>Tax</span><span>${totals.tax.toLocaleString()} EGP</span>
+        </div>
+        <div style="height:1px;background:#2a2a2a;margin:12px 0;"></div>
+        <div style="display:flex;justify-content:space-between;font-size:16px;color:#e0d8c8;font-weight:500;">
+          <span>Total</span>
+          <span style="font-family:'Cormorant Garamond',serif;font-size:20px;color:#c8b89a;">${totals.total.toLocaleString()} EGP</span>
+        </div>
+      </div>
 
-          <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:24px;">
-            <tr>
-              <td style="padding:6px 0;color:#9a8f87;font-size:14px;">Subtotal</td>
-              <td style="padding:6px 0;text-align:right;font-size:14px;">$${totals.subtotal.toFixed(2)}</td>
-            </tr>
-            <tr>
-              <td style="padding:6px 0;color:#9a8f87;font-size:14px;">Shipping</td>
-              <td style="padding:6px 0;text-align:right;font-size:14px;">
-                ${totals.shipping === 0 ? "Free" : "$" + totals.shipping.toFixed(2)}
-              </td>
-            </tr>
-            ${totals.discount > 0 ? `
-            <tr>
-              <td style="padding:6px 0;color:#7d9e7a;font-size:14px;">Discount</td>
-              <td style="padding:6px 0;text-align:right;font-size:14px;color:#7d9e7a;">
-                -$${totals.discount.toFixed(2)}
-              </td>
-            </tr>` : ""}
-            <tr>
-              <td style="padding:6px 0;color:#9a8f87;font-size:14px;">Tax</td>
-              <td style="padding:6px 0;text-align:right;font-size:14px;">$${totals.tax.toFixed(2)}</td>
-            </tr>
-            <tr>
-              <td style="padding:14px 0 0;font-size:16px;font-weight:bold;border-top:1px solid #f0ece8;">
-                Total
-              </td>
-              <td style="padding:14px 0 0;text-align:right;font-size:16px;font-weight:bold;border-top:1px solid #f0ece8;">
-                $${totals.total.toFixed(2)}
-              </td>
-            </tr>
-          </table>
+      ${addressHTML}
 
-          <div style="margin-top:32px;padding:20px;background:#faf8f6;border-radius:4px;">
-            <p style="font-size:12px;letter-spacing:2px;color:#9a8f87;text-transform:uppercase;margin:0 0 10px;">
-              Shipping To
-            </p>
-            <p style="margin:0;line-height:1.8;font-size:14px;">
-              ${address.street}${address.apt ? ", " + address.apt : ""}<br/>
-              ${address.city}, ${address.state} ${address.zip}<br/>
-              ${address.country}
-            </p>
-          </div>
-        </td></tr>
+      <!-- Footer -->
+      <div style="padding:20px 32px;text-align:center;font-size:11px;color:#444;font-weight:300;letter-spacing:0.04em;">
+        © 2026 Lumiskin &nbsp;·&nbsp; lumiskin028@gmail.com
+      </div>
 
-        <tr>
-          <td style="padding:24px 40px;text-align:center;border-top:1px solid #f0ece8;">
-            <p style="margin:0;font-size:12px;color:#c4bcb8;letter-spacing:1px;">
-              Questions? Reply to this email or visit lumiskin.com/help<br/>
-              © ${new Date().getFullYear()} Lumiskin. All rights reserved.
-            </p>
-          </td>
-        </tr>
-
-      </table>
-    </td></tr>
-  </table>
-</body>
-</html>`;
+    </div>
+  </body>
+  </html>`;
 }
-
-/**
- * sendConfirmationEmail — call this after a successful order save.  
-*/ 
-
-const { Resend } = require('resend');
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 async function sendConfirmationEmail(params) {
   try {
     const html = buildEmailHTML(params);
 
-    await resend.emails.send({
-  from: 'Lumiskin <onboarding@resend.dev>',
-  to: 'lina2405707@gmail.com', 
-  subject: `Order Confirmed — ${params.orderId}`,
-  html,
-});
+    if (process.env.NODE_ENV === "production") {
+      // Production (Railway) — use Resend
+      const resend = new Resend(process.env.RESEND_API_KEY);
+      await resend.emails.send({
+        from: "Lumiskin <onboarding@resend.dev>",
+        to: params.email,
+        subject: `Order Confirmed — ${params.orderId}`,
+        html,
+      });
+    } else {
+      // Localhost — use nodemailer with Gmail SMTP
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
+      });
+      await transporter.sendMail({
+        from: `"Lumiskin" <${process.env.EMAIL_USER}>`,
+        to: params.email,
+        subject: `Order Confirmed — ${params.orderId}`,
+        text: `Order Confirmed — ${params.orderId}\n\nThank you ${params.name}!\n\nOrder ID: ${params.orderId}\nTotal: ${params.totals.total.toLocaleString()} EGP\nEstimated Delivery: ${params.estimatedDelivery}`,
+        html,
+      });
+    }
 
     console.log(`[emailService] ✉ Email sent to ${params.email}`);
     return { sent: true };
   } catch (error) {
-    console.error('[emailService] Failed:', error);
+    console.error("[emailService] Failed:", error);
     return { sent: false, error };
   }
 }
- module.exports = { sendConfirmationEmail };
- 
+
+module.exports = { sendConfirmationEmail };

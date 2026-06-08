@@ -150,35 +150,31 @@ exports.saveQuizResult = async (req, res) => {
   }
 };
 
-// ── POST /user/save-purchase ──────────────────────────────────────────────────
 exports.savePurchase = async (req, res) => {
   try {
     const { items } = req.body;
+    if (!req.session.userId) return res.json({ success: false, message: 'Not logged in' });
     if (!items || items.length === 0) return res.json({ success: false, message: 'No items' });
 
-    const purchaseItems = items.map(item => ({
-      name:  item.name,
-      price: item.price,
-      date:  new Date()
-    }));
-
-    await User.findByIdAndUpdate(req.session.userId, {
-      $push: { purchases: { $each: purchaseItems } }
-    });
-
-    req.session.cart = items.map(item => ({
-      productId: item.productId || item._id || item.id,
+    // Normalise and validate items
+    const cartItems = items.map(item => ({
+      productId: item.productId || '',
       name:      item.name,
-      image:     item.image || '',
       price:     parseFloat(item.price),
-      quantity:  parseInt(item.quantity) || 1
+      quantity:  parseInt(item.quantity) || 1,
+      image:     item.image || '',
+      step:      item.step || ''
     }));
+
+    // ✅ Sync the DB cart with EXACTLY what the user is checking out.
+    // This ensures that any items the user removed from the cart before
+    // clicking checkout are NOT recorded in purchase history.
+    await User.findByIdAndUpdate(req.session.userId, { cart: cartItems });
+
+    req.session.cart = cartItems;
 
     req.session.save((err) => {
-      if (err) {
-        console.error('Session save error during checkout sync:', err);
-        return res.json({ success: false, message: 'Session save failed' });
-      }
+      if (err) return res.json({ success: false, message: 'Session save failed' });
       res.json({ success: true });
     });
 

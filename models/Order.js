@@ -6,7 +6,7 @@
 const mongoose = require("mongoose");
 
 const orderItemSchema = new mongoose.Schema({
-  productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+  productId: { type: String, default: "" },
   name:      { type: String, required: true },
   image:     { type: String },
   step:      { type: String },           // e.g. "Cleanser", "Moisturiser"

@@ -311,18 +311,19 @@
 
     <!-- Main -->
     <div class="profile-main">
-        <div class="profile-header">
-            <p class="profile-eyebrow">Account Settings</p>
-            <h1 class="profile-title">Edit Profile</h1>
-            <p class="profile-subtitle">Update your personal information and password.</p>
-        </div>
+        <div id="editSection">
+            <% if (error !== '') { %>
+                <div class="error-msg">⚠ <%= error %></div>
+            <% } %>
+            <% if (success !== '') { %>
+                <div class="success-msg">✓ <%= success %></div>
+            <% } %>
 
-        <% if (error !== '') { %>
-            <div class="error-msg">⚠ <%= error %></div>
-        <% } %>
-        <% if (success !== '') { %>
-            <div class="success-msg">✓ <%= success %></div>
-        <% } %>
+            <div class="profile-header">
+                <p class="profile-eyebrow">Account Settings</p>
+                <h1 class="profile-title">Edit Profile</h1>
+                <p class="profile-subtitle">Update your personal information and password.</p>
+            </div>
 
         <form class="profile-form" action="/user/profile" method="POST">
 
@@ -368,10 +369,9 @@
             </div>
 
         </form>
-    </div>
-</div>
+        </div>
 
-<div id="purchasesSection" style="display:none;">
+        <div id="purchasesSection" style="display:none;">
     <div class="profile-header">
         <p class="profile-eyebrow">Purchase History</p>
         <h1 class="profile-title">Last Purchases</h1>
@@ -410,11 +410,11 @@
             </a>
         </div>
     <% } %>
-</div>
+        </div>
 
-<div id="quizSection" style="display:none;">
-    <div class="profile-header">
-        <p class="profile-eyebrow">Quiz Result</p>
+        <div id="quizSection" style="display:none;">
+            <div class="profile-header">
+                <p class="profile-eyebrow">Quiz Result</p>
         <h1 class="profile-title">My Skin Profile</h1>
         <p class="profile-subtitle">Based on your last skin quiz result.</p>
     </div>
@@ -447,24 +447,49 @@
             </a>
         </div>
     <% } %>
-</div>
+        </div><!-- end quizSection -->
+
+    </div><!-- end profile-main -->
+</div><!-- end profile-layout -->
 
 <script>
 function showProfileSection(name) {
-    // Hide all sections
-    const sections = ['editSection', 'purchasesSection', 'quizSection'];
-    sections.forEach(id => {
-        const el = document.getElementById(id);
+    // Hide ALL sections
+    ['edit', 'purchases', 'quiz'].forEach(s => {
+        const el = document.getElementById(s + 'Section');
         if (el) el.style.display = 'none';
     });
-    // Show selected
+
+    // Show the selected section
     const target = document.getElementById(name + 'Section');
     if (target) target.style.display = 'block';
 
-    // Update active sidebar link
-    document.querySelectorAll('.sidebar-nav-item').forEach(a => a.classList.remove('active'));
-    event.target.classList.add('active');
+    // Update active sidebar link styling
+    document.querySelectorAll('.sidebar-nav-item').forEach(a => {
+        a.classList.remove('active');
+        const href = a.getAttribute('href');
+        if (href === '#' + name || (name === 'edit' && href === '/user/profile')) {
+            a.classList.add('active');
+        }
+    });
+
+    // Scroll to top of main content
+    const main = document.querySelector('.profile-main');
+    if (main) main.scrollTop = 0;
 }
+
+// Show edit section by default or based on URL hash on page load
+document.addEventListener('DOMContentLoaded', () => {
+    let section = 'edit';
+    const hash = window.location.hash;
+    if (hash === '#purchases') {
+        section = 'purchases';
+    } else if (hash === '#quiz') {
+        section = 'quiz';
+    }
+    showProfileSection(section);
+});
+
 
 
   document.querySelectorAll('input[name="fname"], input[name="lname"]').forEach(input => {

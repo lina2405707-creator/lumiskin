@@ -25,16 +25,16 @@ const SENS_LABELS = {
 
 // ── Product data ──────────────────────────────────────────────────────────
 const PRODUCTS = {
-  'cerave-foam':    { name: 'CeraVe Foaming Facial Cleanser 236ml',            price: 550  },
-  'cerave-hydrate': { name: 'CeraVe Hydrating Facial Cleanser 236ml',          price: 580  },
-  'cerave-lotion':  { name: 'CeraVe Daily Moisturizing Lotion 473ml',          price: 650  },
-  'cerave-spf':     { name: 'CeraVe AM Facial Moisturising Lotion SPF50 52ml', price: 1150 },
-  'uriage-gel':     { name: 'Uriage Hyséac Cleansing Gel 200ml',               price: 799  },
-  'uriage-cica':    { name: 'Uriage Bariéderm-Cica Daily Serum 30ml',          price: 1559 },
-  'uriage-water':   { name: 'Uriage Eau Thermale Water Cream 40ml',            price: 814  },
-  'lrp-effaclar':   { name: 'La Roche-Posay Effaclar Duo(+) 40ml',            price: 850  },
-  'lrp-cicaplast':  { name: 'La Roche-Posay Cicaplast Baume B5+ 40ml',        price: 900  },
-  'lrp-spf':        { name: 'La Roche-Posay Anthelios Invisible Fluid SPF50+', price: 1150 }
+  'cerave-foam':    { name: 'CeraVe Foaming Facial Cleanser 236ml',            price: 550,  image: '/images/foaming-cleanser-236ml-1 cerave.jpg',          step: 'CERAVE-FOAM' },
+  'cerave-hydrate': { name: 'CeraVe Hydrating Facial Cleanser 236ml',          price: 580,  image: '/images/hydrating-cleanser-236ml-first cerave.jpg',     step: 'CERAVE-HYDRATE' },
+  'cerave-lotion':  { name: 'CeraVe Daily Moisturizing Lotion 473ml',          price: 650,  image: '/images/CeraVe-Moisturizing-Lotion.avif',              step: 'DERM APPROVED' },
+  'cerave-spf':     { name: 'CeraVe AM Facial Moisturising Lotion SPF50 52ml', price: 1150, image: '/images/sunblock cera 1.webp',                         step: 'PROTECT' },
+  'uriage-gel':     { name: 'Uriage Hyséac Cleansing Gel 200ml',               price: 799,  image: '/images/uriage cleanser 1.webp',                       step: 'CLEANSE' },
+  'uriage-cica':    { name: 'Uriage Bariéderm-Cica Daily Serum 30ml',          price: 1559, image: '/images/1 uriage.jpg',                                 step: 'REPAIR' },
+  'uriage-water':   { name: 'Uriage Eau Thermale Water Cream 40ml',            price: 814,  image: '/images/uriage thermal 1.avif',                        step: 'HYDRATE' },
+  'lrp-effaclar':   { name: 'La Roche-Posay Effaclar Duo(+) 40ml',            price: 850,  image: '/images/Effaclar_Duo+M_40ml_01_La-Roche-Posay.jpg',    step: 'LRP-EFFACLAR' },
+  'lrp-cicaplast':  { name: 'La Roche-Posay Cicaplast Baume B5+ 40ml',        price: 900,  image: '/images/cica 1.webp',                                  step: 'REPAIR' },
+  'lrp-spf':        { name: 'La Roche-Posay Anthelios Invisible Fluid SPF50+', price: 1150, image: '/images/sunblock1.jpg',                                step: 'PROTECT' }
 };
 
 // ── Navigation helpers ────────────────────────────────────────────────────
@@ -149,7 +149,11 @@ function checkTextarea(id, btnId) {
 function addToCartFromQuiz(productKey, btn) {
   const product = PRODUCTS[productKey];
   if (!product) return;
-  if (typeof addToCart === 'function') addToCart(product.name, product.price);
+  // Pass all 5 args matching the brand-page signature:
+  // addToCart(productId, productName, price, image, step)
+  if (typeof addToCart === 'function') {
+    addToCart(productKey, product.name, product.price, product.image || '', product.step || '');
+  }
   const original = btn.textContent;
   btn.textContent = '✓ Added!';
   btn.style.background = 'rgb(39,174,96)';
