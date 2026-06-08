@@ -1,14 +1,12 @@
 /**
  * public/js/checkout.js
  * Client-side validation, input formatting, and UX interactions.
- * Vanilla JS — no dependencies required.
  */
 
 /* ═══════════════════════════════════════════════════════════════ *
  *  UTILITIES
  * ═══════════════════════════════════════════════════════════════ */
 
-/** Show an inline error below a field */
 function showError(fieldId, message) {
   const field = document.getElementById(fieldId);
   if (!field) return;
@@ -22,7 +20,6 @@ function showError(fieldId, message) {
   err.textContent = message;
 }
 
-/** Clear error for a field */
 function clearError(fieldId) {
   const field = document.getElementById(fieldId);
   if (!field) return;
@@ -31,7 +28,6 @@ function clearError(fieldId) {
   if (err) err.textContent = "";
 }
 
-/** Validate a single field and return true if valid */
 function validateField(fieldId, validator) {
   const field = document.getElementById(fieldId);
   if (!field) return true;
@@ -46,56 +42,118 @@ function validateField(fieldId, validator) {
  * ═══════════════════════════════════════════════════════════════ */
 
 const validators = {
-  email:    (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) ? null : "Please enter a valid email address.",
-  required: (label) => (v) => v.trim() ? null : `${label} is required.`,
-  phone:    (v) => {
-    const d = v.replace(/\D/g, "");
-    return d.length >= 7 && d.length <= 15 ? null : "Please enter a valid phone number.";
+
+  email: (v) => {
+    if (!v.trim()) return "Email address is required.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim())) return "Please enter a valid email address.";
+    return null;
   },
-  zip:      (v) => /^[A-Z0-9][A-Z0-9\s\-]{2,9}[A-Z0-9]$/i.test(v.trim()) ? null : "Please enter a valid postal / ZIP code.",
+
+  fullName: (v) => {
+    if (!v.trim()) return "Full name is required.";
+    if (v.trim().length < 2) return "Full name must be at least 2 characters.";
+    if (v.trim().split(/\s+/).length < 2) return "Please enter your first and last name.";
+    return null;
+  },
+
+  phone: (v) => {
+    if (!v.trim()) return "Phone number is required.";
+    const d = v.replace(/\D/g, "");
+    if (d.length < 7)  return "Phone number is too short.";
+    if (d.length > 15) return "Phone number is too long.";
+    return null;
+  },
+
+  street: (v) => {
+    if (!v.trim()) return "Street address is required.";
+    if (v.trim().length < 3) return "Please enter a complete street address.";
+    return null;
+  },
+
+  apt: (v) => {
+    if (!v.trim()) return null;
+    if (v.trim().length > 20) return "Apartment / Suite is too long.";
+    return null;
+  },
+
+  city: (v) => {
+    if (!v.trim()) return "City is required.";
+    if (v.trim().length < 2) return "Please enter a valid city name.";
+    return null;
+  },
+
+  state: (v) => {
+    if (!v.trim()) return "State / Region is required.";
+    return null;
+  },
+
+  zip: (v) => {
+    if (!v.trim()) return "Postal / ZIP code is required.";
+    return null;
+  },
+
+  country: (v) => {
+    if (!v.trim()) return "Country is required.";
+    return null;
+  },
+
   cardNumber: (v) => {
+    if (!v.trim()) return "Card number is required.";
     const d = v.replace(/\s/g, "");
-    if (!/^\d{13,19}$/.test(d)) return "Please enter a valid card number.";
-    // Luhn check
+    if (!/^\d{13,19}$/.test(d)) return "Please enter a valid card number (13–19 digits).";
     let sum = 0, alt = false;
     for (let i = d.length - 1; i >= 0; i--) {
       let n = parseInt(d[i], 10);
       if (alt) { n *= 2; if (n > 9) n -= 9; }
       sum += n; alt = !alt;
     }
-    return sum % 10 === 0 ? null : "Card number is invalid.";
+    return sum % 10 === 0 ? null : "Card number is invalid. Please check and try again.";
   },
+
   expiry: (v) => {
-    if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(v.trim())) return "Use MM/YY format.";
+    if (!v.trim()) return "Expiry date is required.";
+    if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(v.trim())) return "Please use MM/YY format.";
     const [, m, y] = v.match(/^(\d{2})\/(\d{2})$/);
     const now = new Date();
     const exp = new Date(2000 + parseInt(y), parseInt(m) - 1, 1);
     return exp < new Date(now.getFullYear(), now.getMonth(), 1) ? "This card has expired." : null;
   },
-  cvv:    (v) => /^\d{3,4}$/.test(v.trim()) ? null : "CVV must be 3 or 4 digits.",
+
+  cvv: (v) => {
+    if (!v.trim()) return "CVV is required.";
+    if (!/^\d{3,4}$/.test(v.trim())) return "CVV must be 3 or 4 digits.";
+    return null;
+  },
+
+  cardName: (v) => {
+    if (!v.trim()) return "Name on card is required.";
+    if (v.trim().length < 2) return "Please enter the full name on your card.";
+    return null;
+  },
 };
 
 /* ═══════════════════════════════════════════════════════════════ *
  *  INPUT FORMATTERS
  * ═══════════════════════════════════════════════════════════════ */
 
-/** Format card number with spaces every 4 digits */
 function formatCardNumber(input) {
-  const pos    = input.selectionStart;
-  const before = input.value.length;
-  const digits = input.value.replace(/\D/g, "").slice(0, 19);
+  const pos      = input.selectionStart;
+  const before   = input.value.length;
+  const digits   = input.value.replace(/\D/g, "").slice(0, 19);
   const formatted = digits.replace(/(.{4})/g, "$1 ").trim();
-  input.value = formatted;
-  // Restore cursor position accounting for added spaces
-  const added = formatted.length - before;
+  input.value    = formatted;
+  const added    = formatted.length - before;
   input.setSelectionRange(pos + added, pos + added);
 }
 
-/** Format expiry to MM/YY */
 function formatExpiry(input) {
   let v = input.value.replace(/\D/g, "").slice(0, 4);
   if (v.length > 2) v = v.slice(0, 2) + "/" + v.slice(2);
   input.value = v;
+}
+
+function formatPhone(input) {
+  input.value = input.value.replace(/[^\d\s\+\-\(\)]/g, "");
 }
 
 /* ═══════════════════════════════════════════════════════════════ *
@@ -103,25 +161,24 @@ function formatExpiry(input) {
  * ═══════════════════════════════════════════════════════════════ */
 
 function updateTotals() {
-  const method    = document.querySelector('input[name="shippingMethod"]:checked');
-  const shipping  = method && method.value === "express" ? 15.00 : 0.00;
-  const subtotal  = parseFloat(document.getElementById("js-subtotal")?.dataset.value || 0);
-  const discount  = parseFloat(document.getElementById("js-discount")?.dataset.value || 0);
-  const taxRate   = 0.085;
-  const taxable   = subtotal - discount;
-  const tax       = taxable * taxRate;
-  const total     = taxable + shipping + tax;
+  const method   = document.querySelector('input[name="shippingMethod"]:checked');
+  const shipping = method && method.value === "express" ? 15.00 : 0.00;
+  const subtotal = parseFloat(document.getElementById("js-subtotal")?.dataset.value || 0);
+  const discount = parseFloat(document.getElementById("js-discount")?.dataset.value || 0);
+  const taxRate  = 0.085;
+  const taxable  = subtotal - discount;
+  const tax      = taxable * taxRate;
+  const total    = taxable + shipping + tax;
 
   const setEl = (id, val) => {
     const el = document.getElementById(id);
     if (el) el.textContent = val;
   };
 
-  setEl("js-shipping-display", shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`);
-  setEl("js-tax-display",      `$${tax.toFixed(2)}`);
-  setEl("js-total-display",    `$${total.toFixed(2)}`);
+  setEl("js-shipping-display", shipping === 0 ? "Free" : `${shipping.toLocaleString()} EGP`);
+  setEl("js-tax-display",      `${tax.toFixed(2)} EGP`);
+  setEl("js-total-display",    `${total.toFixed(2)} EGP`);
 
-  // Keep hidden input in sync for server
   const hiddenShipping = document.getElementById("js-shipping-value");
   if (hiddenShipping) hiddenShipping.value = shipping.toFixed(2);
 }
@@ -146,24 +203,29 @@ function initBillingToggle() {
   }
 
   checkbox.addEventListener("change", toggle);
-  toggle(); // run on load
+  toggle();
 }
 
 /* ═══════════════════════════════════════════════════════════════ *
- *  PROMO CODE (AJAX)
+ *  PROMO CODE (AJAX) — syncs to hidden form input
  * ═══════════════════════════════════════════════════════════════ */
 
 function initPromoCode() {
-  const btn    = document.getElementById("apply-promo-btn");
-  const input  = document.getElementById("promoCode");
-  const msg    = document.getElementById("promo-message");
+  const btn        = document.getElementById("apply-promo-btn");
+  const input      = document.getElementById("promoCode");
+  const hidden     = document.getElementById("promoCode-hidden");
+  const msg        = document.getElementById("promo-message");
   if (!btn || !input) return;
 
   btn.addEventListener("click", async () => {
     const code = input.value.trim();
-    if (!code) { msg.textContent = "Please enter a promo code."; msg.className = "promo-message error"; return; }
+    if (!code) {
+      msg.textContent = "Please enter a promo code.";
+      msg.className   = "promo-message error";
+      return;
+    }
 
-    btn.disabled = true;
+    btn.disabled    = true;
     btn.textContent = "Applying…";
 
     try {
@@ -178,28 +240,28 @@ function initPromoCode() {
       msg.className   = `promo-message ${data.valid ? "success" : "error"}`;
 
       if (data.valid) {
-        input.disabled = true;
+        // ✅ Sync promo code to hidden input inside the form
+        if (hidden) hidden.value = code;
+
+        input.disabled  = true;
         btn.textContent = "Applied ✓";
-        btn.disabled = true;
         btn.classList.add("applied");
 
-        // Store discount for live total calculation
         const discountEl = document.getElementById("js-discount");
         if (discountEl && data.promo.type === "percent") {
           const subtotal = parseFloat(document.getElementById("js-subtotal")?.dataset.value || 0);
-          const disc = subtotal * (data.promo.value / 100);
+          const disc     = subtotal * (data.promo.value / 100);
           discountEl.dataset.value = disc.toFixed(2);
-          discountEl.textContent   = `-$${disc.toFixed(2)}`;
+          discountEl.textContent   = `-${disc.toFixed(2)} EGP`;
           discountEl.parentElement.classList.remove("hidden");
         }
         if (data.promo.type === "shipping") {
-          // force shipping to 0 by checking standard
           const standard = document.querySelector('input[name="shippingMethod"][value="standard"]');
-          if (standard) { standard.checked = true; }
+          if (standard) standard.checked = true;
         }
         updateTotals();
       } else {
-        btn.disabled = false;
+        btn.disabled    = false;
         btn.textContent = "Apply";
       }
     } catch {
@@ -210,84 +272,103 @@ function initPromoCode() {
     }
   });
 
-  // Also trigger on Enter
   input.addEventListener("keydown", (e) => {
     if (e.key === "Enter") { e.preventDefault(); btn.click(); }
   });
 }
 
 /* ═══════════════════════════════════════════════════════════════ *
- *  PAYMENT METHOD TABS (Card / PayPal / Apple Pay)
+ *  PAYMENT METHOD TABS
+ *  ✅ FIX: updates hidden paymentMethod input so controller knows COD vs card
  * ═══════════════════════════════════════════════════════════════ */
 
 function initPaymentTabs() {
-  const tabs    = document.querySelectorAll(".payment-tab");
-  const panels  = document.querySelectorAll(".payment-panel");
+  const tabs            = document.querySelectorAll(".payment-tab");
+  const panels          = document.querySelectorAll(".payment-panel");
+  const billingToggle   = document.querySelector(".billing-toggle");
+  const paymentMethodEl = document.getElementById("paymentMethod");
 
   tabs.forEach((tab) => {
     tab.addEventListener("click", () => {
-      tabs.forEach((t)   => t.classList.remove("active"));
+      tabs.forEach((t)   => { t.classList.remove("active"); t.setAttribute("aria-selected", "false"); });
       panels.forEach((p) => p.classList.add("hidden"));
+
       tab.classList.add("active");
+      tab.setAttribute("aria-selected", "true");
+
       const panel = document.getElementById(`panel-${tab.dataset.method}`);
       if (panel) panel.classList.remove("hidden");
+
+      // ✅ Update hidden input so the server knows which payment method was chosen
+      if (paymentMethodEl) paymentMethodEl.value = tab.dataset.method;
+
+      // Hide billing toggle for COD
+      if (billingToggle) {
+        billingToggle.style.display = tab.dataset.method === "cod" ? "none" : "";
+      }
+
+      // Clear card errors when switching to COD
+      if (tab.dataset.method !== "card") {
+        ["cardNumber", "expiry", "cvv", "cardName"].forEach(clearError);
+      }
     });
   });
 }
 
 /* ═══════════════════════════════════════════════════════════════ *
- *  FORM SUBMISSION — validation + loading state
+ *  FORM SUBMISSION
+ *  ✅ FIX: validates zip/country, skips card validation for COD
  * ═══════════════════════════════════════════════════════════════ */
 
 function initFormSubmission() {
-  const form   = document.getElementById("checkout-form");
-  const btn    = document.getElementById("place-order-btn");
+  const form = document.getElementById("checkout-form");
+  const btn  = document.getElementById("place-order-btn");
   if (!form || !btn) return;
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     let valid = true;
 
-    // Contact
+    // ── Contact ──────────────────────────────────────────────────
     valid &= validateField("email",    validators.email);
-    valid &= validateField("fullName", validators.required("Full name"));
+    valid &= validateField("fullName", validators.fullName);
     valid &= validateField("phone",    validators.phone);
 
-    // Shipping address
-    valid &= validateField("street",  validators.required("Street address"));
-    valid &= validateField("city",    validators.required("City"));
-    valid &= validateField("state",   validators.required("State / Region"));
-    valid &= validateField("zip",     validators.zip);
-    valid &= validateField("country", validators.required("Country"));
+    // ── Shipping Address ─────────────────────────────────────────
+    valid &= validateField("street",  validators.street);
+    valid &= validateField("apt",     validators.apt);
+    valid &= validateField("city",    validators.city);
+    valid &= validateField("state",   validators.state);
+    valid &= validateField("zip",     validators.zip);     // ✅ was missing
+    valid &= validateField("country", validators.country); // ✅ was missing
 
-    // Active payment method
+    // ── Payment ──────────────────────────────────────────────────
     const activeTab = document.querySelector(".payment-tab.active");
     const method    = activeTab ? activeTab.dataset.method : "card";
+
     if (method === "card") {
+      // ✅ Only validate card fields when card tab is active
       valid &= validateField("cardNumber", validators.cardNumber);
       valid &= validateField("expiry",     validators.expiry);
       valid &= validateField("cvv",        validators.cvv);
-      valid &= validateField("cardName",   validators.required("Name on card"));
-    }
+      valid &= validateField("cardName",   validators.cardName);
 
-    // Billing if different
-    const billingSame = document.getElementById("billingSame");
-    if (billingSame && !billingSame.checked) {
-      valid &= validateField("billingStreet",  validators.required("Billing street"));
-      valid &= validateField("billingCity",    validators.required("Billing city"));
-      valid &= validateField("billingState",   validators.required("Billing state"));
-      valid &= validateField("billingZip",     validators.zip);
-      valid &= validateField("billingCountry", validators.required("Billing country"));
+      const billingSame = document.getElementById("billingSame");
+      if (billingSame && !billingSame.checked) {
+        valid &= validateField("billingStreet", validators.street);
+        valid &= validateField("billingCity",   validators.city);
+        valid &= validateField("billingState",  validators.state);
+      }
     }
+    // ✅ COD: no card fields needed at all
 
     if (!valid) {
-      // Scroll to first error
       const firstErr = form.querySelector(".is-invalid");
       if (firstErr) firstErr.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
 
-    // All good — show loading state and submit
+    // All valid — submit with loading state
     btn.disabled = true;
     btn.classList.add("loading");
     btn.innerHTML = `
@@ -300,40 +381,59 @@ function initFormSubmission() {
     form.submit();
   });
 
-  // Real-time validation on blur
+  // ── Real-time blur validation ─────────────────────────────────
   const liveFields = [
-    ["email",      validators.email],
-    ["fullName",   validators.required("Full name")],
-    ["phone",      validators.phone],
-    ["street",     validators.required("Street address")],
-    ["city",       validators.required("City")],
-    ["zip",        validators.zip],
-    ["cardNumber", validators.cardNumber],
-    ["expiry",     validators.expiry],
-    ["cvv",        validators.cvv],
-    ["cardName",   validators.required("Name on card")],
+    ["email",    validators.email],
+    ["fullName", validators.fullName],
+    ["phone",    validators.phone],
+    ["street",   validators.street],
+    ["apt",      validators.apt],
+    ["city",     validators.city],
+    ["state",    validators.state],
+    ["zip",      validators.zip],
+    ["country",  validators.country],
   ];
 
   liveFields.forEach(([id, v]) => {
     const el = document.getElementById(id);
     if (el) el.addEventListener("blur", () => validateField(id, v));
   });
+
+  // Card fields only validate on blur when card tab is active
+  const cardFields = [
+    ["cardNumber", validators.cardNumber],
+    ["expiry",     validators.expiry],
+    ["cvv",        validators.cvv],
+    ["cardName",   validators.cardName],
+  ];
+
+  cardFields.forEach(([id, v]) => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener("blur", () => {
+      const activeTab = document.querySelector(".payment-tab.active");
+      if (activeTab && activeTab.dataset.method === "card") {
+        validateField(id, v);
+      }
+    });
+  });
 }
 
 /* ═══════════════════════════════════════════════════════════════ *
- *  INPUT EVENT LISTENERS (formatting)
+ *  INPUT FORMATTERS + RESTRICTIONS
  * ═══════════════════════════════════════════════════════════════ */
 
 function initFormatters() {
-  const cardInput   = document.getElementById("cardNumber");
-  const expiryInput = document.getElementById("expiry");
+  const cardInput    = document.getElementById("cardNumber");
+  const expiryInput  = document.getElementById("expiry");
+  const phoneInput   = document.getElementById("phone");
 
   if (cardInput)   cardInput.addEventListener("input",   () => formatCardNumber(cardInput));
   if (expiryInput) expiryInput.addEventListener("input", () => formatExpiry(expiryInput));
+  if (phoneInput)  phoneInput.addEventListener("input",  () => formatPhone(phoneInput));
 }
 
 /* ═══════════════════════════════════════════════════════════════ *
- *  ACCORDION SECTIONS (mobile UX)
+ *  ACCORDION SECTIONS
  * ═══════════════════════════════════════════════════════════════ */
 
 function initAccordion() {
@@ -358,7 +458,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initAccordion();
   updateTotals();
 
-  // Update totals when shipping method changes
   document.querySelectorAll('input[name="shippingMethod"]').forEach((radio) => {
     radio.addEventListener("change", updateTotals);
   });
