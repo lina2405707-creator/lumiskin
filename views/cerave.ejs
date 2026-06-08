@@ -26,16 +26,16 @@
         <% } %>
 
         <% products.forEach(product => { %>
+        <% const imgSrc = product.image && product.image.startsWith('/') ? product.image : '/images/' + product.image; %>
+        <% const img2Src = product.image2 && product.image2.startsWith('/') ? product.image2 : '/images/' + product.image2; %>
         <div class="product-item">
             <div class="image-wrap">
                 <span class="tag-promo" data-product-tag="<%= product.tag %>"><%= product.tag %></span>
-                <img src="<%= product.image && product.image.startsWith('/') ? product.image : '/images/' + product.image %>"
-                     alt="<%= product.name %>" class="img-primary">
-                <img src="<%= product.image2 && product.image2.startsWith('/') ? product.image2 : '/images/' + product.image2 %>"
-                     alt="<%= product.name %>" class="img-secondary">
+                <img src="<%= imgSrc %>"  alt="<%= product.name %>" class="img-primary">
+                <img src="<%= img2Src %>" alt="<%= product.name %>" class="img-secondary">
                 <button class="add-to-cart-btn"
                         data-i18n="product.addToCart"
-                        onclick="addToCart('<%= product.name %>', <%= product.price %>)">
+                        onclick="addToCart('<%= product._id %>', '<%= product.name.replace(/'/g, "\\'") %>', <%= product.price %>, '<%= imgSrc %>', '<%= product.tag %>')">
                     Add To Cart
                 </button>
                 <% if (role === 'admin') { %>
