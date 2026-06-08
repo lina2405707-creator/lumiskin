@@ -8,14 +8,14 @@
 
 :root {
     --font-heading: 'Playfair Display', serif;
-    --font-body:    'DM Sans', sans-serif;
-    --brown:        rgb(147, 97, 62);
-    --brown-dark:   rgb(83, 54, 30);
-    --beige:        rgba(233, 221, 206, 0.97);
-    --header-h:     76px;
+    --font-body: 'DM Sans', sans-serif;
+    --brown: rgb(147, 97, 62);
+    --brown-dark: rgb(83, 54, 30);
+    --beige: rgba(233, 221, 206, 0.97);
+    --header-h: 76px;
     --surface-white: #ffffff;
-    --text-dark:     #2b2520;
-    --text-muted:    #766e65;
+    --text-dark: #2b2520;
+    --text-muted: #766e65;
     --shadow-soft: 0 4px 20px rgba(83, 54, 30, 0.05);
     --shadow-hover: 0 12px 32px rgba(83, 54, 30, 0.12);
     --radius-premium: 16px;
@@ -24,38 +24,65 @@
 }
 
 /* ── Global font ── */
-body, p, a, span, li, label, input,
-textarea, button, td, th, select {
+body,
+p,
+a,
+span,
+li,
+label,
+input,
+textarea,
+button,
+td,
+th,
+select {
     font-family: var(--font-body);
 }
 
-h1, h2, h3, h4, h5,
-.logotext, .auth-title, .profile-title,
-.cart-heading, .brand-title, .main-title,
-.sub-title, .myths-hero-title, .myths-cta h2,
-.login-title, .signup-title {
+h1,
+h2,
+h3,
+h4,
+h5,
+.logotext,
+.auth-title,
+.profile-title,
+.cart-heading,
+.brand-title,
+.main-title,
+.sub-title,
+.myths-hero-title,
+.myths-cta h2,
+.login-title,
+.signup-title {
     font-family: var(--font-heading);
 }
 
 /* ── Body offset ── */
-body            { padding-top: var(--header-h); }
-body.home-page  { padding-top: 0; }
+body {
+    padding-top: var(--header-h);
+}
+
+body.home-page {
+    padding-top: 0;
+}
 
 /* ── Header shell ── */
 header {
     width: 100%;
     height: var(--header-h);
     position: fixed;
-    top: 0; left: 0;
+    top: 0;
+    left: 0;
     z-index: 1000;
     background: var(--beige);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     border-bottom: 1px solid rgba(147, 97, 62, 0.13);
-    transition: transform 0.38s cubic-bezier(.4,0,.2,1),
-                background 0.38s ease,
-                border-color 0.38s ease,
-                box-shadow 0.38s ease;
+    transition: transform 0.38s cubic-bezier(.4, 0, .2, 1),
+        background 0.38s ease,
+        border-color 0.38s ease,
+        box-shadow 0.38s ease;
 }
 
 /* ── Three-column grid → nav | logo | buttons ── */
@@ -95,7 +122,8 @@ header nav ul.navbuttons {
     list-style: none;
     display: flex;
     gap: 32px;
-    margin: 0; padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 header nav a {
@@ -114,14 +142,21 @@ header nav a {
 header nav a::after {
     content: '';
     position: absolute;
-    bottom: 0; left: 0;
-    width: 0; height: 1px;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
     background: var(--brown);
     transition: width 0.3s ease;
 }
 
-header nav a:hover { opacity: 0.7; }
-header nav a:hover::after { width: 100%; }
+header nav a:hover {
+    opacity: 0.7;
+}
+
+header nav a:hover::after {
+    width: 100%;
+}
 
 /* ── Right buttons ── */
 header .nav-buttons {
@@ -160,8 +195,13 @@ header .btn-primary:hover {
 }
 
 /* ── Scroll states ── */
-header.hidden   { transform: translateY(-100%); }
-header.scrolled { box-shadow: 0 4px 20px rgba(83,54,30,0.1); }
+header.hidden {
+    transform: translateY(-100%);
+}
+
+header.scrolled {
+    box-shadow: 0 4px 20px rgba(83, 54, 30, 0.1);
+}
 
 /* ── Transparent (home page at top) ── */
 header.transparent {
@@ -179,15 +219,21 @@ header.transparent .btn-primary {
     color: #fff;
 }
 
-header.transparent nav a::after      { background: #fff; }
+header.transparent nav a::after {
+    background: #fff;
+}
+
 header.transparent .btn-secondary,
-header.transparent .btn-primary      { border-color: rgba(255,255,255,0.4); }
+header.transparent .btn-primary {
+    border-color: rgba(255, 255, 255, 0.4);
+}
 
 header.transparent .btn-secondary:hover,
 header.transparent .btn-primary:hover {
-    background: rgba(255,255,255,0.15);
+    background: rgba(255, 255, 255, 0.15);
     color: #fff;
-} 
+}
+
 html {
     scroll-behavior: smooth;
     background-color: var(--beige);
@@ -203,7 +249,8 @@ body {
 ::selection {
     background-color: var(--brown);
     color: var(--surface-white);
-} 
+}
+
 /* ════════════════════════════════════════════
    ADD TO BOTTOM OF header.css
    Language switcher button styles
@@ -247,6 +294,7 @@ header.transparent #lang-switcher:hover {
     background: rgba(255, 255, 255, 0.15);
     color: #fff;
 }
+
 /* ═══════════════════════════════════════════
    ADD TO BOTTOM OF header.css
    Fixes nav overflow + lang button sizing
@@ -290,10 +338,11 @@ header .nav-buttons {
 /* Transparent state */
 header.transparent #lang-switcher {
     color: #fff;
-    border-color: rgba(255,255,255,0.45);
+    border-color: rgba(255, 255, 255, 0.45);
 }
+
 header.transparent #lang-switcher:hover {
-    background: rgba(255,255,255,0.15);
+    background: rgba(255, 255, 255, 0.15);
     color: #fff;
 }
 
@@ -305,4 +354,229 @@ header.transparent #lang-switcher:hover {
     letter-spacing: 0;
     text-transform: none;
     font-size: 15px;
+}
+
+/* ════════════════════════════════════════════
+   MOBILE RESPONSIVE
+════════════════════════════════════════════ */
+
+.hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    padding: 8px;
+    background: transparent;
+    border: none;
+    z-index: 1100;
+}
+
+.hamburger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--brown);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+
+header.transparent .hamburger span {
+    background: #fff;
+}
+
+.hamburger.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.hamburger.open span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+.mobile-menu {
+    display: none;
+    position: fixed;
+    top: 76px;
+    left: 0;
+    width: 100%;
+    background: var(--beige);
+    border-top: 1px solid rgba(147, 97, 62, 0.13);
+    padding: 24px 32px;
+    z-index: 999;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 0 8px 24px rgba(83, 54, 30, 0.1);
+}
+
+.mobile-menu.open {
+    display: flex;
+}
+
+.mobile-menu a {
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--brown);
+    text-decoration: none;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(147, 97, 62, 0.1);
+    transition: opacity 0.2s;
+}
+
+.mobile-menu a:hover {
+    opacity: 0.7;
+}
+
+.mobile-menu .mobile-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+
+.mobile-menu .btn-primary,
+.mobile-menu .btn-secondary {
+    font-size: 14px;
+    padding: 10px 20px;
+    border: 1px solid rgba(147, 97, 62, 0.32);
+    border-radius: 50px;
+    color: var(--brown);
+    text-decoration: none;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: background 0.2s, color 0.2s;
+}
+
+.mobile-menu .btn-primary:hover,
+.mobile-menu .btn-secondary:hover {
+    background: var(--brown);
+    color: #fff;
+}
+
+@media (max-width: 900px) {
+
+    header nav,
+    header .nav-buttons {
+        display: none;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    header .container {
+        grid-template-columns: auto 1fr auto;
+        padding: 0 20px;
+    }
+
+    header .logo {
+        justify-content: flex-start;
+    }
+
+    header .logotext {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 480px) {
+    header .logotext {
+        font-size: 24px;
+    }
+
+    .mobile-menu {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero {
+        height: 60vh;
+    }
+
+    .hero-content {
+        padding: 20px;
+        max-width: 90%;
+    }
+
+    .btn-formula {
+        width: 100%;
+        max-width: 280px;
+        font-size: 14px;
+    }
+
+    .brand-container {
+        justify-content: center;
+        gap: 24px;
+    }
+
+    .brand-circle {
+        width: 140px;
+        height: 140px;
+    }
+
+    .brand-title {
+        font-size: 28px;
+    }
+
+    .footer-top {
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .footer-nav {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .footer-brand h1 {
+        font-size: 22vw;
+    }
+
+    footer {
+        padding: 40px 20px 20px;
+    }
+
+    .teaser-cards {
+        flex-wrap: wrap;
+    }
+
+    .myth-teaser h2 {
+        font-size: 30px;
+    }
+
+    .myths-banner {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .myths-banner-text h2 {
+        font-size: 28px;
+    }
+}
+
+/* ── Mobile lang and dark mode buttons ── */
+#lang-switcher-mobile,
+#theme-switcher-mobile {
+    padding: 10px 16px;
+    border: 1px dashed rgba(147, 97, 62, 0.4);
+    border-radius: 50px;
+    background: transparent;
+    color: var(--brown);
+    font-size: 15px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: background 0.2s, color 0.2s;
+}
+
+#lang-switcher-mobile:hover,
+#theme-switcher-mobile:hover {
+    background: var(--brown);
+    color: #fff;
 }
