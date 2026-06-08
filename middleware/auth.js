@@ -6,6 +6,7 @@ exports.requireLogin = (req, res, next) => {
   next();
 };
 
+
 // Redirect logged-in users away from login and signup pages
 exports.redirectIfLoggedIn = (req, res, next) => {
   if (req.session.user) {
