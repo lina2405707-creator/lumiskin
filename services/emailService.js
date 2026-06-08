@@ -155,5 +155,5 @@ async function sendConfirmationEmail(params) {
     return { sent: false, error };
   }
 }
- 
+ module.exports = { sendConfirmationEmail };
  
