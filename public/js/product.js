@@ -1,32 +1,66 @@
-async function addToCart(productName, price) {
+async function addToCart(productId, productName, price, image, step) {
     try {
-        const res = await fetch('/user/cart/data');
+        const res  = await fetch('/user/cart/data');
         const data = await res.json();
 
+        // Build the full item object
+        const newItem = {
+            productId: productId || '',
+            name:      productName,
+            price:     parseFloat(price) || 0,
+            image:     image || '',
+            quantity:  1,
+            step:      step  || ''
+        };
+
         if (data.loggedIn) {
-            // User is logged in — save to MongoDB
-            const updatedCart = [...data.cart, { name: productName, price: price }];
+            // User is logged in — merge into DB cart (increment qty if exists)
+            const cart = (data.cart || []).map(i => ({
+                productId: i.productId || '',
+                name:      i.name,
+                price:     parseFloat(i.price) || 0,
+                image:     i.image    || '',
+                quantity:  parseInt(i.quantity) || 1,
+                step:      i.step     || ''
+            }));
+
+            const existing = cart.find(i => i.name === productName);
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push(newItem);
+            }
+
             await fetch('/user/cart/save', {
-                method: 'POST',
+                method:  'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ cart: updatedCart })
+                body:    JSON.stringify({ cart })
             });
         } else {
-            // User is not logged in — save to localStorage
+            // Not logged in — use localStorage
             const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            cart.push({ name: productName, price: price });
+            const existing = cart.find(i => i.name === productName);
+            if (existing) {
+                existing.quantity = (parseInt(existing.quantity) || 1) + 1;
+            } else {
+                cart.push(newItem);
+            }
             localStorage.setItem('cart', JSON.stringify(cart));
         }
 
-        // ── Translated toast ──
         const toastSuffix = (window.LumiI18n && window.LumiI18n.t('product.toast'))
             || 'added to cart!';
         showToast(productName + ' ' + toastSuffix);
 
     } catch (e) {
-        // Fallback to localStorage if something goes wrong
+        // Fallback to localStorage
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        cart.push({ name: productName, price: price });
+        const existing = cart.find(i => i.name === productName);
+        if (existing) {
+            existing.quantity = (parseInt(existing.quantity) || 1) + 1;
+        } else {
+            cart.push({ productId: productId || '', name: productName, price: parseFloat(price) || 0, image: image || '', quantity: 1, step: step || '' });
+        }
         localStorage.setItem('cart', JSON.stringify(cart));
 
         const toastSuffix = (window.LumiI18n && window.LumiI18n.t('product.toast'))
@@ -55,7 +89,7 @@ function showToast(message) {
     toast.style.transform = 'translateX(-50%) translateY(0)';
     clearTimeout(toast._timer);
     toast._timer = setTimeout(() => {
-        toast.style.opacity = '0';
+        toast.style.opacity  = '0';
         toast.style.transform = 'translateX(-50%) translateY(20px)';
     }, 2500);
 }
@@ -97,6 +131,5 @@ function translateTags() {
     });
 }
 
-/* Run on load and on every language switch */
 document.addEventListener('DOMContentLoaded', translateTags);
-document.addEventListener('langchange', translateTags);
+document.addEventListener('langchange',       translateTags);
