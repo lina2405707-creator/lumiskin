@@ -1,6 +1,6 @@
 // ── Signup Validation ─────────────────────────────────────────────────────────
 exports.validateSignup = (req, res, next) => {
-  const { fname, lname, email, password, confirmPassword } = req.body;
+  const { fname, lname, email, password, confirmPassword } = req.body;   
 
   if (!fname || !lname || !email || !password || !confirmPassword) {
     return res.render('signup', { user: '', error: 'All fields are required.' });
