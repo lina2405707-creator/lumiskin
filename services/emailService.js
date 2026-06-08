@@ -142,11 +142,11 @@ async function sendConfirmationEmail(params) {
     const html = buildEmailHTML(params);
 
     await resend.emails.send({
-      from:    'Lumiskin <onboarding@resend.dev>',  // use this until you verify a domain
-      to:      params.email,
-      subject: `Order Confirmed — ${params.orderId}`,
-      html,
-    });
+  from: 'Lumiskin <onboarding@resend.dev>',
+  to: 'lina2405707@gmail.com', 
+  subject: `Order Confirmed — ${params.orderId}`,
+  html,
+});
 
     console.log(`[emailService] ✉ Email sent to ${params.email}`);
     return { sent: true };
