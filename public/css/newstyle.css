@@ -1,12 +1,12 @@
 :root {
-    --bg:          rgb(233, 221, 206);   
-    --surface:     rgb(243, 241, 238);   
-    --brown-dark:  rgb(83, 54, 30);      
-    --brown-mid:   rgb(147, 97, 62);     
-    --brown-light: rgb(163, 108, 69);    
-    --accent:      rgb(206, 110, 26);    
-    --accent-dark: rgb(147, 97, 62);     
-    --nav-bg:      rgb(233, 221, 206);   
+    --bg: rgb(233, 221, 206);
+    --surface: rgb(243, 241, 238);
+    --brown-dark: rgb(83, 54, 30);
+    --brown-mid: rgb(147, 97, 62);
+    --brown-light: rgb(163, 108, 69);
+    --accent: rgb(206, 110, 26);
+    --accent-dark: rgb(147, 97, 62);
+    --nav-bg: rgb(233, 221, 206);
 }
 
 * {
@@ -46,11 +46,11 @@ body {
     max-width: 1280px;
     margin: 0 auto;
     /* Increased padding to account for the absolute header height */
-    padding: 180px 6% 120px; 
+    padding: 180px 6% 120px;
 }
 
 .header-container {
-   margin-bottom: 64px;
+    margin-bottom: 64px;
 }
 
 .main-title {
@@ -65,7 +65,7 @@ body {
 /* Grid & Content Styles */
 .content-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;  
+    grid-template-columns: 1fr 1fr;
     gap: 72px;
     align-items: center;
 }
@@ -74,8 +74,8 @@ body {
     position: relative;
     border-radius: 20px;
     overflow: hidden;
-    background: var(--surface);   
-    box-shadow: 0 24px 60px rgba(46,31,20,0.12);
+    background: var(--surface);
+    box-shadow: 0 24px 60px rgba(46, 31, 20, 0.12);
 }
 
 .image-frame img {
@@ -102,7 +102,9 @@ body {
     margin-bottom: 18px;
 }
 
-.curated-section, .matching-section, .reviews-section {
+.curated-section,
+.matching-section,
+.reviews-section {
     max-width: 1280px;
     margin: 0 auto;
     padding: 100px 6% 140px;
@@ -110,88 +112,187 @@ body {
 
 /* Responsive */
 @media (max-width: 900px) {
-    .content-grid { grid-template-columns: 1fr; }
-    .logotext { font-size: 40px; }
-    nav a { font-size: 18px; }
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .logotext {
+        font-size: 40px;
+    }
+
+    nav a {
+        font-size: 18px;
+    }
 }
+
 /* Footer Styles */
 footer {
-  background-color: rgb(233, 221, 206,1);
-  color: #fff;
-  padding: 80px 40px 20px 40px;
-   margin: 0; 
-   font-family: 'Inter', sans-serif;
+    background-color: rgb(233, 221, 206, 1);
+    color: #fff;
+    padding: 80px 40px 20px 40px;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
 }
 
 .footer-top {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 40px;
-  margin-bottom: 60px;
-  color: rgba(245, 239, 59, 239,1);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 40px;
+    margin-bottom: 60px;
+    color: rgba(245, 239, 59, 239, 1);
 }
 
 /* Newsletter Styles */
 .footer-newsletter h2 {
-  font-size: 2.5rem;
-  line-height: 1.1;
-  margin-bottom: 10px;
-  color: rgb(163, 108, 69,1);
+    font-size: 2.5rem;
+    line-height: 1.1;
+    margin-bottom: 10px;
+    color: rgb(163, 108, 69, 1);
 }
 
 .input-group {
-  display: flex;
-  border-bottom: 1px solid rgb(243, 241, 238, 1);
-  padding: 10px 0;
-  width: 300px;
+    display: flex;
+    border-bottom: 1px solid rgb(243, 241, 238, 1);
+    padding: 10px 0;
+    width: 300px;
 }
 
 .input-group input {
-  background: transparent;
-  border: none;
-  color: black;
-  width: 100%;
-  outline: none;
+    background: transparent;
+    border: none;
+    color: black;
+    width: 100%;
+    outline: none;
 }
 
 .input-group button {
-  background: rgb(243, 241, 238,1);
-  border-radius: 50%;
-  border: none;
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
+    background: rgb(243, 241, 238, 1);
+    border-radius: 50%;
+    border: none;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
 }
 
 /* Nav Columns */
 
 .footer-nav {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 30px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
 }
 
 .nav-col h4 {
-  color: rgb(206, 175, 145,1);
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  margin-bottom: 15px;
+    color: rgb(206, 175, 145, 1);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    margin-bottom: 15px;
 }
 
-.nav-col ul { list-style:none; padding: 0; }
-.nav-col li { margin-bottom: 8px;  }
-.nav-col a { color: rgb(245, 239, 239,1); text-decoration: none; font-size: 0.9rem; }
+.nav-col ul {
+    list-style: none;
+    padding: 0;
+}
+
+.nav-col li {
+    margin-bottom: 8px;
+}
+
+.nav-col a {
+    color: rgb(245, 239, 239, 1);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
 
 .footer-brand h1 {
-  font-size: 18vw; 
-  text-align: center;
-  margin: 0;
-  line-height: 0.8;
-  letter-spacing: -0.05em;
-  font-weight: 700;
-  color: rgb(163, 108, 69,1);
+    font-size: 18vw;
+    text-align: center;
+    margin: 0;
+    line-height: 0.8;
+    letter-spacing: -0.05em;
+    font-weight: 700;
+    color: rgb(163, 108, 69, 1);
 }
+
 .nav-cta {
     display: inline-block;
+}
+
+/* ── Mobile Responsive Fixes ── */
+@media (max-width: 768px) {
+
+    /* Remove huge top padding on about section */
+    .about-section {
+        padding: 40px 5% 60px;
+    }
+
+    .curated-section,
+    .matching-section,
+    .reviews-section {
+        padding: 40px 5% 60px;
+    }
+
+    /* Stack grid to single column */
+    .content-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    /* On mobile show text before image always */
+    .content-grid .image-col {
+        order: 2;
+    }
+
+    .content-grid .text-col {
+        order: 1;
+    }
+
+    /* Fix image height on mobile */
+    .image-frame img {
+        height: auto;
+        max-height: 380px;
+        object-fit: contain;
+    }
+
+    /* Smaller title */
+    .main-title {
+        font-size: 36px;
+    }
+
+    .sub-title {
+        font-size: 22px;
+        margin-bottom: 16px;
+    }
+
+    .body-text {
+        font-size: 15px;
+    }
+
+    .header-container {
+        margin-bottom: 32px;
+    }
+
+    /* Footer mobile */
+    footer {
+        padding: 40px 20px 20px;
+    }
+
+    .footer-top {
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .footer-nav {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .footer-brand h1 {
+        font-size: 22vw;
+    }
+
+    .input-group {
+        width: 100%;
+    }
 }
