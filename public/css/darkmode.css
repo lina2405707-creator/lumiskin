@@ -604,7 +604,6 @@ html.dark-mode .promo-row button      { background: rgb(83,54,30) !important; }
 html.dark-mode .promo-row button:hover:not(:disabled) { background: rgb(107,70,38) !important; }
 
 /* Price breakdown */
-html.dark-mode .price-breakdown    { /* inherits card bg */ }
 html.dark-mode .price-row .label   { color: rgb(176,160,144) !important; }
 html.dark-mode .price-row .value   { color: rgb(235,220,200) !important; }
 html.dark-mode .price-row.total    { border-top-color: rgba(180,140,100,0.25) !important; }
