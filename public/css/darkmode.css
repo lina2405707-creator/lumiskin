@@ -154,8 +154,11 @@ html.dark-mode .review-toast {
 html.dark-mode .brand-showcase  { background-color: var(--dm-bg-page) !important; }
 html.dark-mode .brand-title     { color: var(--dm-brown-mid)          !important; }
 html.dark-mode .brand-circle    {
-    background-color: var(--dm-bg-card)            !important;
+    background-color: #ffffff                      !important;
     box-shadow: 0 10px 30px rgba(0,0,0,0.4)        !important;
+}
+html.dark-mode .brand-circle img {
+    filter: none !important;
 }
 html.dark-mode .brand-name      { color: var(--dm-brown-mid) !important; }
 
