@@ -463,3 +463,164 @@ html.dark-mode .hero-content h1 span {
     color: #ffffff !important;
     text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8) !important;
 }
+
+/* ══════════════════════════════════════════════════════════════
+   CHECKOUT PAGE
+   ══════════════════════════════════════════════════════════════ */
+html.dark-mode .checkout-header {
+    background:    #18120e !important;
+    border-bottom-color: rgba(180,140,100,0.2) !important;
+}
+html.dark-mode .checkout-header .logo { color: rgb(214,185,155) !important; }
+html.dark-mode .checkout-breadcrumb span.active { color: rgb(214,185,155) !important; }
+html.dark-mode .checkout-breadcrumb { color: #806050 !important; }
+html.dark-mode .checkout-header .secure-badge { color: #806050 !important; }
+
+html.dark-mode body.checkout-page,
+html.dark-mode .checkout-wrapper { background-color: #18120e !important; }
+
+html.dark-mode .checkout-title { color: rgb(214,185,155) !important; }
+
+/* Form sections */
+html.dark-mode .form-section {
+    background:   #2a1f16 !important;
+    border-color: rgba(180,140,100,0.25) !important;
+}
+html.dark-mode .section-header:hover { background: #221a14 !important; }
+html.dark-mode .section-title        { color: rgb(214,185,155) !important; }
+html.dark-mode .section-body         { border-top-color: rgba(180,140,100,0.2) !important; }
+
+/* Fields */
+html.dark-mode .field-group label    { color: rgb(176,160,144) !important; }
+html.dark-mode .field-group input,
+html.dark-mode .field-group select {
+    background:   #1e1510 !important;
+    border-color: rgba(180,140,100,0.3) !important;
+    color:        rgb(235,220,200) !important;
+}
+html.dark-mode .field-group input::placeholder { color: #806050 !important; }
+html.dark-mode .field-group input:focus,
+html.dark-mode .field-group select:focus {
+    border-color: rgb(210,165,118) !important;
+    box-shadow: 0 0 0 3px rgba(180,140,100,0.12) !important;
+}
+html.dark-mode .field-group input.is-invalid { background: #1e1510 !important; }
+
+/* Checkbox */
+html.dark-mode .checkbox-row label { color: rgb(176,160,144) !important; }
+
+/* Shipping options */
+html.dark-mode .shipping-option {
+    border-color: rgba(180,140,100,0.25) !important;
+    background:   #2a1f16 !important;
+}
+html.dark-mode .shipping-option:has(input:checked) {
+    border-color: rgb(210,165,118) !important;
+    background:   #221a14 !important;
+}
+html.dark-mode .shipping-option-name  { color: rgb(235,220,200) !important; }
+html.dark-mode .shipping-option-desc  { color: #806050 !important; }
+html.dark-mode .shipping-option-price { color: rgb(235,220,200) !important; }
+
+/* Payment tabs */
+html.dark-mode .payment-tab {
+    background:   #1e1510 !important;
+    border-color: rgba(180,140,100,0.3) !important;
+    color:        rgb(176,160,144) !important;
+}
+html.dark-mode .payment-tab:hover {
+    border-color: rgb(210,165,118) !important;
+    color: rgb(235,220,200) !important;
+}
+html.dark-mode .payment-tab.active {
+    background:   rgb(83,54,30) !important;
+    border-color: rgb(83,54,30) !important;
+    color:        #fff !important;
+}
+html.dark-mode .alt-payment-placeholder {
+    border-color: rgba(180,140,100,0.25) !important;
+    color: #806050 !important;
+}
+
+/* Billing toggle */
+html.dark-mode .billing-toggle { border-top-color: rgba(180,140,100,0.2) !important; }
+html.dark-mode .security-notice { color: #806050 !important; }
+
+/* Place order button */
+html.dark-mode .place-order-btn {
+    background: rgb(83,54,30) !important;
+}
+html.dark-mode .place-order-btn:hover:not(:disabled) {
+    background: rgb(107,70,38) !important;
+}
+
+/* Error banner */
+html.dark-mode .error-banner {
+    background:   rgba(192,87,79,0.12) !important;
+    border-color: rgba(192,87,79,0.3) !important;
+    color:        #f5a0a0 !important;
+}
+
+/* ── Order Summary ── */
+html.dark-mode .order-summary {
+    background:   #2a1f16 !important;
+    border-color: rgba(180,140,100,0.25) !important;
+}
+html.dark-mode .summary-header {
+    border-bottom-color: rgba(180,140,100,0.2) !important;
+}
+html.dark-mode .summary-header h2  { color: rgb(214,185,155) !important; }
+html.dark-mode .summary-header .item-count { color: #806050 !important; }
+
+html.dark-mode .cart-item         { border-bottom-color: rgba(180,140,100,0.15) !important; }
+html.dark-mode .cart-item-image   {
+    background:   #1e1510 !important;
+    border-color: rgba(180,140,100,0.2) !important;
+}
+html.dark-mode .cart-item-image-placeholder {
+    background:   #1e1510 !important;
+    border-color: rgba(180,140,100,0.2) !important;
+    color: #806050 !important;
+}
+html.dark-mode .cart-item-name    { color: rgb(235,220,200) !important; }
+html.dark-mode .cart-item-step    { color: #806050 !important; }
+html.dark-mode .cart-item-qty     { color: #806050 !important; }
+html.dark-mode .cart-item-price   { color: rgb(235,220,200) !important; }
+
+/* Promo */
+html.dark-mode .promo-section {
+    border-color: rgba(180,140,100,0.2) !important;
+}
+html.dark-mode .promo-row input {
+    background:   #1e1510 !important;
+    border-color: rgba(180,140,100,0.3) !important;
+    color:        rgb(235,220,200) !important;
+}
+html.dark-mode .promo-row input:focus { border-color: rgb(210,165,118) !important; }
+html.dark-mode .promo-row button      { background: rgb(83,54,30) !important; }
+html.dark-mode .promo-row button:hover:not(:disabled) { background: rgb(107,70,38) !important; }
+
+/* Price breakdown */
+html.dark-mode .price-breakdown    { /* inherits card bg */ }
+html.dark-mode .price-row .label   { color: rgb(176,160,144) !important; }
+html.dark-mode .price-row .value   { color: rgb(235,220,200) !important; }
+html.dark-mode .price-row.total    { border-top-color: rgba(180,140,100,0.25) !important; }
+html.dark-mode .price-row.total .label,
+html.dark-mode .price-row.total .value { color: rgb(235,220,200) !important; }
+
+/* Trust badges */
+html.dark-mode .trust-badges       { border-top-color: rgba(180,140,100,0.2) !important; }
+html.dark-mode .trust-badge        { color: #806050 !important; }
+html.dark-mode .trust-badge svg    { stroke: #806050 !important; }
+
+/* Confirmation page */
+html.dark-mode .confirmation-wrapper h1 { color: rgb(214,185,155) !important; }
+html.dark-mode .confirmation-wrapper .subtitle { color: rgb(176,160,144) !important; }
+html.dark-mode .confirmation-card {
+    background:   #2a1f16 !important;
+    border-color: rgba(180,140,100,0.25) !important;
+}
+html.dark-mode .confirmation-card .card-item span  { color: #806050 !important; }
+html.dark-mode .confirmation-card .card-item strong { color: rgb(235,220,200) !important; }
+html.dark-mode .confirmation-cta   { background: rgb(83,54,30) !important; }
+html.dark-mode .confirmation-cta:hover { background: rgb(107,70,38) !important; }
