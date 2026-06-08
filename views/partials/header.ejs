@@ -1,4 +1,3 @@
-<!-- Unified Header CSS — loaded on every page -->
 <link rel="stylesheet" href="/css/header.css">
 <link rel="stylesheet" href="/css/darkmode.css">
 <link rel="stylesheet" href="/css/rtl.css">
@@ -19,25 +18,83 @@
         </a>
 
         <div class="nav-buttons">
-            <% if (user !== '') { %>
-                <% if (role === 'admin') { %>
+            <% if (user !=='' ) { %>
+                <% if (role==='admin' ) { %>
                     <a href="/admin" class="btn-secondary" data-i18n="nav.admin"><b>⚙ Admin</b></a>
-                <% } %>
-                <a href="/user/profile" class="btn-secondary"><b><%= user %></b></a>
-                <a href="/user/logout" class="btn-secondary" data-i18n="nav.logout"><b>Logout</b></a>
-            <% } else { %>
-                <a href="/user/login" class="btn-secondary" data-i18n="nav.account"><b>Account</b></a>
-            <% } %>
-            <a href="/user/cart" class="btn-primary" data-i18n="nav.cart"><b>Cart</b></a>
-
-            <!-- Language toggle -->
-            <button id="lang-switcher" title="Toggle language" onclick="if(window.LumiI18n) LumiI18n.toggle()">ع</button>
-
-            <!-- Dark mode toggle -->
-            <button id="theme-switcher-control" title="Toggle dark mode">🌙</button>
+                    <% } %>
+                        <a href="/user/profile" class="btn-secondary"><b>
+                                <%= user %>
+                            </b></a>
+                        <a href="/user/logout" class="btn-secondary" data-i18n="nav.logout"><b>Logout</b></a>
+                        <% } else { %>
+                            <a href="/user/login" class="btn-secondary" data-i18n="nav.account"><b>Account</b></a>
+                            <% } %>
+                                <a href="/user/cart" class="btn-primary" data-i18n="nav.cart"><b>Cart</b></a>
+                                <button id="lang-switcher" title="Toggle language"
+                                    onclick="if(window.LumiI18n) LumiI18n.toggle()">ع</button>
+                                <button id="theme-switcher-control" title="Toggle dark mode">🌙</button>
         </div>
+
+        <!-- Hamburger button (mobile only) -->
+        <button class="hamburger" id="hamburger" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
     </div>
 </header>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+    <a href="/" data-i18n="nav.home">Home</a>
+    <a href="/#brand-section" data-i18n="nav.products">Products</a>
+    <a href="/about" data-i18n="nav.about">About</a>
+    <a href="/skin-advisor" data-i18n="nav.advisor">Skin Advisor</a>
+    <div class="mobile-buttons">
+        <% if (user !=='' ) { %>
+            <% if (role==='admin' ) { %>
+                <a href="/admin" class="btn-secondary" data-i18n="nav.admin">⚙ Admin</a>
+                <% } %>
+                    <a href="/user/profile" class="btn-secondary">
+                        <%= user %>
+                    </a>
+                    <a href="/user/logout" class="btn-secondary" data-i18n="nav.logout">Logout</a>
+                    <% } else { %>
+                        <a href="/user/login" class="btn-secondary" data-i18n="nav.account">Account</a>
+                        <% } %>
+                            <a href="/user/cart" class="btn-primary" data-i18n="nav.cart">Cart</a>
+                            <button id="lang-switcher-mobile" title="Toggle language"
+                                onclick="if(window.LumiI18n) LumiI18n.toggle()">ع</button>
+                            <button id="theme-switcher-mobile" title="Toggle dark mode">🌙</button>
+    </div>
+</div>
+
+<script>
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('open');
+        mobileMenu.classList.toggle('open');
+    });
+
+    // Close menu when a link is clicked
+    mobileMenu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            hamburger.classList.remove('open');
+            mobileMenu.classList.remove('open');
+        });
+    });
+
+    // Sync mobile dark mode button with desktop
+    const themeMobile = document.getElementById('theme-switcher-mobile');
+    if (themeMobile) {
+        themeMobile.addEventListener('click', () => {
+            const desktopBtn = document.getElementById('theme-switcher-control');
+            if (desktopBtn) desktopBtn.click();
+        });
+    }
+</script>
 
 <script src="/js/js.js"></script>
 <script src="/js/i18n.js"></script>
