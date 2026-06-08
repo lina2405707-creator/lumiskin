@@ -130,35 +130,30 @@ function buildEmailHTML({ name, orderId, items, totals, address, estimatedDelive
 }
 
 /**
- * sendConfirmationEmail — call this after a successful order save.
- */
+ * sendConfirmationEmail — call this after a successful order save.  
+*/ 
+
+const { Resend } = require('resend');
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 async function sendConfirmationEmail(params) {
   try {
     const html = buildEmailHTML(params);
 
-    // ACTIVATED PRODUCTION NODEMAILER BLOCK FOR GMAIL
-    const transporter = nodemailer.createTransport({
-      service: 'gmail', // Swapped from host/port to standard Gmail service
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    await transporter.sendMail({
-      from:    `"Lumiskin" <${process.env.EMAIL_USER}>`,
+    await resend.emails.send({
+      from:    'Lumiskin <onboarding@resend.dev>',  // use this until you verify a domain
       to:      params.email,
       subject: `Order Confirmed — ${params.orderId}`,
       html,
     });
 
-    console.log(`\n[emailService] ✉  Real Confirmation email successfully sent to → ${params.email}`);
+    console.log(`[emailService] ✉ Email sent to ${params.email}`);
     return { sent: true };
-
   } catch (error) {
-    console.error("[emailService] Failed to send email:", error);
+    console.error('[emailService] Failed:', error);
     return { sent: false, error };
   }
 }
-
-module.exports = { sendConfirmationEmail };
+ 
+ 
