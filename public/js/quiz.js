@@ -3,7 +3,7 @@ const answers = {};
 const flags   = {};
 const TOTAL_STEPS = 15;
 
-// ── Skin profile labels (hardcoded — no translation dependency) ───────────
+// ── Skin profile labels ───────────────────────────────────────────────────
 const SKIN_LABELS = {
   very_dry:    'Very Dry Skin',
   often_dry:   'Dry Skin',
@@ -23,24 +23,30 @@ const SENS_LABELS = {
   avoids:    'Avoids New Products'
 };
 
-// ── Product data (matches real DB products) ───────────────────────────────
+// ── Product data ──────────────────────────────────────────────────────────
 const PRODUCTS = {
-  'cerave-foam':    { name: 'CeraVe Foaming Facial Cleanser 236ml',           price: 550  },
-  'cerave-hydrate': { name: 'CeraVe Hydrating Facial Cleanser 236ml',         price: 580  },
-  'cerave-lotion':  { name: 'CeraVe Daily Moisturizing Lotion 473ml',         price: 650  },
-  'cerave-spf':     { name: 'CeraVe AM Facial Moisturising Lotion SPF50 52ml',price: 1150 },
-  'uriage-gel':     { name: 'Uriage Hyséac Cleansing Gel 200ml',              price: 799  },
-  'uriage-cica':    { name: 'Uriage Bariéderm-Cica Daily Serum 30ml',         price: 1559 },
-  'uriage-water':   { name: 'Uriage Eau Thermale Water Cream 40ml',           price: 814  },
-  'lrp-effaclar':   { name: 'La Roche-Posay Effaclar Duo(+) 40ml',           price: 850  },
-  'lrp-cicaplast':  { name: 'La Roche-Posay Cicaplast Baume B5+ 40ml',       price: 900  },
-  'lrp-spf':        { name: 'La Roche-Posay Anthelios Invisible Fluid SPF50+',price: 1150 }
+  'cerave-foam':    { name: 'CeraVe Foaming Facial Cleanser 236ml',            price: 550  },
+  'cerave-hydrate': { name: 'CeraVe Hydrating Facial Cleanser 236ml',          price: 580  },
+  'cerave-lotion':  { name: 'CeraVe Daily Moisturizing Lotion 473ml',          price: 650  },
+  'cerave-spf':     { name: 'CeraVe AM Facial Moisturising Lotion SPF50 52ml', price: 1150 },
+  'uriage-gel':     { name: 'Uriage Hyséac Cleansing Gel 200ml',               price: 799  },
+  'uriage-cica':    { name: 'Uriage Bariéderm-Cica Daily Serum 30ml',          price: 1559 },
+  'uriage-water':   { name: 'Uriage Eau Thermale Water Cream 40ml',            price: 814  },
+  'lrp-effaclar':   { name: 'La Roche-Posay Effaclar Duo(+) 40ml',            price: 850  },
+  'lrp-cicaplast':  { name: 'La Roche-Posay Cicaplast Baume B5+ 40ml',        price: 900  },
+  'lrp-spf':        { name: 'La Roche-Posay Anthelios Invisible Fluid SPF50+', price: 1150 }
 };
+
+// ── Navigation helpers ────────────────────────────────────────────────────
+// Steps 9 and 10 are female-only (pregnancy + period questions).
+// Males jump from 8 → 11, skipping both.
 
 function getNextStep(current) {
   switch (current) {
     case 1:  return answers.s1 === 'none' ? 3 : 2;
-    case 8:  return answers.s8 === 'male' ? 10 : 9;
+    case 8:  return answers.s8 === 'male' ? 11 : 9;   // ✅ males skip 9 AND 10
+    case 9:  return 10;
+    case 10: return 11;
     case 11: return flags.hasAllergy   ? 12 : 13;
     case 13: return flags.hasCondition ? 14 : 15;
     case 15: return flags.hasExtra     ? 16 : 'result';
@@ -52,7 +58,9 @@ function getNextStep(current) {
 function getPrevStep(current) {
   switch (current) {
     case 3:        return answers.s1 === 'none' ? 1 : 2;
-    case 10:       return answers.s8 === 'male' ? 8 : 9;
+    case 9:        return 8;
+    case 10:       return 9;
+    case 11:       return answers.s8 === 'male' ? 8 : 10;  // ✅ males go back to 8
     case 13:       return flags.hasAllergy   ? 12 : 11;
     case 15:       return flags.hasCondition ? 14 : 13;
     case 16:       return 15;
@@ -107,6 +115,7 @@ function selectSingle(card, stepNum) {
   answers['s' + stepNum] = card.dataset.value;
   const btn = document.getElementById('next' + stepNum);
   if (btn) btn.disabled = false;
+
   if (stepNum === 9) {
     const warn = document.getElementById('pregnancyWarning');
     if (warn) warn.classList.toggle('visible', ['pregnant','breastfeeding','trying'].includes(card.dataset.value));
@@ -136,17 +145,11 @@ function checkTextarea(id, btnId) {
   if (btn) btn.disabled = document.getElementById(id).value.trim().length === 0;
 }
 
-// ── Add to cart — uses same addToCart from product.js ─────────────────────
+// ── Add to cart ───────────────────────────────────────────────────────────
 function addToCartFromQuiz(productKey, btn) {
   const product = PRODUCTS[productKey];
   if (!product) return;
-
-  // Call the addToCart function from product.js (handles login/localStorage)
-  if (typeof addToCart === 'function') {
-    addToCart(product.name, product.price);
-  }
-
-  // Button feedback
+  if (typeof addToCart === 'function') addToCart(product.name, product.price);
   const original = btn.textContent;
   btn.textContent = '✓ Added!';
   btn.style.background = 'rgb(39,174,96)';
@@ -158,7 +161,7 @@ function addToCartFromQuiz(productKey, btn) {
   }, 2000);
 }
 
-// ── Save quiz result to database ──────────────────────────────────────────
+// ── Save quiz result to DB ────────────────────────────────────────────────
 function saveQuizResultToDB(resultText) {
   fetch('/user/save-quiz', {
     method: 'POST',
@@ -172,6 +175,7 @@ function buildRoutine(skinType, acne, sensitivity, goals, pregnancy) {
   const isDry       = ['very_dry','often_dry'].includes(skinType);
   const isOily      = ['often_oily','very_oily'].includes(skinType);
   const isSensitive = sensitivity === 'sensitive';
+  // Males have no pregnancy answer — treat as none
   const isPregnant  = ['pregnant','breastfeeding','trying'].includes(pregnancy);
   const routine     = [];
 
@@ -215,26 +219,27 @@ function showResult() {
   const acne        = answers.s1 || 'none';
   const sensitivity = answers.s4 || 'normal';
   const goals       = answers.goals || [];
+  // Males won't have s9 set — defaults to undefined → treated as 'none' in buildRoutine
   const pregnancy   = answers.s9;
 
-  // ── Profile label ─────────────────────────────────────────────────────────
-  const skinLabel = SKIN_LABELS[skinType] || 'Combination Skin';
-  const acneLabel = ACNE_LABELS[acne]     || 'Acne-Free';
-  const sensLabel = SENS_LABELS[sensitivity] || 'Normal';
+  const skinLabel = SKIN_LABELS[skinType]     || 'Combination Skin';
+  const acneLabel = ACNE_LABELS[acne]         || 'Acne-Free';
+  const sensLabel = SENS_LABELS[sensitivity]  || 'Normal';
 
-  const resultTitle = skinLabel;
+  const resultTitle   = skinLabel;
   const resultSummary = `${skinLabel} · ${acneLabel} · ${sensLabel} Sensitivity`;
 
   document.getElementById('resultTitle').textContent = resultTitle;
-  document.getElementById('resultDesc').textContent =
+  document.getElementById('resultDesc').textContent  =
     `Based on your answers, your skin profile is: ${resultSummary}. ` +
     `Here is your personalized skincare routine — each product is carefully selected for your skin type.`;
 
-  // ── Tags ──────────────────────────────────────────────────────────────────
+  // Tags
   const tagEl = document.getElementById('resultTags');
   tagEl.innerHTML = '';
-  const goalLabels = { clogged_pores:'Clogged Pores', dark_spots:'Dark Spots', firmness:'Firmness', texture:'Texture' };
-  [skinLabel, acneLabel, sensLabel === 'Normal' ? null : sensLabel + ' Skin',
+  const goalLabels = { clogged_pores: 'Clogged Pores', dark_spots: 'Dark Spots', firmness: 'Firmness', texture: 'Texture' };
+  [skinLabel, acneLabel,
+   sensLabel === 'Normal' ? null : sensLabel + ' Skin',
    ...goals.map(g => goalLabels[g]).filter(Boolean)]
     .filter(Boolean).forEach(tag => {
       const span = document.createElement('span');
@@ -243,7 +248,7 @@ function showResult() {
       tagEl.appendChild(span);
     });
 
-  // ── Render routine ────────────────────────────────────────────────────────
+  // Routine
   const routine   = buildRoutine(skinType, acne, sensitivity, goals, pregnancy);
   const routineEl = document.getElementById('routineList');
   routineEl.innerHTML = '';
@@ -252,33 +257,31 @@ function showResult() {
     const product = PRODUCTS[item.key];
     if (!product) return;
     const safeKey = item.key.replace(/'/g, "\\'");
-
     routineEl.innerHTML += `
-      <div class="result-item" style="display:flex; align-items:flex-start; justify-content:space-between; gap:14px;">
-        <div style="display:flex; gap:14px; align-items:flex-start; flex:1;">
+      <div class="result-item" style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;">
+        <div style="display:flex;gap:14px;align-items:flex-start;flex:1;">
           <div class="result-num">${i + 1}</div>
           <div class="result-item-text">
             <strong>${product.name}</strong>
-            <span style="font-size:12px; color:#888; display:block; margin-top:2px;">${item.step}</span>
+            <span style="font-size:12px;color:#888;display:block;margin-top:2px;">${item.step}</span>
             <span>${item.desc}</span>
-            <span style="color:rgb(206,110,26); font-weight:700; font-size:13px; display:block; margin-top:4px;">
+            <span style="color:rgb(206,110,26);font-weight:700;font-size:13px;display:block;margin-top:4px;">
               ${product.price} EGP
             </span>
           </div>
         </div>
         <button
           onclick="addToCartFromQuiz('${safeKey}', this)"
-          style="padding:8px 16px; background:rgb(83,54,30); color:#fff; border:none;
-                 border-radius:20px; font-size:12px; font-weight:600; letter-spacing:0.06em;
-                 text-transform:uppercase; cursor:pointer; white-space:nowrap;
-                 transition:background 0.2s; flex-shrink:0; margin-top:4px;"
+          style="padding:8px 16px;background:rgb(83,54,30);color:#fff;border:none;
+                 border-radius:20px;font-size:12px;font-weight:600;letter-spacing:0.06em;
+                 text-transform:uppercase;cursor:pointer;white-space:nowrap;
+                 transition:background 0.2s;flex-shrink:0;margin-top:4px;"
           onmouseover="if(!this.disabled) this.style.background='rgb(147,97,62)'"
           onmouseout="if(!this.disabled) this.style.background='rgb(83,54,30)'"
         >+ Add to Cart</button>
       </div>`;
   });
 
-  // Save to DB (silent)
   saveQuizResultToDB(resultSummary);
 }
 
