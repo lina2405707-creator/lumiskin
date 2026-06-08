@@ -2,14 +2,18 @@ const mongoose = require('mongoose');
 const bcrypt   = require('bcrypt');
 
 const cartItemSchema = new mongoose.Schema({
-  name:  { type: String, required: true },
-  price: { type: Number, required: true }
+  productId: { type: String,  default: '' },
+  name:      { type: String,  required: true },
+  price:     { type: Number,  required: true },
+  image:     { type: String,  default: '' },
+  quantity:  { type: Number,  default: 1 },
+  step:      { type: String,  default: '' }
 }, { _id: false });
 
 const purchaseSchema = new mongoose.Schema({
   name:  { type: String, required: true },
   price: { type: Number, required: true },
-  date:  { type: Date, default: Date.now }
+  date:  { type: Date,   default: Date.now }
 }, { _id: false });
 
 const userSchema = new mongoose.Schema({
