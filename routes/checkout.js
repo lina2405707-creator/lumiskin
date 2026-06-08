@@ -19,4 +19,4 @@ router.get("/confirmation",    controller.getConfirmation);
 // AJAX promo code validation
 router.post("/validate-promo", controller.validatePromo);
 
-module.exports = router;
+module.exports = router; 
