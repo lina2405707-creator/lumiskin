@@ -1,569 +1,379 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title><%= title %></title>
   <link rel="stylesheet" href="/css/checkout.css" />
-  <%# Add your global stylesheet here if you have one %>
-  <%# <link rel="stylesheet" href="/css/styles.css" /> %>
+  <link rel="stylesheet" href="/css/darkmode.css" />
+  <!-- Apply dark mode instantly before page renders to prevent flash -->
+  <script>
+    (function() {
+      if (localStorage.getItem('lumiskin-theme') === 'dark') {
+        document.documentElement.classList.add('dark-mode');
+      }
+    })();
+  </script>
 </head>
 <body>
 
-  <!-- ══════════════════════════════════════════════════════════ -->
-  <!-- HEADER                                                     -->
-  <!-- ══════════════════════════════════════════════════════════ -->
   <header class="checkout-header">
     <a href="/" class="logo">LUMISKIN</a>
-
     <nav class="checkout-breadcrumb" aria-label="Checkout progress">
-      <span class="active">Checkout</span>
+      <span class="active" data-i18n="checkout.step.checkout">Checkout</span>
       <span class="sep">›</span>
-      <span>Confirmation</span>
+      <span data-i18n="checkout.step.confirmation">Confirmation</span>
     </nav>
-
-    <div class="secure-badge">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-      </svg>
-      Secure Checkout
+    <div class="checkout-header-right">
+      <div class="secure-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        <span data-i18n="checkout.secure">Secure Checkout</span>
+      </div>
     </div>
   </header>
 
-  <!-- ══════════════════════════════════════════════════════════ -->
-  <!-- MAIN CONTENT                                              -->
-  <!-- ══════════════════════════════════════════════════════════ -->
   <main>
     <div class="checkout-wrapper">
 
-      <!-- ════════════════════════════════════════════════════ -->
-      <!-- LEFT — FORM                                         -->
-      <!-- ════════════════════════════════════════════════════ -->
+      <!-- ════ LEFT — FORM ════ -->
       <div class="checkout-form-col">
-        <h1 class="checkout-title">Your Details</h1>
+        <h1 class="checkout-title" data-i18n="checkout.title">Your Details</h1>
 
-        <%# General error from server (e.g. payment failure) %>
         <% if (errors.general) { %>
           <div class="error-banner" role="alert"><%= errors.general %></div>
         <% } %>
 
         <form id="checkout-form" method="POST" action="/checkout" novalidate>
 
-          <!-- ─── Section 1: Contact & Shipping ─────────────── -->
+          <input type="hidden" id="paymentMethod" name="paymentMethod" value="card" />
+          <input type="hidden" id="promoCode-hidden" name="promoCode" value="<%= formData.promoCode || '' %>" />
+
+          <!-- ── Section 1: Contact & Shipping ── -->
           <div class="form-section" id="section-contact">
             <div class="section-header" aria-expanded="true">
               <span class="section-number">1</span>
-              <span class="section-title">Contact & Shipping</span>
+              <span class="section-title" data-i18n="checkout.s1.title">Contact & Shipping</span>
               <svg class="section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path d="M6 9l6 6 6-6"/>
               </svg>
             </div>
 
             <div class="section-body">
-              <%# Email %>
+
+              <!-- Email -->
               <div class="field-row">
                 <div class="field-group">
-                  <label for="email">Email Address</label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    placeholder="you@example.com"
-                    value="<%= formData.email || '' %>"
-                    autocomplete="email"
-                    class="<%= errors.email ? 'is-invalid' : '' %>"
-                    required
-                  />
-                  <% if (errors.email) { %>
-                    <span class="field-error"><%= errors.email %></span>
-                  <% } else { %>
-                    <span class="field-error"></span>
-                  <% } %>
+                  <label for="email" data-i18n="checkout.field.email">Email Address</label>
+                  <input type="email" id="email" name="email"
+                    data-i18n-ph="checkout.ph.email" placeholder="you@example.com"
+                    value="<%= formData.email || '' %>" autocomplete="email"
+                    class="<%= errors.email ? 'is-invalid' : '' %>" required />
+                  <span class="field-error"><%= errors.email || '' %></span>
                 </div>
               </div>
 
-              <%# Newsletter opt-in %>
+              <!-- Newsletter -->
               <label class="checkbox-row">
-                <input
-                  type="checkbox"
-                  name="subscribe"
-                  <%= formData.subscribe === 'on' ? 'checked' : '' %>
-                />
-                <span>Subscribe to skincare tips and exclusive offers</span>
+                <input type="checkbox" name="subscribe" <%= formData.subscribe === 'on' ? 'checked' : '' %> />
+                <span data-i18n="checkout.subscribe">Subscribe to skincare tips and exclusive offers</span>
               </label>
 
-              <%# Full Name %>
+              <!-- Full Name -->
               <div class="field-row">
                 <div class="field-group">
-                  <label for="fullName">Full Name</label>
-                  <input
-                    type="text"
-                    id="fullName"
-                    name="fullName"
-                    placeholder="Jane Doe"
-                    value="<%= formData.fullName || '' %>"
-                    autocomplete="name"
-                    class="<%= errors.fullName ? 'is-invalid' : '' %>"
-                    required
-                  />
-                  <% if (errors.fullName) { %>
-                    <span class="field-error"><%= errors.fullName %></span>
-                  <% } else { %>
-                    <span class="field-error"></span>
-                  <% } %>
+                  <label for="fullName" data-i18n="checkout.field.name">Full Name</label>
+                  <input type="text" id="fullName" name="fullName"
+                    data-i18n-ph="checkout.ph.name" placeholder="Jane Doe"
+                    value="<%= formData.fullName || '' %>" autocomplete="name"
+                    class="<%= errors.fullName ? 'is-invalid' : '' %>" required />
+                  <span class="field-error"><%= errors.fullName || '' %></span>
                 </div>
               </div>
 
-              <%# Phone %>
+              <!-- Phone -->
               <div class="field-row">
                 <div class="field-group">
-                  <label for="phone">Phone Number</label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    placeholder="(555) 000-0000"
-                    value="<%= formData.phone || '' %>"
-                    autocomplete="tel"
-                    class="<%= errors.phone ? 'is-invalid' : '' %>"
-                    required
-                  />
-                  <% if (errors.phone) { %>
-                    <span class="field-error"><%= errors.phone %></span>
-                  <% } else { %>
-                    <span class="field-error"></span>
-                  <% } %>
+                  <label for="phone" data-i18n="checkout.field.phone">Phone Number</label>
+                  <input type="tel" id="phone" name="phone"
+                    data-i18n-ph="checkout.ph.phone" placeholder="+20 100 000 0000"
+                    value="<%= formData.phone || '' %>" autocomplete="tel"
+                    class="<%= errors.phone ? 'is-invalid' : '' %>" required />
+                  <span class="field-error"><%= errors.phone || '' %></span>
                 </div>
               </div>
 
-              <%# Street + Apartment %>
+              <!-- Street -->
               <div class="field-row">
                 <div class="field-group">
-                  <label for="street">Street Address</label>
-                  <input
-                    type="text"
-                    id="street"
-                    name="street"
-                    placeholder="123 Main Street"
-                    value="<%= formData.street || '' %>"
-                    autocomplete="address-line1"
-                    class="<%= errors.street ? 'is-invalid' : '' %>"
-                    required
-                  />
-                  <% if (errors.street) { %>
-                    <span class="field-error"><%= errors.street %></span>
-                  <% } else { %>
-                    <span class="field-error"></span>
-                  <% } %>
+                  <label for="street" data-i18n="checkout.field.street">Street Address</label>
+                  <input type="text" id="street" name="street"
+                    data-i18n-ph="checkout.ph.street" placeholder="123 Main Street"
+                    value="<%= formData.street || '' %>" autocomplete="address-line1"
+                    class="<%= errors.street ? 'is-invalid' : '' %>" required />
+                  <span class="field-error"><%= errors.street || '' %></span>
                 </div>
               </div>
 
+              <!-- Apartment (optional) -->
               <div class="field-row">
                 <div class="field-group">
-                  <label for="apt">Apartment / Suite <span style="color:var(--text-light)">(optional)</span></label>
-                  <input
-                    type="text"
-                    id="apt"
-                    name="apt"
-                    placeholder="Apt 4B"
-                    value="<%= formData.apt || '' %>"
-                    autocomplete="address-line2"
-                  />
+                  <label for="apt">
+                    <span data-i18n="checkout.field.apt">Apartment / Suite</span>
+                    <span style="color:var(--text-light)" data-i18n="checkout.optional">(optional)</span>
+                  </label>
+                  <input type="text" id="apt" name="apt"
+                    data-i18n-ph="checkout.ph.apt" placeholder="Apt 4B"
+                    value="<%= formData.apt || '' %>" autocomplete="address-line2" />
+                  <span class="field-error"></span>
                 </div>
               </div>
 
-              <%# City + State %>
+              <!-- City + State -->
               <div class="field-row cols-2">
                 <div class="field-group">
-                  <label for="city">City</label>
-                  <input
-                    type="text"
-                    id="city"
-                    name="city"
-                    placeholder="New York"
-                    value="<%= formData.city || '' %>"
-                    autocomplete="address-level2"
-                    class="<%= errors.city ? 'is-invalid' : '' %>"
-                    required
-                  />
-                  <% if (errors.city) { %>
-                    <span class="field-error"><%= errors.city %></span>
-                  <% } else { %>
-                    <span class="field-error"></span>
-                  <% } %>
+                  <label for="city" data-i18n="checkout.field.city">City</label>
+                  <input type="text" id="city" name="city"
+                    data-i18n-ph="checkout.ph.city" placeholder="Cairo"
+                    value="<%= formData.city || '' %>" autocomplete="address-level2"
+                    class="<%= errors.city ? 'is-invalid' : '' %>" required />
+                  <span class="field-error"><%= errors.city || '' %></span>
                 </div>
                 <div class="field-group">
-                  <label for="state">State / Region</label>
-                  <input
-                    type="text"
-                    id="state"
-                    name="state"
-                    placeholder="NY"
-                    value="<%= formData.state || '' %>"
-                    autocomplete="address-level1"
-                    class="<%= errors.state ? 'is-invalid' : '' %>"
-                    required
-                  />
-                  <% if (errors.state) { %>
-                    <span class="field-error"><%= errors.state %></span>
-                  <% } else { %>
-                    <span class="field-error"></span>
-                  <% } %>
+                  <label for="state" data-i18n="checkout.field.state">State / Region</label>
+                  <input type="text" id="state" name="state"
+                    data-i18n-ph="checkout.ph.state" placeholder="Cairo"
+                    value="<%= formData.state || '' %>" autocomplete="address-level1"
+                    class="<%= errors.state ? 'is-invalid' : '' %>" required />
+                  <span class="field-error"><%= errors.state || '' %></span>
                 </div>
               </div>
 
-              <%# ZIP + Country %>
+              <!-- ZIP + Country -->
               <div class="field-row cols-2">
                 <div class="field-group">
-                  <label for="zip">Postal / ZIP Code</label>
-                  <input
-                    type="text"
-                    id="zip"
-                    name="zip"
-                    placeholder="10001"
-                    value="<%= formData.zip || '' %>"
-                    autocomplete="postal-code"
-                    class="<%= errors.zip ? 'is-invalid' : '' %>"
-                    required
-                  />
-                  <% if (errors.zip) { %>
-                    <span class="field-error"><%= errors.zip %></span>
-                  <% } else { %>
-                    <span class="field-error"></span>
-                  <% } %>
+                  <label for="zip" data-i18n="checkout.field.zip">Postal / ZIP Code</label>
+                  <input type="text" id="zip" name="zip"
+                    data-i18n-ph="checkout.ph.zip" placeholder="12345"
+                    value="<%= formData.zip || '' %>" autocomplete="postal-code"
+                    class="<%= errors.zip ? 'is-invalid' : '' %>" required />
+                  <span class="field-error"><%= errors.zip || '' %></span>
                 </div>
                 <div class="field-group">
-                  <label for="country">Country</label>
-                  <select id="country" name="country" autocomplete="country" class="<%= errors.country ? 'is-invalid' : '' %>" required>
-                    <option value="" disabled <%= !formData.country ? 'selected' : '' %>>Select country</option>
-                    <option value="US"  <%= formData.country === 'US'  ? 'selected' : '' %>>United States</option>
-                    <option value="CA"  <%= formData.country === 'CA'  ? 'selected' : '' %>>Canada</option>
-                    <option value="GB"  <%= formData.country === 'GB'  ? 'selected' : '' %>>United Kingdom</option>
-                    <option value="AU"  <%= formData.country === 'AU'  ? 'selected' : '' %>>Australia</option>
-                    <option value="DE"  <%= formData.country === 'DE'  ? 'selected' : '' %>>Germany</option>
-                    <option value="FR"  <%= formData.country === 'FR'  ? 'selected' : '' %>>France</option>
-                    <option value="NL"  <%= formData.country === 'NL'  ? 'selected' : '' %>>Netherlands</option>
-                    <option value="SE"  <%= formData.country === 'SE'  ? 'selected' : '' %>>Sweden</option>
-                    <option value="SG"  <%= formData.country === 'SG'  ? 'selected' : '' %>>Singapore</option>
-                    <option value="AE"  <%= formData.country === 'AE'  ? 'selected' : '' %>>United Arab Emirates</option>
-                    <%# Add more countries as needed %>
-                  </select>
-                  <% if (errors.country) { %>
-                    <span class="field-error"><%= errors.country %></span>
-                  <% } else { %>
-                    <span class="field-error"></span>
-                  <% } %>
+                  <label for="country" data-i18n="checkout.field.country">Country</label>
+                  <input type="text" id="country" name="country"
+                    data-i18n-ph="checkout.ph.country" placeholder="Egypt"
+                    value="<%= formData.country || '' %>" autocomplete="country-name"
+                    class="<%= errors.country ? 'is-invalid' : '' %>" required />
+                  <span class="field-error"><%= errors.country || '' %></span>
                 </div>
               </div>
-            </div><!-- /section-body -->
-          </div><!-- /section-contact -->
 
+            </div>
+          </div>
 
-          <!-- ─── Section 2: Shipping Method ────────────────── -->
+          <!-- ── Section 2: Shipping Method ── -->
           <div class="form-section" id="section-shipping">
             <div class="section-header">
               <span class="section-number">2</span>
-              <span class="section-title">Shipping Method</span>
+              <span class="section-title" data-i18n="checkout.s2.title">Shipping Method</span>
               <svg class="section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path d="M6 9l6 6 6-6"/>
               </svg>
             </div>
-
             <div class="section-body">
               <div class="shipping-options" role="radiogroup" aria-label="Shipping method">
-
                 <label class="shipping-option">
-                  <input
-                    type="radio"
-                    name="shippingMethod"
-                    value="standard"
-                    <%= (!formData.shippingMethod || formData.shippingMethod === 'standard') ? 'checked' : '' %>
-                  />
+                  <input type="radio" name="shippingMethod" value="standard"
+                    <%= (!formData.shippingMethod || formData.shippingMethod === 'standard') ? 'checked' : '' %> />
                   <div class="shipping-option-label">
-                    <span class="shipping-option-name">Standard Shipping</span>
-                    <span class="shipping-option-desc">5–7 business days</span>
+                    <span class="shipping-option-name" data-i18n="checkout.ship.standard">Standard Shipping</span>
+                    <span class="shipping-option-desc" data-i18n="checkout.ship.standard.desc">5–7 business days</span>
                   </div>
-                  <span class="shipping-option-price free">Free</span>
+                  <span class="shipping-option-price free" data-i18n="cart.free">Free</span>
                 </label>
-
                 <label class="shipping-option">
-                  <input
-                    type="radio"
-                    name="shippingMethod"
-                    value="express"
-                    <%= formData.shippingMethod === 'express' ? 'checked' : '' %>
-                  />
+                  <input type="radio" name="shippingMethod" value="express"
+                    <%= formData.shippingMethod === 'express' ? 'checked' : '' %> />
                   <div class="shipping-option-label">
-                    <span class="shipping-option-name">Express Shipping</span>
-                    <span class="shipping-option-desc">1–2 business days</span>
+                    <span class="shipping-option-name" data-i18n="checkout.ship.express">Express Shipping</span>
+                    <span class="shipping-option-desc" data-i18n="checkout.ship.express.desc">1–2 business days</span>
                   </div>
-                  <span class="shipping-option-price">$15.00</span>
+                  <span class="shipping-option-price">15.00 EGP</span>
                 </label>
-
               </div>
             </div>
-          </div><!-- /section-shipping -->
+          </div>
 
-
-          <!-- ─── Section 3: Payment ─────────────────────────── -->
+          <!-- ── Section 3: Payment ── -->
           <div class="form-section" id="section-payment">
             <div class="section-header">
               <span class="section-number">3</span>
-              <span class="section-title">Payment</span>
+              <span class="section-title" data-i18n="checkout.s3.title">Payment</span>
               <svg class="section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path d="M6 9l6 6 6-6"/>
               </svg>
             </div>
-
             <div class="section-body">
 
-              <!-- Payment method tabs -->
+              <!-- Payment Tabs -->
               <div class="payment-tabs" role="tablist" aria-label="Payment method">
                 <button type="button" class="payment-tab active" data-method="card" role="tab" aria-selected="true">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                     <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
                     <line x1="1" y1="10" x2="23" y2="10"/>
                   </svg>
-                  Card
+                  <span data-i18n="checkout.pay.card">Card</span>
                 </button>
-                <button type="button" class="payment-tab" data-method="paypal" role="tab" aria-selected="false">
+                <button type="button" class="payment-tab" data-method="cod" role="tab" aria-selected="false">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                    <path d="M7 11l3-7h5a4 4 0 0 1 0 8H9"/>
-                    <path d="M5 19l3-7h5a4 4 0 0 0 0-8"/>
+                    <rect x="2" y="6" width="20" height="14" rx="2"/>
+                    <path d="M2 10h20"/>
+                    <circle cx="12" cy="15" r="2"/>
                   </svg>
-                  PayPal
-                </button>
-                <button type="button" class="payment-tab" data-method="apple" role="tab" aria-selected="false">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                    <path d="M12 2a4 4 0 0 1 4 4"/>
-                    <rect x="4" y="8" width="16" height="13" rx="2"/>
-                  </svg>
-                  Apple Pay
+                  <span data-i18n="checkout.pay.cod">Cash on Delivery</span>
                 </button>
               </div>
 
-              <!-- Card panel -->
+              <!-- Card Panel -->
               <div class="payment-panel" id="panel-card">
-
-                <%# Card number with icon %>
                 <div class="field-row">
                   <div class="field-group">
-                    <label for="cardNumber">Card Number</label>
+                    <label for="cardNumber" data-i18n="checkout.field.cardNumber">Card Number</label>
                     <div class="card-input-wrap">
-                      <input
-                        type="text"
-                        id="cardNumber"
-                        name="cardNumber"
-                        placeholder="1234 5678 9012 3456"
-                        inputmode="numeric"
-                        maxlength="23"
-                        autocomplete="cc-number"
-                        class="<%= errors.cardNumber ? 'is-invalid' : '' %>"
-                      />
-                      <!-- Generic card icon -->
+                      <input type="text" id="cardNumber" name="cardNumber"
+                        data-i18n-ph="checkout.ph.cardNumber" placeholder="1234 5678 9012 3456"
+                        inputmode="numeric" maxlength="23"
+                        autocomplete="cc-number" class="<%= errors.cardNumber ? 'is-invalid' : '' %>" />
                       <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                         <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
                         <line x1="1" y1="10" x2="23" y2="10"/>
                       </svg>
                     </div>
-                    <% if (errors.cardNumber) { %>
-                      <span class="field-error"><%= errors.cardNumber %></span>
-                    <% } else { %>
-                      <span class="field-error"></span>
-                    <% } %>
+                    <span class="field-error"><%= errors.cardNumber || '' %></span>
                   </div>
                 </div>
 
-                <%# Expiry + CVV + Name on card %>
                 <div class="field-row cols-3">
                   <div class="field-group">
-                    <label for="expiry">Expiry Date</label>
-                    <input
-                      type="text"
-                      id="expiry"
-                      name="expiry"
-                      placeholder="MM/YY"
-                      maxlength="5"
-                      inputmode="numeric"
-                      autocomplete="cc-exp"
-                      class="<%= errors.expiry ? 'is-invalid' : '' %>"
-                    />
-                    <% if (errors.expiry) { %>
-                      <span class="field-error"><%= errors.expiry %></span>
-                    <% } else { %>
-                      <span class="field-error"></span>
-                    <% } %>
+                    <label for="expiry" data-i18n="checkout.field.expiry">Expiry Date</label>
+                    <input type="text" id="expiry" name="expiry"
+                      data-i18n-ph="checkout.ph.expiry" placeholder="MM/YY"
+                      maxlength="5" inputmode="numeric" autocomplete="cc-exp"
+                      class="<%= errors.expiry ? 'is-invalid' : '' %>" />
+                    <span class="field-error"><%= errors.expiry || '' %></span>
                   </div>
                   <div class="field-group">
-                    <label for="cvv">CVV</label>
-                    <input
-                      type="text"
-                      id="cvv"
-                      name="cvv"
-                      placeholder="123"
-                      maxlength="4"
-                      inputmode="numeric"
-                      autocomplete="cc-csc"
-                      class="<%= errors.cvv ? 'is-invalid' : '' %>"
-                    />
-                    <% if (errors.cvv) { %>
-                      <span class="field-error"><%= errors.cvv %></span>
-                    <% } else { %>
-                      <span class="field-error"></span>
-                    <% } %>
+                    <label for="cvv" data-i18n="checkout.field.cvv">CVV</label>
+                    <input type="text" id="cvv" name="cvv"
+                      data-i18n-ph="checkout.ph.cvv" placeholder="123"
+                      maxlength="4" inputmode="numeric" autocomplete="cc-csc"
+                      class="<%= errors.cvv ? 'is-invalid' : '' %>" />
+                    <span class="field-error"><%= errors.cvv || '' %></span>
                   </div>
                   <div class="field-group">
-                    <label for="cardName">Name on Card</label>
-                    <input
-                      type="text"
-                      id="cardName"
-                      name="cardName"
-                      placeholder="Jane Doe"
-                      autocomplete="cc-name"
-                      class="<%= errors.cardName ? 'is-invalid' : '' %>"
-                    />
-                    <% if (errors.cardName) { %>
-                      <span class="field-error"><%= errors.cardName %></span>
-                    <% } else { %>
-                      <span class="field-error"></span>
-                    <% } %>
+                    <label for="cardName" data-i18n="checkout.field.cardName">Name on Card</label>
+                    <input type="text" id="cardName" name="cardName"
+                      data-i18n-ph="checkout.ph.cardName" placeholder="Jane Doe"
+                      autocomplete="cc-name" class="<%= errors.cardName ? 'is-invalid' : '' %>" />
+                    <span class="field-error"><%= errors.cardName || '' %></span>
                   </div>
                 </div>
 
                 <!-- Billing address toggle -->
                 <div class="billing-toggle">
                   <label class="checkbox-row">
-                    <input
-                      type="checkbox"
-                      id="billingSame"
-                      name="billingSame"
-                      <%= (!formData.billingSame || formData.billingSame === 'on') ? 'checked' : '' %>
-                    />
-                    <span>Billing address is the same as shipping</span>
+                    <input type="checkbox" id="billingSame" name="billingSame"
+                      <%= (!formData.billingSame || formData.billingSame === 'on') ? 'checked' : '' %> />
+                    <span data-i18n="checkout.billing.same">Billing address is the same as shipping</span>
                   </label>
 
-                  <!-- Billing fields (hidden by default) -->
                   <div id="billing-address-section" class="hidden">
                     <div class="field-row" style="margin-top:16px;">
                       <div class="field-group">
-                        <label for="billingStreet">Billing Street Address</label>
+                        <label for="billingStreet" data-i18n="checkout.field.billingStreet">Billing Street Address</label>
                         <input type="text" id="billingStreet" name="billingStreet"
-                          placeholder="123 Billing Lane"
+                          data-i18n-ph="checkout.ph.billingStreet" placeholder="123 Billing Lane"
                           value="<%= formData.billingStreet || '' %>"
-                          class="<%= errors.billingStreet ? 'is-invalid' : '' %>"
-                          disabled />
+                          class="<%= errors.billingStreet ? 'is-invalid' : '' %>" disabled />
                         <span class="field-error"><%= errors.billingStreet || '' %></span>
                       </div>
                     </div>
                     <div class="field-row">
                       <div class="field-group">
-                        <label for="billingApt">Apartment / Suite <span style="color:var(--text-light)">(optional)</span></label>
+                        <label for="billingApt">
+                          <span data-i18n="checkout.field.apt">Apartment / Suite</span>
+                          <span style="color:var(--text-light)" data-i18n="checkout.optional">(optional)</span>
+                        </label>
                         <input type="text" id="billingApt" name="billingApt"
                           value="<%= formData.billingApt || '' %>" disabled />
                       </div>
                     </div>
                     <div class="field-row cols-2">
                       <div class="field-group">
-                        <label for="billingCity">City</label>
+                        <label for="billingCity" data-i18n="checkout.field.city">City</label>
                         <input type="text" id="billingCity" name="billingCity"
                           value="<%= formData.billingCity || '' %>"
-                          class="<%= errors.billingCity ? 'is-invalid' : '' %>"
-                          disabled />
+                          class="<%= errors.billingCity ? 'is-invalid' : '' %>" disabled />
                         <span class="field-error"><%= errors.billingCity || '' %></span>
                       </div>
                       <div class="field-group">
-                        <label for="billingState">State / Region</label>
+                        <label for="billingState" data-i18n="checkout.field.state">State / Region</label>
                         <input type="text" id="billingState" name="billingState"
                           value="<%= formData.billingState || '' %>"
-                          class="<%= errors.billingState ? 'is-invalid' : '' %>"
-                          disabled />
+                          class="<%= errors.billingState ? 'is-invalid' : '' %>" disabled />
                         <span class="field-error"><%= errors.billingState || '' %></span>
                       </div>
                     </div>
-                    <div class="field-row cols-2">
-                      <div class="field-group">
-                        <label for="billingZip">Postal / ZIP Code</label>
-                        <input type="text" id="billingZip" name="billingZip"
-                          value="<%= formData.billingZip || '' %>"
-                          class="<%= errors.billingZip ? 'is-invalid' : '' %>"
-                          disabled />
-                        <span class="field-error"><%= errors.billingZip || '' %></span>
-                      </div>
-                      <div class="field-group">
-                        <label for="billingCountry">Country</label>
-                        <select id="billingCountry" name="billingCountry" disabled
-                          class="<%= errors.billingCountry ? 'is-invalid' : '' %>">
-                          <option value="" disabled selected>Select country</option>
-                          <option value="US" <%= formData.billingCountry === 'US' ? 'selected' : '' %>>United States</option>
-                          <option value="CA" <%= formData.billingCountry === 'CA' ? 'selected' : '' %>>Canada</option>
-                          <option value="GB" <%= formData.billingCountry === 'GB' ? 'selected' : '' %>>United Kingdom</option>
-                          <option value="AU" <%= formData.billingCountry === 'AU' ? 'selected' : '' %>>Australia</option>
-                        </select>
-                        <span class="field-error"><%= errors.billingCountry || '' %></span>
-                      </div>
-                    </div>
-                  </div><!-- /billing-address-section -->
-                </div><!-- /billing-toggle -->
+                  </div>
+                </div>
 
-                <!-- Security notice -->
                 <p class="security-notice">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                   </svg>
-                  Your payment information is encrypted and never stored on our servers.
+                  <span data-i18n="checkout.security.notice">Your payment information is encrypted and never stored on our servers.</span>
                 </p>
+              </div>
 
-              </div><!-- /panel-card -->
-
-              <!-- PayPal placeholder -->
-              <div class="payment-panel hidden" id="panel-paypal">
+              <!-- Cash on Delivery Panel -->
+              <div class="payment-panel hidden" id="panel-cod">
                 <div class="alt-payment-placeholder">
                   <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-light)" stroke-width="1.5" aria-hidden="true">
-                    <path d="M7 11l3-7h5a4 4 0 0 1 0 8H9"/><path d="M5 19l3-7h5a4 4 0 0 0 0-8"/>
+                    <rect x="2" y="6" width="20" height="14" rx="2"/>
+                    <path d="M2 10h20"/>
+                    <circle cx="12" cy="15" r="2"/>
                   </svg>
-                  <p>You'll be redirected to PayPal to complete your purchase securely.</p>
+                  <p data-i18n="checkout.cod.desc">Pay with cash when your order arrives at your door. No card details needed.</p>
                 </div>
               </div>
 
-              <!-- Apple Pay placeholder -->
-              <div class="payment-panel hidden" id="panel-apple">
-                <div class="alt-payment-placeholder">
-                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-light)" stroke-width="1.5" aria-hidden="true">
-                    <path d="M12 2a4 4 0 0 1 4 4"/><rect x="4" y="8" width="16" height="13" rx="2"/>
-                  </svg>
-                  <p>Apple Pay integration requires an HTTPS context and the Apple Pay JS SDK.</p>
-                </div>
-              </div>
+            </div>
+          </div>
 
-            </div><!-- /section-body -->
-          </div><!-- /section-payment -->
-
-          <!-- ─── Place Order ─────────────────────────────────── -->
-          <button type="submit" id="place-order-btn" class="place-order-btn">
+          <button type="submit" id="place-order-btn" class="place-order-btn" data-i18n="checkout.place.order">
             Place Order
           </button>
 
           <p style="text-align:center;font-size:12px;color:var(--text-light);margin-top:16px;line-height:1.6;">
-            By placing your order you agree to our
-            <a href="/terms" style="color:var(--text-mid);">Terms of Service</a>
-            and
-            <a href="/privacy" style="color:var(--text-mid);">Privacy Policy</a>.
+            <span data-i18n="checkout.terms.pre">By placing your order you agree to our</span>
+            <a href="/terms" style="color:var(--text-mid);" data-i18n="checkout.terms.link">Terms of Service</a>
+            <span data-i18n="checkout.terms.and">and</span>
+            <a href="/privacy" style="color:var(--text-mid);" data-i18n="checkout.privacy.link">Privacy Policy</a>.
           </p>
 
         </form>
-      </div><!-- /checkout-form-col -->
+      </div>
 
-
-      <!-- ════════════════════════════════════════════════════ -->
-      <!-- RIGHT — ORDER SUMMARY                              -->
-      <!-- ════════════════════════════════════════════════════ -->
+      <!-- ════ RIGHT — ORDER SUMMARY ════ -->
       <div class="order-summary-col">
         <div class="order-summary">
 
           <div class="summary-header">
-            <h2>Order Summary</h2>
+            <h2 data-i18n="cart.summary">Order Summary</h2>
             <p class="item-count">
-              <%= cart.length %> item<%= cart.length !== 1 ? 's' : '' %> in your routine
+              <%= cart.length %> <span data-i18n="checkout.items.in">item<%= cart.length !== 1 ? 's' : '' %> in your routine</span>
             </p>
           </div>
 
@@ -572,26 +382,19 @@
             <% cart.forEach(function(item) { %>
               <div class="cart-item">
                 <% if (item.image) { %>
-                  <img
-                    src="<%= item.image %>"
-                    alt="<%= item.name %>"
-                    class="cart-item-image"
-                    loading="lazy"
-                  />
+                  <img src="<%= item.image %>" alt="<%= item.name %>" class="cart-item-image" loading="lazy" />
                 <% } else { %>
-                  <div class="cart-item-image-placeholder">No img</div>
+                  <div class="cart-item-image-placeholder" data-i18n="checkout.no.img">No img</div>
                 <% } %>
-
                 <div class="cart-item-info">
                   <% if (item.step) { %>
                     <p class="cart-item-step"><%= item.step %></p>
                   <% } %>
                   <p class="cart-item-name"><%= item.name %></p>
-                  <p class="cart-item-qty">Qty: <%= item.quantity %></p>
+                  <p class="cart-item-qty"><span data-i18n="checkout.qty">Qty</span>: <%= item.quantity %></p>
                 </div>
-
                 <span class="cart-item-price">
-                  $<%= (item.price * item.quantity).toFixed(2) %>
+                  <%= (item.price * item.quantity).toLocaleString() %> EGP
                 </span>
               </div>
             <% }); %>
@@ -600,58 +403,41 @@
           <!-- Promo Code -->
           <div class="promo-section">
             <div class="promo-row">
-              <input
-                type="text"
-                id="promoCode"
-                name="promoCode"
-                placeholder="PROMO CODE"
-                maxlength="20"
-                aria-label="Promo code"
-              />
-              <button type="button" id="apply-promo-btn">Apply</button>
+              <input type="text" id="promoCode"
+                data-i18n-ph="checkout.promo.ph" placeholder="PROMO CODE"
+                maxlength="20" aria-label="Promo code" />
+              <button type="button" id="apply-promo-btn" data-i18n="checkout.promo.apply">Apply</button>
             </div>
             <p class="promo-message" id="promo-message" role="status"></p>
           </div>
 
           <!-- Price Breakdown -->
           <div class="price-breakdown">
-
-            <!-- Subtotal (stores raw value for JS) -->
             <div class="price-row">
-              <span class="label">Subtotal</span>
-              <span
-                class="value"
-                id="js-subtotal"
-                data-value="<%= subtotal %>"
-              >$<%= parseFloat(subtotal).toFixed(2) %></span>
-            </div>
-
-            <!-- Discount (hidden until promo applied) -->
-            <div class="price-row discount hidden">
-              <span class="label">Discount</span>
-              <span class="value" id="js-discount" data-value="0">-$0.00</span>
-            </div>
-
-            <!-- Shipping (updated by JS) -->
-            <div class="price-row">
-              <span class="label">Shipping</span>
-              <span class="value" id="js-shipping-display">Free</span>
-              <input type="hidden" id="js-shipping-value" name="shippingCost" value="0" />
-            </div>
-
-            <!-- Tax (updated by JS) -->
-            <div class="price-row">
-              <span class="label">Tax (8.5%)</span>
-              <span class="value" id="js-tax-display">
-                $<%= (parseFloat(subtotal) * 0.085).toFixed(2) %>
+              <span class="label" data-i18n="cart.subtotal">Subtotal</span>
+              <span class="value" id="js-subtotal" data-value="<%= subtotal %>">
+                <%= parseFloat(subtotal).toLocaleString() %> EGP
               </span>
             </div>
-
-            <!-- Total (updated by JS) -->
+            <div class="price-row discount hidden">
+              <span class="label" data-i18n="checkout.discount">Discount</span>
+              <span class="value" id="js-discount" data-value="0">-0.00 EGP</span>
+            </div>
+            <div class="price-row">
+              <span class="label" data-i18n="cart.shipping">Shipping</span>
+              <span class="value" id="js-shipping-display" data-i18n="cart.free">Free</span>
+              <input type="hidden" id="js-shipping-value" name="shippingCost" value="0" />
+            </div>
+            <div class="price-row">
+              <span class="label" data-i18n="checkout.tax">Tax (8.5%)</span>
+              <span class="value" id="js-tax-display">
+                <%= (parseFloat(subtotal) * 0.085).toLocaleString() %> EGP
+              </span>
+            </div>
             <div class="price-row total">
-              <span class="label">Total</span>
+              <span class="label" data-i18n="cart.total">Total</span>
               <span class="value" id="js-total-display">
-                $<%= (parseFloat(subtotal) * 1.085).toFixed(2) %>
+                <%= (parseFloat(subtotal) * 1.085).toLocaleString() %> EGP
               </span>
             </div>
           </div>
@@ -662,29 +448,37 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
               </svg>
-              Secure
+              <span data-i18n="checkout.badge.secure">Secure</span>
             </div>
             <div class="trust-badge">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                 <polyline points="20 6 9 17 4 12"/>
               </svg>
-              Verified
+              <span data-i18n="checkout.badge.verified">Verified</span>
             </div>
             <div class="trust-badge">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                 <circle cx="12" cy="12" r="10"/>
                 <polyline points="12 6 12 12 16 14"/>
               </svg>
-              Fast Ship
+              <span data-i18n="checkout.badge.fast">Fast Ship</span>
             </div>
           </div>
 
-        </div><!-- /order-summary -->
-      </div><!-- /order-summary-col -->
+        </div>
+      </div>
 
-    </div><!-- /checkout-wrapper -->
+    </div>
   </main>
 
+  <script src="/js/i18n.js"></script>
   <script src="/js/checkout.js"></script>
+  <script>
+    // Remove language button injected by i18n.js
+    document.addEventListener('DOMContentLoaded', function() {
+      var langBtn = document.getElementById('lang-switcher');
+      if (langBtn) langBtn.remove();
+    });
+  </script>
 </body>
 </html>
