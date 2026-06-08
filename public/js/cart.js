@@ -1,11 +1,14 @@
-let cart = [];
+let cart = []; // [{ productId, name, price, image, quantity, step }]
 
+/* ═══════════════════════════════════════════════════════
+ *  LOAD
+ * ═══════════════════════════════════════════════════════ */
 async function loadCart() {
   try {
-    const res = await fetch('/user/cart/data');
+    const res  = await fetch('/user/cart/data');
     const data = await res.json();
     if (data.loggedIn) {
-      cart = data.cart || [];
+      cart = (data.cart || []).map(normalise);
     } else {
       cart = JSON.parse(localStorage.getItem('cart')) || [];
     }
@@ -15,15 +18,18 @@ async function loadCart() {
   displayCart();
 }
 
+/* ═══════════════════════════════════════════════════════
+ *  SAVE
+ * ═══════════════════════════════════════════════════════ */
 async function saveCart() {
   try {
     const res = await fetch('/user/cart/data');
     const { loggedIn } = await res.json();
     if (loggedIn) {
       await fetch('/user/cart/save', {
-        method: 'POST',
+        method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cart })
+        body:    JSON.stringify({ cart })
       });
     } else {
       localStorage.setItem('cart', JSON.stringify(cart));
@@ -33,6 +39,45 @@ async function saveCart() {
   }
 }
 
+/* ═══════════════════════════════════════════════════════
+ *  NORMALISE
+ * ═══════════════════════════════════════════════════════ */
+function normalise(item) {
+  return {
+    productId: item.productId || item._id || '',
+    name:      item.name      || '',
+    price:     parseFloat(item.price)  || 0,
+    image:     item.image     || '',
+    quantity:  parseInt(item.quantity) || 1,
+    step:      item.step      || ''
+  };
+}
+
+/* ═══════════════════════════════════════════════════════
+ *  ADD TO CART
+ *  Accepts EITHER an object OR (productId, name, price, image, step)
+ * ═══════════════════════════════════════════════════════ */
+function addToCart(productIdOrObj, name, price, image, step) {
+  let item;
+  if (typeof productIdOrObj === 'object' && productIdOrObj !== null) {
+    item = normalise(productIdOrObj);
+  } else {
+    item = normalise({ productId: productIdOrObj, name, price, image, step, quantity: 1 });
+  }
+
+  const existing = cart.find(i => i.name === item.name);
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    cart.push(item);
+  }
+  saveCart();
+  displayCart();
+}
+
+/* ═══════════════════════════════════════════════════════
+ *  DISPLAY CART
+ * ═══════════════════════════════════════════════════════ */
 function displayCart() {
   const cartItemsEl   = document.getElementById('cartItems');
   const totalAmountEl = document.getElementById('totalAmount');
@@ -45,37 +90,32 @@ function displayCart() {
   let total = 0;
 
   if (cart.length === 0) {
-    emptyMsg.style.display = 'block';
-    if (summary) summary.style.display = 'none';
+    if (emptyMsg) emptyMsg.style.display = 'block';
+    if (summary)  summary.style.display  = 'none';
     return;
   }
 
-  emptyMsg.style.display = 'none';
-  if (summary) summary.style.display = 'block';
+  if (emptyMsg) emptyMsg.style.display = 'none';
+  if (summary)  summary.style.display  = 'block';
 
-  const grouped = {};
   cart.forEach(item => {
-    if (grouped[item.name]) {
-      grouped[item.name].qty++;
-    } else {
-      grouped[item.name] = { ...item, qty: 1 };
-    }
-  });
-
-  Object.values(grouped).forEach(item => {
-    const itemTotal = item.price * item.qty;
+    const itemTotal = item.price * item.quantity;
     total += itemTotal;
+
     const li = document.createElement('li');
     li.className = 'cart-item';
     li.innerHTML = `
       <div class="cart-item-info">
+        ${item.image
+          ? `<img src="${item.image}" alt="${item.name}" class="cart-item-img" style="width:48px;height:48px;object-fit:cover;border-radius:6px;margin-right:10px;">`
+          : ''}
         <span class="cart-item-name">${item.name}</span>
         <span class="cart-item-price">${item.price.toLocaleString()} EGP each</span>
       </div>
       <div class="cart-item-controls">
-        <button class="qty-btn" onclick="changeQty('${item.name}', ${item.price}, -1)">−</button>
-        <span class="qty-count">${item.qty}</span>
-        <button class="qty-btn" onclick="changeQty('${item.name}', ${item.price}, 1)">+</button>
+        <button class="qty-btn" onclick="changeQty('${item.name}', -1)">−</button>
+        <span class="qty-count">${item.quantity}</span>
+        <button class="qty-btn" onclick="changeQty('${item.name}', 1)">+</button>
         <span class="cart-item-total">${itemTotal.toLocaleString()} EGP</span>
         <button class="remove-btn" onclick="removeItem('${item.name}')">✕</button>
       </div>`;
@@ -87,52 +127,52 @@ function displayCart() {
   if (subtotalEl)    subtotalEl.textContent    = totalStr;
 }
 
-function changeQty(name, price, delta) {
-  const idx = cart.findIndex(i => i.name === name);
-  if (delta === 1) {
-    cart.push({ name, price });
-  } else if (delta === -1 && idx !== -1) {
-    cart.splice(idx, 1);
-  }
+/* ═══════════════════════════════════════════════════════
+ *  CHANGE QUANTITY
+ * ═══════════════════════════════════════════════════════ */
+function changeQty(name, delta) {
+  const item = cart.find(i => i.name === name);
+  if (!item) return;
+  item.quantity += delta;
+  if (item.quantity <= 0) cart = cart.filter(i => i.name !== name);
   saveCart();
   displayCart();
 }
 
+/* ═══════════════════════════════════════════════════════
+ *  REMOVE ITEM
+ * ═══════════════════════════════════════════════════════ */
 function removeItem(name) {
   cart = cart.filter(i => i.name !== name);
   saveCart();
   displayCart();
 }
 
+/* ═══════════════════════════════════════════════════════
+ *  CHECKOUT
+ * ═══════════════════════════════════════════════════════ */
 function checkout() {
-    // 1. Grab your local array data from cart.js (assuming it's named 'cart' or loaded from DB)
-    // If you are tracking the array items inside a variable called 'cart', use that here:
-    if (!cart || cart.length === 0) {
-        alert("Your cart is empty.");
-        return;
+  if (!cart || cart.length === 0) {
+    alert('Your cart is empty.');
+    return;
+  }
+  fetch('/user/save-purchase', {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify({ items: cart })
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.success) {
+      window.location.href = '/checkout';
+    } else {
+      alert('Checkout error: ' + data.message);
     }
-
-    // 2. Send items to user controller session storage
-    fetch('/user/save-purchase', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ items: cart }) // Sends the array to usercontroller
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // 3. Success! The session is filled; redirect to checkout page now
-            window.location.href = '/checkout';
-        } else {
-            alert("Checkout validation error: " + data.message);
-        }
-    })
-    .catch(err => {
-        console.error("Syncing session failed:", err);
-        alert("An error occurred preparing checkout.");
-    });
+  })
+  .catch(err => {
+    console.error('Checkout sync failed:', err);
+    alert('An error occurred preparing checkout.');
+  });
 }
 
 loadCart();
