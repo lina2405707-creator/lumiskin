@@ -3,7 +3,7 @@ let cart = []; // [{ productId, name, price, image, quantity, step }]
 /* ═══════════════════════════════════════════════════════
  *  LOAD
  * ═══════════════════════════════════════════════════════ */
-async function loadCart() {
+async function loadCart() { 
   try {
     const res  = await fetch('/user/cart/data');
     const data = await res.json();
