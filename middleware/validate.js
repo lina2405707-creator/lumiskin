@@ -34,7 +34,6 @@ exports.validateSignup = (req, res, next) => {
   }
   next();
 };
-
 // ── Login Validation ──────────────────────────────────────────────────────────
 exports.validateLogin = (req, res, next) => {
   const { email, password } = req.body;
@@ -48,7 +47,6 @@ exports.validateLogin = (req, res, next) => {
   if (password.length < 8) {
     return res.render('login', { user: '', error: 'Password must be at least 8 characters.' });
   }
-
   next();
 };
 
