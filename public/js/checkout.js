@@ -10,7 +10,7 @@
 function showError(fieldId, message) {
   const field = document.getElementById(fieldId);
   if (!field) return;
-  field.classList.add("is-invalid");
+  field.classList.add("is-invalid"); 
   let err = field.parentElement.querySelector(".field-error");
   if (!err) {
     err = document.createElement("span");
