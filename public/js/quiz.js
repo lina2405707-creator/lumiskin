@@ -144,12 +144,6 @@ function checkTextarea(id, btnId) {
   const btn = document.getElementById(btnId);
   if (btn) btn.disabled = document.getElementById(id).value.trim().length === 0;
 }
-
-
-
-
-
-
 // ── Add to cart ───────────────────────────────────────────────────────────
 function addToCartFromQuiz(productKey, btn) {
   const product = PRODUCTS[productKey];
