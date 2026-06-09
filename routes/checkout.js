@@ -20,7 +20,3 @@ router.get("/confirmation",    controller.getConfirmation);
 router.post("/validate-promo", controller.validatePromo);
 
 module.exports = router; 
-
-
-
-    
