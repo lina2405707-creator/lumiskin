@@ -3,6 +3,13 @@ const answers = {};
 const flags   = {};
 const TOTAL_STEPS = 15;
 
+
+
+
+
+
+
+
 // ── Skin profile labels ───────────────────────────────────────────────────
 const SKIN_LABELS = {
   very_dry:    'Very Dry Skin',
@@ -144,6 +151,13 @@ function checkTextarea(id, btnId) {
   const btn = document.getElementById(btnId);
   if (btn) btn.disabled = document.getElementById(id).value.trim().length === 0;
 }
+
+
+
+
+
+
+
 
 // ── Add to cart ───────────────────────────────────────────────────────────
 function addToCartFromQuiz(productKey, btn) {
