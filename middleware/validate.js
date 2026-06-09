@@ -32,7 +32,6 @@ exports.validateSignup = (req, res, next) => {
   if (password !== confirmPassword) {
     return res.render('signup', { user: '', error: 'Passwords do not match.' });
   }
-
   next();
 };
 
