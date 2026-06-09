@@ -42,4 +42,7 @@ exports.getUriage = async (req, res) => {
   } catch (err) {
     res.render('uriage', { user: req.session.user || '', role: req.session.role || '', products: [] });
   }
-};
+};  
+
+
+
