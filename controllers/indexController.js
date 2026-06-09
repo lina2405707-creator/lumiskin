@@ -43,6 +43,3 @@ exports.getUriage = async (req, res) => {
     res.render('uriage', { user: req.session.user || '', role: req.session.role || '', products: [] });
   }
 };  
-
-
-
