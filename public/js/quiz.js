@@ -300,3 +300,8 @@ function restartQuiz() {
 
 updateProgress();
 document.addEventListener('langchange', () => { if (currentStep === 'result') showResult(); });
+
+
+
+
+
