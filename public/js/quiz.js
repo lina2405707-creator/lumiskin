@@ -23,6 +23,11 @@ const SENS_LABELS = {
   avoids:    'Avoids New Products'
 };
 
+
+
+
+
+
 // ── Product data ──────────────────────────────────────────────────────────
 const PRODUCTS = {
   'cerave-foam':    { name: 'CeraVe Foaming Facial Cleanser 236ml',            price: 550,  image: '/images/foaming-cleanser-236ml-1 cerave.jpg',          step: 'CERAVE-FOAM' },
@@ -251,6 +256,14 @@ function showResult() {
       tagEl.appendChild(span);
     });
 
+
+
+
+
+
+
+
+  
   // Routine
   const routine   = buildRoutine(skinType, acne, sensitivity, goals, pregnancy);
   const routineEl = document.getElementById('routineList');
