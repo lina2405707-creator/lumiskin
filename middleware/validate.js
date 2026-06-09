@@ -87,8 +87,5 @@ exports.validateProfileUpdate = async (req, res, next) => {
     if (!/\d/.test(password))         return fail('Password must contain at least 1 number.');
     if (password !== confirmPassword) return fail('Passwords do not match.');
   }
-
-
-  
   next();
 };
