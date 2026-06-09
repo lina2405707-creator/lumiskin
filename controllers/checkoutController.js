@@ -2,7 +2,7 @@
  * controllers/checkoutController.js
  */
 const Order  = require("../models/Order");
-const User   = require("../models/user");
+const User   = require("../models/user"); 
 const { sendConfirmationEmail } = require("../services/emailService");
 
 const PROMO_CODES = {
