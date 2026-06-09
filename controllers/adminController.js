@@ -1,17 +1,38 @@
 const path = require('path');
 const fs   = require('fs');
 const User    = require('../models/user');
-const Product = require('../models/product'); 
+const Product = require('../models/product');
 
-
-// ── Show Dashboard ────────────────────────────────────────────────────────────
 exports.getDashboard = async (req, res) => {
   if (!req.session.user) return res.redirect('/user/login');
   if (req.session.role !== 'admin') return res.redirect('/');
   try {
-    const users    = await User.find();
-    const products = await Product.find();
-    res.render('admin', { user: req.session.user, users, products });
+    // ── PAGINATION FOR PRODUCTS ──────────────────────────────────────────
+    const page = parseInt(req.query.page) || 1;      // Current page (default 1)
+    const limit = 10;                                 // 10 products per page
+    const skip = (page - 1) * limit;                  // How many to skip
+    
+    // Get products for current page only
+    const products = await Product.find()
+      .skip(skip)
+      .limit(limit);
+    
+    // Get total count for pagination controls
+    const totalProducts = await Product.countDocuments();
+    const totalPages = Math.ceil(totalProducts / limit);
+    
+    // Get all users (no pagination needed - usually fewer users)
+    const users = await User.find();
+    
+    res.render('admin', { 
+      user: req.session.user, 
+      users, 
+      products,
+      currentPage: page,
+      totalPages: totalPages,
+      hasPrevPage: page > 1,
+      hasNextPage: page < totalPages
+    });
   } catch (err) {
     res.redirect('/');
   }
@@ -212,6 +233,4 @@ exports.postEditUser = async (req, res) => {
   } catch (err) {
     res.redirect('/admin');
   }
-}; 
-
-
+};
