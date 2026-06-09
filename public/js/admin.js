@@ -8,7 +8,7 @@ function showSection(name) {
 
 // ── Toast Notification ────────────────────────────────────────────────────────
 function showToast(msg, isError = false) {
-    const toast = document.getElementById('admin-toast');
+    const toast = document.getElementById('admin-toast'); 
     toast.textContent = msg;
     toast.className = isError ? 'error show' : 'show';
     clearTimeout(toast._t);
