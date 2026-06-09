@@ -10,7 +10,7 @@ router.get('/myth-vs-fact', controller.getMythVsFact);
 router.get('/cerave',       controller.getCerave);
 router.get('/laroche',      controller.getLaroche);
 router.get('/uriage',       controller.getUriage);
-
+ 
 // Skin Advisor page
 router.get('/skin-advisor', skinCtrl.getSkinAdvisor);
 
