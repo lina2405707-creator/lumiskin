@@ -1,5 +1,5 @@
 // ── Signup Validation ────────────────────────────────────────────────────────
-exports.validateSignup = (req, res, next) => {
+exports.validateSignup = (req, res, next) => { 
   const { fname, lname, email, password, confirmPassword } = req.body;   
 
   if (!fname || !lname || !email || !password || !confirmPassword) {
