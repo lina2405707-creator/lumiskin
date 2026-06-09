@@ -1,6 +1,6 @@
 const User   = require('../models/user');
 const bcrypt = require('bcrypt');
-
+ 
 // ── GET /user/login ───────────────────────────────────────────────────────────
 exports.getLogin = (req, res) => {
   res.render('login', { user: req.session.user || '', error: '' });
