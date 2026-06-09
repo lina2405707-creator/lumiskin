@@ -89,9 +89,3 @@ exports.validateProfileUpdate = async (req, res, next) => {
   }
   next();
 };
-
-
-
-
-
-
