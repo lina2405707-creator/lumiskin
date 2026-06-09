@@ -11,7 +11,7 @@ const cartItemSchema = new mongoose.Schema({
 }, { _id: false });
 
 const purchaseSchema = new mongoose.Schema({
-  name:  { type: String, required: true },
+  name:  { type: String, required: true }, 
   price: { type: Number, required: true },
   date:  { type: Date,   default: Date.now }
 }, { _id: false });
