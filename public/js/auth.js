@@ -12,7 +12,7 @@ function validateLogin() {
 
     // Password checks
     if (password.length === 0) {
-        showError('Please enter your password.');
+        showError('Please enter your password.'); 
         return false;
     }
     if (password.length < 8) {
