@@ -8,4 +8,7 @@ exports.getSkinAdvisor = (req, res) => {
     user: req.session.user || '',
     role: req.session.role || ''
   });
-};
+};    
+
+
+
