@@ -22,4 +22,6 @@ router.get('/delete-user/:id',        adminController.deleteUser);     // fallba
 router.get('/edit-user/:id',          adminController.getEditUser);
 router.post('/edit-user/:id',         adminController.postEditUser);
 
-module.exports = router;
+module.exports = router; 
+
+
