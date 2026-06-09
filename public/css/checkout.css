@@ -799,4 +799,6 @@ body {
 @media (max-width: 480px) {
   .confirmation-card { grid-template-columns: 1fr; }
   .trust-badges { gap: 12px; }
-}
+}                               
+
+
