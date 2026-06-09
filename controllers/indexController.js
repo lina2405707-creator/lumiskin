@@ -4,7 +4,7 @@ exports.getHome = (req, res) => {
   res.render('index', { user: req.session.user || '', role: req.session.role || '' });
 };
 
-exports.getAbout = (req, res) => {
+exports.getAbout = (req, res) => { 
   res.render('about', { user: req.session.user || '', role: req.session.role || '' });
 };
 
