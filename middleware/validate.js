@@ -35,10 +35,6 @@ exports.validateSignup = (req, res, next) => {
   next();
 };
 // ── Login Validation ──────────────────────────────────────────────────────────
-
-
-
-
 exports.validateLogin = (req, res, next) => {
   const { email, password } = req.body;
 
