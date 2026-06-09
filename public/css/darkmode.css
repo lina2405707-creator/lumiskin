@@ -625,4 +625,7 @@ html.dark-mode .confirmation-card {
 html.dark-mode .confirmation-card .card-item span  { color: #806050 !important; }
 html.dark-mode .confirmation-card .card-item strong { color: rgb(235,220,200) !important; }
 html.dark-mode .confirmation-cta   { background: rgb(83,54,30) !important; }
-html.dark-mode .confirmation-cta:hover { background: rgb(107,70,38) !important; }
+html.dark-mode .confirmation-cta:hover { background: rgb(107,70,38) !important; }   
+
+
+
