@@ -1,4 +1,4 @@
-// ── Signup Validation ─────────────────────────────────────────────────────────
+// ── Signup Validation ────────────────────────────────────────────────────────
 exports.validateSignup = (req, res, next) => {
   const { fname, lname, email, password, confirmPassword } = req.body;   
 
@@ -89,3 +89,4 @@ exports.validateProfileUpdate = async (req, res, next) => {
   }
   next();
 };
+
