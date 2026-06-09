@@ -27,4 +27,7 @@ router.post('/profile', requireLogin, validateProfileUpdate, userController.upda
 router.post('/save-quiz',     requireLogin, userController.saveQuizResult);
 router.post('/save-purchase', requireLogin, userController.savePurchase);
 
-module.exports = router;
+module.exports = router;  
+
+
+
