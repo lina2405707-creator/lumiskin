@@ -8,7 +8,7 @@
             'nav.home': 'Home',
             'nav.products': 'Products',
             'nav.about': 'About',
-            'nav.advisor': 'Skin Advisor',
+            'nav.advisor': 'Skin Advisor', 
             'nav.admin': '⚙ Admin',
             'nav.logout': 'Logout',
             'nav.account': 'Account',
