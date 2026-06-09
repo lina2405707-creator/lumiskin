@@ -1,4 +1,11 @@
 // ── Signup Validation ─────────────────────────────────────────────────────────
+
+
+
+
+
+
+
 exports.validateSignup = (req, res, next) => {
   const { fname, lname, email, password, confirmPassword } = req.body;   
 
@@ -35,6 +42,10 @@ exports.validateSignup = (req, res, next) => {
   next();
 };
 // ── Login Validation ──────────────────────────────────────────────────────────
+
+
+
+
 exports.validateLogin = (req, res, next) => {
   const { email, password } = req.body;
 
