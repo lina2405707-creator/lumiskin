@@ -2,14 +2,6 @@
 const answers = {};
 const flags   = {};
 const TOTAL_STEPS = 15;
-
-
-
-
-
-
-
-
 // ── Skin profile labels ───────────────────────────────────────────────────
 const SKIN_LABELS = {
   very_dry:    'Very Dry Skin',
