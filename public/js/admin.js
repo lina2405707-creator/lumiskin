@@ -1,14 +1,28 @@
 // ── Section Switcher ──────────────────────────────────────────────────────────
+// ── Section Switcher ──────────────────────────────────────────────────────────
 function showSection(name) {
     document.getElementById('dashboardSection').style.display = 'none';
     document.getElementById('productsSection').style.display  = 'none';
     document.getElementById('userSection').style.display      = 'none';
     document.getElementById(name + 'Section').style.display = 'block';
+    
+    // Save the active section in localStorage so it persists after page reload
+    localStorage.setItem('activeAdminSection', name);
+}
+
+// ── Restore the last active section after page load ──────────────────────────
+function restoreActiveSection() {
+    const savedSection = localStorage.getItem('activeAdminSection');
+    if (savedSection && savedSection !== 'dashboard') {
+        showSection(savedSection);
+    } else {
+        showSection('dashboard');
+    }
 }
 
 // ── Toast Notification ────────────────────────────────────────────────────────
 function showToast(msg, isError = false) {
-    const toast = document.getElementById('admin-toast'); 
+    const toast = document.getElementById('admin-toast');
     toast.textContent = msg;
     toast.className = isError ? 'error show' : 'show';
     clearTimeout(toast._t);
@@ -93,6 +107,7 @@ async function ajaxDeleteUser(id, name) {
 // ── AJAX Add Product Form (with file upload via FormData) ─────────────────────
 // Person 4: Uses fetch() to POST multipart/form-data so page does NOT reload
 document.addEventListener('DOMContentLoaded', () => {
+    restoreActiveSection();
     const form   = document.getElementById('addProductForm');
     const addBtn = document.getElementById('addBtn');
 
