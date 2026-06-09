@@ -50,6 +50,11 @@ exports.validateLogin = (req, res, next) => {
   next();
 };
 // ── Profile Update Validation ─────────────────────────────────────────────────
+
+
+
+
+
 exports.validateProfileUpdate = async (req, res, next) => {
   const { fname, lname, email, password, confirmPassword } = req.body;
 
