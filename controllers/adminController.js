@@ -1,7 +1,7 @@
 const path = require('path');
 const fs   = require('fs');
 const User    = require('../models/user');
-const Product = require('../models/product');
+const Product = require('../models/product'); 
 
 
 // ── Show Dashboard ────────────────────────────────────────────────────────────
