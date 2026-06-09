@@ -3,6 +3,7 @@ const fs   = require('fs');
 const User    = require('../models/user');
 const Product = require('../models/product');
 
+
 // ── Show Dashboard ────────────────────────────────────────────────────────────
 exports.getDashboard = async (req, res) => {
   if (!req.session.user) return res.redirect('/user/login');
