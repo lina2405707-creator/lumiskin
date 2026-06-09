@@ -9,6 +9,3 @@ exports.getSkinAdvisor = (req, res) => {
     role: req.session.role || ''
   });
 };    
-
-
-
